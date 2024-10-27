@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2021-2024 Bearsampp
- * License:  GNU General Public License version 3 or later; see LICENSE.txt
- * Author: Bear
- * Website: https://bearsampp.com
- * Github: https://github.com/Bearsampp
+ *
+ *  * Copyright (c) 2021-2024 Bearsampp
+ *  * License:  GNU General Public License version 3 or later; see LICENSE.txt
+ *  * Website: https://bearsampp.com
+ *  * Github: https://github.com/Bearsampp
+ *
  */
 :root {
     --icon-width: 32px;
@@ -86,15 +87,6 @@ table.tablesorter thead tr th:hover {
     }
 
 /* Flot Chart Containers */
-.flot-chart {
-    display: block;
-    height: 400px;
-    }
-
-.flot-chart-content {
-    width: 100%;
-    height: 100%;
-    }
 
 /* Homepage */
 .modal-changelog .modal-dialog {
@@ -185,25 +177,6 @@ table.tablesorter thead tr th:hover {
     }
 
 /* fix gap in module versions */
-.apache-version-list,
-.php-version-list,
-.mysql-version-list,
-.mariadb-version-list,
-.postgresql-version-list,
-.nodejs-version-list,
-.mailhog-version-list,
-.mailpit-version-list,
-.memcached-version-list,
-.filezilla-version-list,
-.filezilla-checkport-list,
-.xlight-version-list,
-.xlight-checkport-list{
-    display: inline-flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 5px;
-    }
 
 /*
  * ---- Iconography ----
@@ -384,18 +357,6 @@ div#InternetState {
 
 .moduleheader {
     font-weight: bold
-    }
-
-.waitloader {
-    border: 16px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 16px solid blue;
-    border-right: 16px solid green;
-    border-bottom: 16px solid red;
-    width: 120px;
-    height: 120px;
-    -webkit-animation: spin 2s linear infinite;
-    animation: spin 2s linear infinite;
     }
 
 #progress-bar {
