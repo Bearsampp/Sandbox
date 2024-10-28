@@ -1,10 +1,11 @@
 <?php
 /*
- * Copyright (c) 2021-2024 Bearsampp
- * License:  GNU General Public License version 3 or later; see LICENSE.txt
- * Author: Bear
- * Website: https://bearsampp.com
- * Github: https://github.com/Bearsampp
+ *
+ *  * Copyright (c) 2021-2024 Bearsampp
+ *  * License:  GNU General Public License version 3 or later; see LICENSE.txt
+ *  * Website: https://bearsampp.com
+ *  * Github: https://github.com/Bearsampp
+ *
  */
 
 /**
@@ -94,7 +95,7 @@ abstract class Module
                 Util::logError('Removing . ' . $this->symlinkPath . ' file. It should not be a regular file');
                 unlink($dest);
             } elseif (is_dir($dest)) {
-                if (!(new \FilesystemIterator($dest))->valid()) {
+                if (!(new FilesystemIterator($dest))->valid()) {
                     rmdir($dest);
                 } else {
                     Util::logError($this->symlinkPath . ' should be a symlink to ' . $this->currentPath . '. Please remove this dir and restart bearsampp.');
