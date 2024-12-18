@@ -375,7 +375,166 @@ class Root
         return $this->getLogsPath($aetrayPath) . '/bearsampp-batch.log';
     }
 
-    // Other path-related methods...
+    /**
+     * Gets the path to the VBS log file.
+     *
+     * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
+     * @return string The VBS log file path.
+     */
+    public function getVbsLogFilePath($aetrayPath = false)
+    {
+        return $this->getLogsPath($aetrayPath) . '/bearsampp-vbs.log';
+    }
+
+    /**
+     * Gets the path to the Winbinder log file.
+     *
+     * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
+     * @return string The Winbinder log file path.
+     */
+    public function getWinbinderLogFilePath($aetrayPath = false)
+    {
+        return $this->getLogsPath($aetrayPath) . '/bearsampp-winbinder.log';
+    }
+
+    /**
+     * Gets the path to the NSSM log file.
+     *
+     * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
+     * @return string The NSSM log file path.
+     */
+    public function getNssmLogFilePath($aetrayPath = false)
+    {
+        return $this->getLogsPath($aetrayPath) . '/bearsampp-nssm.log';
+    }
+
+    /**
+     * Gets the path to the homepage file.
+     *
+     * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
+     * @return string The homepage file path.
+     */
+    public function getHomepageFilePath($aetrayPath = false)
+    {
+        return $this->getWwwPath($aetrayPath) . '/index.php';
+    }
+
+    /**
+     * Gets the name of the process.
+     *
+     * @return string The process name.
+     */
+    public function getProcessName()
+    {
+        return 'bearsampp';
+    }
+
+    /**
+     * Constructs a local URL with the specified request.
+     *
+     * @param string|null $request The specific request to append to the URL.
+     * @return string The constructed local URL.
+     */
+    public function getLocalUrl($request = null)
+    {
+        global $bearsamppBins;
+        return (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') .
+            (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost') .
+            ($bearsamppBins->getApache()->getPort() != 80 && !isset($_SERVER['HTTPS']) ? ':' . $bearsamppBins->getApache()->getPort() : '') .
+            (!empty($request) ? '/' . $request : '');
+    }
+
+    /**
+     * Loads the core components of the application.
+     */
+    public static function loadCore()
+    {
+        global $bearsamppCore;
+        $bearsamppCore = new Core();
+    }
+
+    /**
+     * Loads the configuration settings of the application.
+     */
+    public static function loadConfig()
+    {
+        global $bearsamppConfig;
+        $bearsamppConfig = new Config();
+    }
+
+    /**
+     * Loads the language settings of the application.
+     */
+    public static function loadLang()
+    {
+        global $bearsamppLang;
+        $bearsamppLang = new LangProc();
+    }
+
+    /**
+     * Loads the OpenSSL settings of the application.
+     */
+    public static function loadOpenSsl()
+    {
+        global $bearsamppOpenSsl;
+        $bearsamppOpenSsl = new OpenSsl();
+    }
+
+    /**
+     * Loads the binary components of the application.
+     */
+    public static function loadBins()
+    {
+        global $bearsamppBins;
+        $bearsamppBins = new Bins();
+    }
+
+    /**
+     * Loads the tools components of the application.
+     */
+    public static function loadTools()
+    {
+        global $bearsamppTools;
+        $bearsamppTools = new Tools();
+    }
+
+    /**
+     * Loads the apps components of the application.
+     */
+    public static function loadApps()
+    {
+        global $bearsamppApps;
+        $bearsamppApps = new Apps();
+    }
+
+    /**
+     * Loads the Winbinder extension if available.
+     */
+    public static function loadWinbinder()
+    {
+        global $bearsamppWinbinder;
+        if (extension_loaded('winbinder')) {
+            $bearsamppWinbinder = new WinBinder();
+        }
+    }
+
+    /**
+     * Loads the registry settings of the application.
+     */
+    public static function loadRegistry()
+    {
+        global $bearsamppRegistry;
+        $bearsamppRegistry = new Registry();
+    }
+
+    /**
+     * Loads the homepage settings of the application.
+     */
+    public static function loadHomepage()
+    {
+        global $bearsamppHomepage;
+        $bearsamppHomepage = new Homepage();
+    }
 
     /**
      * Handles errors and logs them to the error log file.
