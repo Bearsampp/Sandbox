@@ -53,3 +53,4 @@
 !/core/tmp/.gitignore
 .codiumai
 /core/resources/quickpick-releases.json
+.qodo
