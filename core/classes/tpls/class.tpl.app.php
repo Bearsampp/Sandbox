@@ -17,11 +17,11 @@
 class TplApp
 {
     // Constants for item and section identifiers
-    const ITEM_CAPTION = 0;
-    const ITEM_GLYPH = 1;
+    public const ITEM_CAPTION = 0;
+    public const ITEM_GLYPH = 1;
 
-    const SECTION_CALL = 0;
-    const SECTION_CONTENT = 1;
+    public const SECTION_CALL = 0;
+    public const SECTION_CONTENT = 1;
 
     /**
      * Private constructor to prevent instantiation.
@@ -40,7 +40,7 @@ class TplApp
      *
      * @return string The generated sections as a concatenated string.
      */
-    public static function process()
+    public static function process(): string
     {
         global $bearsamppCore;
 
@@ -61,7 +61,7 @@ class TplApp
      *
      * @return string The generated sections as a concatenated string.
      */
-    public static function processLight()
+    public static function processLight(): string
     {
         return TplAestan::getSectionConfig() . PHP_EOL .
             self::getSectionServices() . PHP_EOL .
@@ -77,7 +77,7 @@ class TplApp
      *
      * @return string The generated section name.
      */
-    public static function getSectionName($name, $args = array())
+    public static function getSectionName(string $name, array $args = []): string
     {
         return ucfirst($name) . (!empty($args) ? '-' . md5(serialize($args)) : '');
     }
@@ -91,12 +91,11 @@ class TplApp
      *
      * @return string The generated section content.
      */
-    public static function getSectionContent($name, $class, $args = array())
+    public static function getSectionContent(string $name, string $class, array $args = []): string
     {
         $baseMethod = 'get' . ucfirst($name);
-        $args = $args == null ? array() : $args;
         return '[' . self::getSectionName($name, $args) . ']' . PHP_EOL .
-            call_user_func_array($class . '::' . $baseMethod, $args);
+            call_user_func_array([$class, $baseMethod], $args);
     }
 
     /**
@@ -112,10 +111,9 @@ class TplApp
      *
      * @return string The generated action string.
      */
-    public static function getActionRun($action, $args = array(), $item = array(), $waitUntilTerminated = true)
+    public static function getActionRun(string $action, array $args = [], array $item = [], bool $waitUntilTerminated = true): string
     {
         global $bearsamppRoot, $bearsamppCore;
-        $args = $args == null ? array() : $args;
 
         $argImp = '';
         foreach ($args as $arg) {
@@ -124,7 +122,7 @@ class TplApp
 
         $result = 'Action: run; ' .
             'FileName: "' . $bearsamppCore->getPhpExe(true) . '"; ' .
-            'Parameters: "' . Core::isRoot_FILE . ' ' . $action . $argImp . '"; ' .
+            'Parameters: "' . Core::IS_ROOT_FILE . ' ' . $action . $argImp . '"; ' .
             'WorkingDir: "' . $bearsamppRoot->getCorePath(true) . '"';
 
         if (!empty($item)) {
@@ -149,10 +147,9 @@ class TplApp
      *
      * @return array An array containing the call string and the section content.
      */
-    public static function getActionMulti($action, $args = array(), $item = array(), $disabled = false, $class = false)
+    public static function getActionMulti(string $action, array $args = [], array $item = [], bool $disabled = false, string $class = ''): array
     {
         $action = 'action' . ucfirst($action);
-        $args = $args == null ? array() : $args;
         $sectionName = self::getSectionName($action, $args);
 
         $call = 'Action: multi; Actions: ' . $sectionName;
@@ -165,7 +162,7 @@ class TplApp
             $call .= '; Flags: waituntilterminated';
         }
 
-        return array($call, self::getSectionContent($action, $class, $args));
+        return [$call, self::getSectionContent($action, $class, $args)];
     }
 
     /**
@@ -173,9 +170,9 @@ class TplApp
      *
      * @return string The generated action string.
      */
-    public static function getActionExec()
+    public static function getActionExec(): string
     {
-        return self::getActionRun(Action::EXEC, array(), array(), false);
+        return self::getActionRun(Action::EXEC, [], [], false);
     }
 
     /**
@@ -187,7 +184,7 @@ class TplApp
      *
      * @return array An array containing the call string and the menu content.
      */
-    public static function getMenu($caption, $menu, $class)
+    public static function getMenu(string $caption, string $menu, string $class): array
     {
         $menu = 'menu' . ucfirst($menu);
 
@@ -196,7 +193,7 @@ class TplApp
             'SubMenu: ' . self::getSectionName($menu) . '; ' .
             'Glyph: ' . TplAestan::GLYPH_FOLDER_CLOSE;
 
-        return array($call, self::getSectionContent($menu, $class, null));
+        return [$call, self::getSectionContent($menu, $class)];
     }
 
     /**
@@ -209,7 +206,7 @@ class TplApp
      *
      * @return array An array containing the call string and the menu content.
      */
-    public static function getMenuEnable($caption, $menu, $class, $enabled = true)
+    public static function getMenuEnable(string $caption, string $menu, string $class, bool $enabled = true): array
     {
         $menu = 'menu' . ucfirst($menu);
 
@@ -218,7 +215,7 @@ class TplApp
             'SubMenu: ' . self::getSectionName($menu) . '; ' .
             'Glyph: ' . ($enabled ? TplAestan::GLYPH_FOLDER_CLOSE : TplAestan::GLYPH_FOLDER_DISABLED);
 
-        return array($call, self::getSectionContent($menu, $class, null));
+        return [$call, self::getSectionContent($menu, $class)];
     }
 
     /**
@@ -228,7 +225,7 @@ class TplApp
      *
      * @return string The generated services section.
      */
-    private static function getSectionServices()
+    private static function getSectionServices(): string
     {
         global $bearsamppBins;
 
@@ -245,7 +242,7 @@ class TplApp
      *
      * @return string The generated startup action section.
      */
-    private static function getSectionStartupAction()
+    private static function getSectionStartupAction(): string
     {
         return '[StartupAction]' . PHP_EOL .
             self::getActionRun(Action::STARTUP) . PHP_EOL .
@@ -261,7 +258,7 @@ class TplApp
      *
      * @return string The generated right menu section.
      */
-    private static function getSectionMenuRight()
+    private static function getSectionMenuRight(): string
     {
         global $bearsamppLang;
 
@@ -275,11 +272,11 @@ class TplApp
         return
             // Items
             '[Menu.Right]' . PHP_EOL .
-            self::getActionRun(Action::ABOUT, null, array($bearsamppLang->getValue(Lang::MENU_ABOUT), TplAestan::GLYPH_ABOUT)) . PHP_EOL .
+            self::getActionRun(Action::ABOUT, null, [$bearsamppLang->getValue(Lang::MENU_ABOUT), TplAestan::GLYPH_ABOUT]) . PHP_EOL .
             self::getActionRun(
                 Action::CHECK_VERSION,
-                array(ActionCheckVersion::DISPLAY_OK),
-                array($bearsamppLang->getValue(Lang::MENU_CHECK_UPDATE), TplAestan::GLYPH_UPDATE)
+                [ActionCheckVersion::DISPLAY_OK],
+                [$bearsamppLang->getValue(Lang::MENU_CHECK_UPDATE), TplAestan::GLYPH_UPDATE]
             ) . PHP_EOL .
             TplAestan::getItemLink($bearsamppLang->getValue(Lang::HELP), Util::getWebsiteUrl('faq')) . PHP_EOL .
 
@@ -316,7 +313,7 @@ class TplApp
      *
      * @return string The generated left menu section.
      */
-    private static function getSectionMenuLeft()
+    private static function getSectionMenuLeft(): string
     {
         global $bearsamppRoot, $bearsamppBins, $bearsamppLang;
 
