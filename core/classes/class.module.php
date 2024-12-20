@@ -13,21 +13,21 @@
  */
 abstract class Module
 {
-    const BUNDLE_RELEASE = 'bundleRelease';
+    public const BUNDLE_RELEASE = 'bundleRelease';
 
-    private $type;
-    private $id;
+    private string $type;
+    private string $id;
 
-    protected $name;
-    protected $version;
-    protected $release = 'N/A';
+    protected string $name;
+    protected string $version;
+    protected string $release = 'N/A';
 
-    protected $rootPath;
-    protected $currentPath;
-    protected $symlinkPath;
-    protected $enable;
-    protected $bearsamppConf;
-    protected $bearsamppConfRaw;
+    protected string $rootPath;
+    protected string $currentPath;
+    protected string $symlinkPath;
+    protected bool $enable;
+    protected string $bearsamppConf;
+    protected array|false $bearsamppConfRaw;
 
     /**
      * Constructor for the Module class.
@@ -43,11 +43,11 @@ abstract class Module
      * @param string|null $id The ID of the module. If null, the current ID is used.
      * @param string|null $type The type of the module. If null, the current type is used.
      */
-    protected function reload($id = null, $type = null) {
+    protected function reload(?string $id = null, ?string $type = null): void {
         global $bearsamppRoot;
 
-        $this->id = empty($id) ? $this->id : $id;
-        $this->type = empty($type) ? $this->type : $type;
+        $this->id = $id ?? $this->id;
+        $this->type = $type ?? $this->type;
         $mainPath = 'N/A';
 
         switch ($this->type) {
@@ -78,20 +78,20 @@ abstract class Module
      * Creates a symbolic link from the current path to the symlink path.
      * If the symlink already exists and points to the correct target, no action is taken.
      */
-    private function createSymlink()
+    private function createSymlink(): void
     {
         $src = Util::formatWindowsPath($this->currentPath);
         $dest = Util::formatWindowsPath($this->symlinkPath);
 
-        if(file_exists($dest)) {
+        if (file_exists($dest)) {
             if (is_link($dest)) {
                 $target = readlink($dest);
-                if ($target == $src) {
+                if ($target === $src) {
                     return;
                 }
                 Batch::removeSymlink($dest);
             } elseif (is_file($dest)) {
-                Util::logError('Removing . ' . $this->symlinkPath . ' file. It should not be a regular file');
+                Util::logError('Removing ' . $this->symlinkPath . ' file. It should not be a regular file');
                 unlink($dest);
             } elseif (is_dir($dest)) {
                 if (!(new \FilesystemIterator($dest))->valid()) {
@@ -112,8 +112,8 @@ abstract class Module
      * @param string $key The key to replace.
      * @param string $value The new value for the key.
      */
-    protected function replace($key, $value) {
-        $this->replaceAll(array($key => $value));
+    protected function replace(string $key, string $value): void {
+        $this->replaceAll([$key => $value]);
     }
 
     /**
@@ -121,11 +121,11 @@ abstract class Module
      *
      * @param array $params An associative array of key-value pairs to replace.
      */
-    protected function replaceAll($params) {
+    protected function replaceAll(array $params): void {
         $content = file_get_contents($this->bearsamppConf);
 
         foreach ($params as $key => $value) {
-            $content = preg_replace('|' . $key . ' = .*|', $key . ' = ' . '"' . $value.'"', $content);
+            $content = preg_replace('|' . preg_quote($key, '|') . ' = .*|', $key . ' = ' . '"' . $value . '"', $content);
             $this->bearsamppConfRaw[$key] = $value;
         }
 
@@ -138,7 +138,7 @@ abstract class Module
      * @param int $sub The sub-level for logging indentation.
      * @param bool $showWindow Whether to show a window during the update process.
      */
-    public function update($sub = 0, $showWindow = false) {
+    public function update(int $sub = 0, bool $showWindow = false): void {
         $this->updateConfig(null, $sub, $showWindow);
     }
 
@@ -149,8 +149,8 @@ abstract class Module
      * @param int $sub The sub-level for logging indentation.
      * @param bool $showWindow Whether to show a window during the update process.
      */
-    protected function updateConfig($version = null, $sub = 0, $showWindow = false) {
-        $version = $version == null ? $this->version : $version;
+    protected function updateConfig(?string $version = null, int $sub = 0, bool $showWindow = false): void {
+        $version = $version ?? $this->version;
         Util::logDebug(($sub > 0 ? str_repeat(' ', 2 * $sub) : '') . 'Update ' . $this->name . ' ' . $version . ' config');
     }
 
@@ -159,7 +159,7 @@ abstract class Module
      *
      * @return string The name of the module.
      */
-    public function __toString() {
+    public function __toString(): string {
         return $this->getName();
     }
 
@@ -168,7 +168,7 @@ abstract class Module
      *
      * @return string The type of the module.
      */
-    public function getType() {
+    public function getType(): string {
         return $this->type;
     }
 
@@ -177,7 +177,7 @@ abstract class Module
      *
      * @return string The ID of the module.
      */
-    public function getId() {
+    public function getId(): string {
         return $this->id;
     }
 
@@ -186,7 +186,7 @@ abstract class Module
      *
      * @return string The name of the module.
      */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
@@ -195,7 +195,7 @@ abstract class Module
      *
      * @return string The version of the module.
      */
-    public function getVersion() {
+    public function getVersion(): string {
         return $this->version;
     }
 
@@ -204,7 +204,7 @@ abstract class Module
      *
      * @return array The list of available versions.
      */
-    public function getVersionList() {
+    public function getVersionList(): array {
         return Util::getVersionList($this->rootPath);
     }
 
@@ -213,14 +213,14 @@ abstract class Module
      *
      * @param string $version The version to set.
      */
-    abstract public function setVersion($version);
+    abstract public function setVersion(string $version): void;
 
     /**
      * Gets the release information of the module.
      *
      * @return string The release information.
      */
-    public function getRelease() {
+    public function getRelease(): string {
         return $this->release;
     }
 
@@ -229,7 +229,7 @@ abstract class Module
      *
      * @return string The root path of the module.
      */
-    public function getRootPath() {
+    public function getRootPath(): string {
         return $this->rootPath;
     }
 
@@ -238,7 +238,7 @@ abstract class Module
      *
      * @return string The current path of the module.
      */
-    public function getCurrentPath() {
+    public function getCurrentPath(): string {
         return $this->currentPath;
     }
 
@@ -247,7 +247,7 @@ abstract class Module
      *
      * @return string The symlink path of the module.
      */
-    public function getSymlinkPath() {
+    public function getSymlinkPath(): string {
         return $this->symlinkPath;
     }
 
@@ -256,7 +256,7 @@ abstract class Module
      *
      * @return bool True if the module is enabled, false otherwise.
      */
-    public function isEnable() {
+    public function isEnable(): bool {
         return $this->enable;
     }
 }

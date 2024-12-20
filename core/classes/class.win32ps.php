@@ -8,8 +8,6 @@
  * Github: https://github.com/Bearsampp
  */
 
-namespace Core\Classes;
-
 use Core\Classes\Vbs;
 use Core\Classes\Util;
 use Core\Classes\Root;

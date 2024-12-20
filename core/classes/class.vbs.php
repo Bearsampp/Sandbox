@@ -26,13 +26,13 @@ use Core\Classes\Winbinder;
  */
 class Vbs
 {
-    const END_PROCESS_STR = 'FINISHED!';
-    const STR_SEPARATOR = ' || ';
+    public const END_PROCESS_STR = 'FINISHED!';
+    public const STR_SEPARATOR = ' || ';
 
-    const DESKTOP_PATH = 'objShell.SpecialFolders("Desktop")';
-    const ALL_DESKTOP_PATH = 'objShell.SpecialFolders("AllUsersDesktop")';
-    const STARTUP_PATH = 'objShell.SpecialFolders("Startup")';
-    const ALL_STARTUP_PATH = 'objShell.SpecialFolders("AllUsersStartup")';
+    public const DESKTOP_PATH = 'objShell.SpecialFolders("Desktop")';
+    public const ALL_DESKTOP_PATH = 'objShell.SpecialFolders("AllUsersDesktop")';
+    public const STARTUP_PATH = 'objShell.SpecialFolders("Startup")';
+    public const ALL_STARTUP_PATH = 'objShell.SpecialFolders("AllUsersStartup")';
 
     /**
      * Vbs constructor.
@@ -59,7 +59,7 @@ class Vbs
      * @param string $path The path to count files and folders in.
      * @return int|false The count of files and folders, or false on failure.
      */
-    public static function countFilesFolders(string $path)
+    public static function countFilesFolders(string $path): int|false
     {
         $basename = 'countFilesFolders';
         $resultFile = self::getResultFile($basename);
@@ -90,7 +90,7 @@ class Vbs
      *
      * @return string|false The path to the default browser executable, or false on failure.
      */
-    public static function getDefaultBrowser()
+    public static function getDefaultBrowser(): string|false
     {
         $basename = 'getDefaultBrowser';
         $resultFile = self::getResultFile($basename);
@@ -121,7 +121,7 @@ class Vbs
      *
      * @return array|false An array of paths to installed browser executables, or false on failure.
      */
-    public static function getInstalledBrowsers()
+    public static function getInstalledBrowsers(): array|false
     {
         $basename = 'getInstalledBrowsers';
         $resultFile = self::getResultFile($basename);
@@ -170,7 +170,7 @@ class Vbs
      * @param array $vbsKeys The keys to retrieve for each process.
      * @return array|false An array of process information, or false on failure.
      */
-    public static function getListProcs(array $vbsKeys)
+    public static function getListProcs(array $vbsKeys): array|false
     {
         $basename = 'getListProcs';
         $resultFile = self::getResultFile($basename);
@@ -353,7 +353,7 @@ class Vbs
      * @param string $serviceName The name of the service to retrieve information about.
      * @return array|false An array of service information, or false on failure.
      */
-    public static function getServiceInfos(string $serviceName)
+    public static function getServiceInfos(string $serviceName): array|false
     {
         $basename = 'getServiceInfos';
         $resultFile = self::getResultFile($basename);
@@ -438,7 +438,7 @@ class Vbs
      * @param int|bool $timeout The timeout duration in seconds, or true for default timeout, or false for no timeout.
      * @return array|false The result of the script execution as an array of lines, or false on failure.
      */
-    public static function exec(string $basename, string $resultFile, string $content, $timeout = true)
+    public static function exec(string $basename, string $resultFile, string $content, int|bool $timeout = true): array|false
     {
         global $bearsamppConfig, $bearsamppWinbinder;
 

@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (c) 2021-2024 Bearsampp
- * License:  GNU General Public License version 3 or later; see LICENSE.txt
+ * License: GNU General Public License version 3 or later; see LICENSE.txt
  * Author: Bear
  * Website: https://bearsampp.com
  * Github: https://github.com/Bearsampp
@@ -19,7 +19,7 @@ use Core\Classes\Win32Ps;
  */
 class Root
 {
-    const ERROR_HANDLER = 'errorHandler';
+    public const ERROR_HANDLER = 'errorHandler';
 
     public string $path;
     private ?array $procs = null;
@@ -28,11 +28,11 @@ class Root
     /**
      * Constructs a Root object with the specified root path.
      *
-     * @param   string  $rootPath  The root path of the application.
+     * @param string $rootPath The root path of the application.
      */
     public function __construct(string $rootPath)
     {
-        $this->path   = str_replace('\\', '/', rtrim($rootPath, '/\\'));
+        $this->path = str_replace('\\', '/', rtrim($rootPath, '/\\'));
         $this->isRoot = $_SERVER['PHP_SELF'] === 'root.php';
     }
 
@@ -120,8 +120,7 @@ class Root
     /**
      * Gets the root path, optionally formatted for AeTrayMenu.
      *
-     * @param   bool  $aetrayPath  Whether to format the path for AeTrayMenu.
-     *
+     * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The root path.
      */
     public function getRootPath(bool $aetrayPath = false): string
@@ -134,8 +133,7 @@ class Root
     /**
      * Formats a path for AeTrayMenu.
      *
-     * @param   string  $path  The path to format.
-     *
+     * @param string $path The path to format.
      * @return string The formatted path.
      */
     private function aetrayPath(string $path): string
@@ -150,7 +148,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The alias path.
      */
-    public function getAliasPath($aetrayPath = false)
+    public function getAliasPath(bool $aetrayPath = false): string
     {
         return $this->getRootPath($aetrayPath) . '/alias';
     }
@@ -161,7 +159,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The apps path.
      */
-    public function getAppsPath($aetrayPath = false)
+    public function getAppsPath(bool $aetrayPath = false): string
     {
         return $this->getRootPath($aetrayPath) . '/apps';
     }
@@ -172,7 +170,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The bin path.
      */
-    public function getBinPath($aetrayPath = false)
+    public function getBinPath(bool $aetrayPath = false): string
     {
         return $this->getRootPath($aetrayPath) . '/bin';
     }
@@ -183,7 +181,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The core path.
      */
-    public function getCorePath($aetrayPath = false)
+    public function getCorePath(bool $aetrayPath = false): string
     {
         return $aetrayPath ? $this->aetrayPath($this->path) : $this->path;
     }
@@ -194,7 +192,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The logs path.
      */
-    public function getLogsPath($aetrayPath = false)
+    public function getLogsPath(bool $aetrayPath = false): string
     {
         return $this->getRootPath($aetrayPath) . '/logs';
     }
@@ -205,7 +203,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The SSL path.
      */
-    public function getSslPath($aetrayPath = false)
+    public function getSslPath(bool $aetrayPath = false): string
     {
         return $this->getRootPath($aetrayPath) . '/ssl';
     }
@@ -216,7 +214,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The temporary path.
      */
-    public function getTmpPath($aetrayPath = false)
+    public function getTmpPath(bool $aetrayPath = false): string
     {
         return $this->getRootPath($aetrayPath) . '/tmp';
     }
@@ -227,7 +225,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The tools path.
      */
-    public function getToolsPath($aetrayPath = false)
+    public function getToolsPath(bool $aetrayPath = false): string
     {
         return $this->getRootPath($aetrayPath) . '/tools';
     }
@@ -238,7 +236,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The virtual hosts path.
      */
-    public function getVhostsPath($aetrayPath = false)
+    public function getVhostsPath(bool $aetrayPath = false): string
     {
         return $this->getRootPath($aetrayPath) . '/vhosts';
     }
@@ -249,7 +247,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The WWW path.
      */
-    public function getWwwPath($aetrayPath = false)
+    public function getWwwPath(bool $aetrayPath = false): string
     {
         return $this->getRootPath($aetrayPath) . '/www';
     }
@@ -260,7 +258,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The executable file path.
      */
-    public function getExeFilePath($aetrayPath = false)
+    public function getExeFilePath(bool $aetrayPath = false): string
     {
         return $this->getRootPath($aetrayPath) . '/bearsampp.exe';
     }
@@ -271,7 +269,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The configuration file path.
      */
-    public function getConfigFilePath($aetrayPath = false)
+    public function getConfigFilePath(bool $aetrayPath = false): string
     {
         return $this->getRootPath($aetrayPath) . '/bearsampp.conf';
     }
@@ -282,7 +280,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The INI file path.
      */
-    public function getIniFilePath($aetrayPath = false)
+    public function getIniFilePath(bool $aetrayPath = false): string
     {
         return $this->getRootPath($aetrayPath) . '/bearsampp.ini';
     }
@@ -293,7 +291,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The SSL configuration file path.
      */
-    public function getSslConfPath($aetrayPath = false)
+    public function getSslConfPath(bool $aetrayPath = false): string
     {
         return $this->getSslPath($aetrayPath) . '/openssl.cnf';
     }
@@ -304,7 +302,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The log file path.
      */
-    public function getLogFilePath($aetrayPath = false)
+    public function getLogFilePath(bool $aetrayPath = false): string
     {
         return $this->getLogsPath($aetrayPath) . '/bearsampp.log';
     }
@@ -315,7 +313,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The error log file path.
      */
-    public function getErrorLogFilePath($aetrayPath = false)
+    public function getErrorLogFilePath(bool $aetrayPath = false): string
     {
         return $this->getLogsPath($aetrayPath) . '/bearsampp-error.log';
     }
@@ -326,7 +324,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The homepage log file path.
      */
-    public function getHomepageLogFilePath($aetrayPath = false)
+    public function getHomepageLogFilePath(bool $aetrayPath = false): string
     {
         return $this->getLogsPath($aetrayPath) . '/bearsampp-homepage.log';
     }
@@ -337,7 +335,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The services log file path.
      */
-    public function getServicesLogFilePath($aetrayPath = false)
+    public function getServicesLogFilePath(bool $aetrayPath = false): string
     {
         return $this->getLogsPath($aetrayPath) . '/bearsampp-services.log';
     }
@@ -348,7 +346,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The registry log file path.
      */
-    public function getRegistryLogFilePath($aetrayPath = false)
+    public function getRegistryLogFilePath(bool $aetrayPath = false): string
     {
         return $this->getLogsPath($aetrayPath) . '/bearsampp-registry.log';
     }
@@ -359,7 +357,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The startup log file path.
      */
-    public function getStartupLogFilePath($aetrayPath = false)
+    public function getStartupLogFilePath(bool $aetrayPath = false): string
     {
         return $this->getLogsPath($aetrayPath) . '/bearsampp-startup.log';
     }
@@ -370,7 +368,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The batch log file path.
      */
-    public function getBatchLogFilePath($aetrayPath = false)
+    public function getBatchLogFilePath(bool $aetrayPath = false): string
     {
         return $this->getLogsPath($aetrayPath) . '/bearsampp-batch.log';
     }
@@ -381,7 +379,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The VBS log file path.
      */
-    public function getVbsLogFilePath($aetrayPath = false)
+    public function getVbsLogFilePath(bool $aetrayPath = false): string
     {
         return $this->getLogsPath($aetrayPath) . '/bearsampp-vbs.log';
     }
@@ -392,7 +390,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The Winbinder log file path.
      */
-    public function getWinbinderLogFilePath($aetrayPath = false)
+    public function getWinbinderLogFilePath(bool $aetrayPath = false): string
     {
         return $this->getLogsPath($aetrayPath) . '/bearsampp-winbinder.log';
     }
@@ -403,7 +401,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The NSSM log file path.
      */
-    public function getNssmLogFilePath($aetrayPath = false)
+    public function getNssmLogFilePath(bool $aetrayPath = false): string
     {
         return $this->getLogsPath($aetrayPath) . '/bearsampp-nssm.log';
     }
@@ -414,7 +412,7 @@ class Root
      * @param bool $aetrayPath Whether to format the path for AeTrayMenu.
      * @return string The homepage file path.
      */
-    public function getHomepageFilePath($aetrayPath = false)
+    public function getHomepageFilePath(bool $aetrayPath = false): string
     {
         return $this->getWwwPath($aetrayPath) . '/index.php';
     }
@@ -424,7 +422,7 @@ class Root
      *
      * @return string The process name.
      */
-    public function getProcessName()
+    public function getProcessName(): string
     {
         return 'bearsampp';
     }
@@ -435,11 +433,11 @@ class Root
      * @param string|null $request The specific request to append to the URL.
      * @return string The constructed local URL.
      */
-    public function getLocalUrl($request = null)
+    public function getLocalUrl(?string $request = null): string
     {
         global $bearsamppBins;
         return (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') .
-            (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost') .
+            ($_SERVER['SERVER_NAME'] ?? 'localhost') .
             ($bearsamppBins->getApache()->getPort() != 80 && !isset($_SERVER['HTTPS']) ? ':' . $bearsamppBins->getApache()->getPort() : '') .
             (!empty($request) ? '/' . $request : '');
     }
@@ -447,7 +445,7 @@ class Root
     /**
      * Loads the core components of the application.
      */
-    public static function loadCore()
+    public static function loadCore(): void
     {
         global $bearsamppCore;
         $bearsamppCore = new Core();
@@ -456,7 +454,7 @@ class Root
     /**
      * Loads the configuration settings of the application.
      */
-    public static function loadConfig()
+    public static function loadConfig(): void
     {
         global $bearsamppConfig;
         $bearsamppConfig = new Config();
@@ -465,7 +463,7 @@ class Root
     /**
      * Loads the language settings of the application.
      */
-    public static function loadLang()
+    public static function loadLang(): void
     {
         global $bearsamppLang;
         $bearsamppLang = new LangProc();
@@ -474,7 +472,7 @@ class Root
     /**
      * Loads the OpenSSL settings of the application.
      */
-    public static function loadOpenSsl()
+    public static function loadOpenSsl(): void
     {
         global $bearsamppOpenSsl;
         $bearsamppOpenSsl = new OpenSsl();
@@ -483,7 +481,7 @@ class Root
     /**
      * Loads the binary components of the application.
      */
-    public static function loadBins()
+    public static function loadBins(): void
     {
         global $bearsamppBins;
         $bearsamppBins = new Bins();
@@ -492,7 +490,7 @@ class Root
     /**
      * Loads the tools components of the application.
      */
-    public static function loadTools()
+    public static function loadTools(): void
     {
         global $bearsamppTools;
         $bearsamppTools = new Tools();
@@ -501,7 +499,7 @@ class Root
     /**
      * Loads the apps components of the application.
      */
-    public static function loadApps()
+    public static function loadApps(): void
     {
         global $bearsamppApps;
         $bearsamppApps = new Apps();
@@ -510,7 +508,7 @@ class Root
     /**
      * Loads the Winbinder extension if available.
      */
-    public static function loadWinbinder()
+    public static function loadWinbinder(): void
     {
         global $bearsamppWinbinder;
         if (extension_loaded('winbinder')) {
@@ -521,7 +519,7 @@ class Root
     /**
      * Loads the registry settings of the application.
      */
-    public static function loadRegistry()
+    public static function loadRegistry(): void
     {
         global $bearsamppRegistry;
         $bearsamppRegistry = new Registry();
@@ -530,7 +528,7 @@ class Root
     /**
      * Loads the homepage settings of the application.
      */
-    public static function loadHomepage()
+    public static function loadHomepage(): void
     {
         global $bearsamppHomepage;
         $bearsamppHomepage = new Homepage();
@@ -539,10 +537,10 @@ class Root
     /**
      * Handles errors and logs them to the error log file.
      *
-     * @param   int     $errno    The level of the error raised.
-     * @param   string  $errstr   The error message.
-     * @param   string  $errfile  The filename that the error was raised in.
-     * @param   int     $errline  The line number the error was raised at.
+     * @param int $errno The level of the error raised.
+     * @param string $errstr The error message.
+     * @param string $errfile The filename that the error was raised in.
+     * @param int $errline The line number the error was raised at.
      */
     public function errorHandler(int $errno, string $errstr, string $errfile, int $errline): void
     {
@@ -605,8 +603,7 @@ class Root
 /**
  * Adjusts the trace number in debug backtrace.
  *
- * @param   array  $match  The matches from the regular expression.
- *
+ * @param array $match The matches from the regular expression.
  * @return string The adjusted trace number.
  */
 function debugStringPregReplace(array $match): string

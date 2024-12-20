@@ -1,11 +1,13 @@
 <?php
 /*
  * Copyright (c) 2021-2024 Bearsampp
- * License:  GNU General Public License version 3 or later; see LICENSE.txt
+ * License: GNU General Public License version 3 or later; see LICENSE.txt
  * Author: Bear
  * Website: https://bearsampp.com
  * Github: https://github.com/Bearsampp
  */
+
+declare(strict_types=1);
 
 /**
  * Class Splash
@@ -16,15 +18,15 @@
 class Splash
 {
     /* Set progress bar "loading" modal size. */
-    const WINDOW_WIDTH = 460;
-    const WINDOW_HEIGHT = 90;
+    public const WINDOW_WIDTH = 460;
+    public const WINDOW_HEIGHT = 90;
 
-    private $wbWindow;
-    private $wbImage;
-    private $wbTextLoading;
-    private $wbProgressBar;
+    private mixed $wbWindow;
+    private mixed $wbImage;
+    private mixed $wbTextLoading;
+    private mixed $wbProgressBar;
 
-    private $currentImg;
+    private ?string $currentImg;
 
     /**
      * Splash constructor.
@@ -44,7 +46,7 @@ class Splash
      * @param int $gauge The maximum value for the progress bar.
      * @param string $text The initial loading text to display.
      */
-    public function init($title, $gauge, $text)
+    public function init(string $title, int $gauge, string $text): void
     {
         global $bearsamppCore, $bearsamppWinbinder;
 
@@ -69,7 +71,7 @@ class Splash
      *
      * @param string $caption The loading text to display.
      */
-    public function setTextLoading($caption)
+    public function setTextLoading(string $caption): void
     {
         global $bearsamppWinbinder;
 
@@ -82,7 +84,7 @@ class Splash
      *
      * @param int $nb The number of steps to increment the progress bar by. Default is 1.
      */
-    public function incrProgressBar($nb = 1)
+    public function incrProgressBar(int $nb = 1): void
     {
         global $bearsamppCore, $bearsamppWinbinder;
 
@@ -100,7 +102,7 @@ class Splash
      *
      * @return mixed The window object of the splash screen.
      */
-    public function getWbWindow()
+    public function getWbWindow(): mixed
     {
         return $this->wbWindow;
     }

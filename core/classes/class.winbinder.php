@@ -426,7 +426,7 @@ class WinBinder
      * @param   mixed  $wbobject  The WinBinder object to create the timer for.
      * @param   int    $wait      The wait time in milliseconds.
      *
-     * @return array An array containing the timer ID and object.
+     * @return array{int, mixed} An array containing the timer ID and object.
      */
     public function createTimer(mixed $wbobject, int $wait = 1000): array
     {
@@ -764,7 +764,7 @@ class WinBinder
      * @param   mixed     $style    The style for the label.
      * @param   mixed     $params   Additional parameters for the label.
      *
-     * @return array An array containing the control ID and object.
+     * @return array{int, mixed} An array containing the control ID and object.
      */
     public function createLabel(mixed $parent, string $caption, int $xPos, int $yPos, ?int $width = null, ?int $height = null, mixed $style = null, mixed $params = null): array
     {
@@ -788,7 +788,7 @@ class WinBinder
      * @param   mixed     $style      The style for the input text.
      * @param   mixed     $params     Additional parameters for the input text.
      *
-     * @return array An array containing the control ID and object.
+     * @return array{int, mixed} An array containing the control ID and object.
      */
     public function createInputText(
         mixed $parent,
@@ -824,7 +824,7 @@ class WinBinder
      * @param   mixed     $style   The style for the edit box.
      * @param   mixed     $params  Additional parameters for the edit box.
      *
-     * @return array An array containing the control ID and object.
+     * @return array{int, mixed} An array containing the control ID and object.
      */
     public function createEditBox(mixed $parent, string $value, int $xPos, int $yPos, ?int $width = null, ?int $height = null, mixed $style = null, mixed $params = null): array
     {
@@ -848,7 +848,7 @@ class WinBinder
      * @param   mixed     $style    The style for the hyperlink.
      * @param   mixed     $params   Additional parameters for the hyperlink.
      *
-     * @return array An array containing the control ID and object.
+     * @return array{int, mixed} An array containing the control ID and object.
      */
     public function createHyperLink(mixed $parent, string $caption, int $xPos, int $yPos, ?int $width = null, ?int $height = null, mixed $style = null, mixed $params = null): array
     {
@@ -873,7 +873,7 @@ class WinBinder
      * @param   int|null  $height      The height of the radio button.
      * @param   bool      $startGroup  Whether this radio button starts a new group.
      *
-     * @return array An array containing the control ID and object.
+     * @return array{int, mixed} An array containing the control ID and object.
      */
     public function createRadioButton(mixed $parent, string $caption, bool $checked, int $xPos, int $yPos, ?int $width = null, ?int $height = null, bool $startGroup = false): array
     {
@@ -896,7 +896,7 @@ class WinBinder
      * @param   mixed     $style    The style for the button.
      * @param   mixed     $params   Additional parameters for the button.
      *
-     * @return array An array containing the control ID and object.
+     * @return array{int, mixed} An array containing the control ID and object.
      */
     public function createButton(mixed $parent, string $caption, int $xPos, int $yPos, ?int $width = null, ?int $height = null, mixed $style = null, mixed $params = null): array
     {
@@ -918,7 +918,7 @@ class WinBinder
      * @param   mixed     $style   The style for the progress bar.
      * @param   mixed     $params  Additional parameters for the progress bar.
      *
-     * @return array An array containing the control ID and object.
+     * @return array{int, mixed} An array containing the control ID and object.
      */
     public function createProgressBar(mixed $parent, int $max, int $xPos, int $yPos, ?int $width = null, ?int $height = null, mixed $style = null, mixed $params = null): array
     {

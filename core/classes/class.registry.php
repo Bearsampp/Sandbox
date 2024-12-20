@@ -16,39 +16,39 @@
  */
 class Registry
 {
-    const END_PROCESS_STR = 'FINISHED!';
+    public const END_PROCESS_STR = 'FINISHED!';
 
-    const HKEY_CLASSES_ROOT = 'HKCR';
-    const HKEY_CURRENT_USER = 'HKCU';
-    const HKEY_LOCAL_MACHINE = 'HKLM';
-    const HKEY_USERS = 'HKEY_USERS';
+    public const HKEY_CLASSES_ROOT = 'HKCR';
+    public const HKEY_CURRENT_USER = 'HKCU';
+    public const HKEY_LOCAL_MACHINE = 'HKLM';
+    public const HKEY_USERS = 'HKEY_USERS';
 
-    const REG_SZ = 'REG_SZ';
-    const REG_EXPAND_SZ = 'REG_EXPAND_SZ';
-    const REG_BINARY = 'REG_BINARY';
-    const REG_DWORD = 'REG_DWORD';
-    const REG_MULTI_SZ = 'REG_MULTI_SZ';
+    public const REG_SZ = 'REG_SZ';
+    public const REG_EXPAND_SZ = 'REG_EXPAND_SZ';
+    public const REG_BINARY = 'REG_BINARY';
+    public const REG_DWORD = 'REG_DWORD';
+    public const REG_MULTI_SZ = 'REG_MULTI_SZ';
 
-    const REG_ERROR_ENTRY = 'REG_ERROR_ENTRY';
-    const REG_ERROR_SET = 'REG_ERROR_SET';
-    const REG_NO_ERROR = 'REG_NO_ERROR';
+    public const REG_ERROR_ENTRY = 'REG_ERROR_ENTRY';
+    public const REG_ERROR_SET = 'REG_ERROR_SET';
+    public const REG_NO_ERROR = 'REG_NO_ERROR';
 
-    const ENV_KEY = 'SYSTEM\CurrentControlSet\Control\Session Manager\Environment';
+    public const ENV_KEY = 'SYSTEM\CurrentControlSet\Control\Session Manager\Environment';
 
     // App bins entry
-    const APP_BINS_REG_ENTRY = 'BEARSAMPP_BINS';
+    public const APP_BINS_REG_ENTRY = 'BEARSAMPP_BINS';
 
     // App path entry
-    const APP_PATH_REG_ENTRY = 'BEARSAMPP_PATH';
+    public const APP_PATH_REG_ENTRY = 'BEARSAMPP_PATH';
 
     // System path entry
-    const SYSPATH_REG_ENTRY = 'Path';
+    public const SYSPATH_REG_ENTRY = 'Path';
 
     // Processor architecture
-    const PROCESSOR_REG_SUBKEY = 'HARDWARE\DESCRIPTION\System\CentralProcessor\0';
-    const PROCESSOR_REG_ENTRY = 'Identifier';
+    public const PROCESSOR_REG_SUBKEY = 'HARDWARE\DESCRIPTION\System\CentralProcessor\0';
+    public const PROCESSOR_REG_ENTRY = 'Identifier';
 
-    private $latestError;
+    private ?string $latestError = null;
 
     /**
      * Registry constructor.
@@ -57,7 +57,6 @@ class Registry
     public function __construct()
     {
         Util::logInitClass($this);
-        $this->latestError = null;
     }
 
     /**
@@ -65,7 +64,7 @@ class Registry
      *
      * @param string $log The log message to write.
      */
-    private function writeLog($log)
+    private function writeLog(string $log): void
     {
         global $bearsamppRoot;
         Util::logDebug($log, $bearsamppRoot->getRegistryLogFilePath());
@@ -79,7 +78,7 @@ class Registry
      * @param string|null $entry The entry name (optional).
      * @return bool True if the key or entry exists, false otherwise.
      */
-    public function exists($key, $subkey, $entry = null)
+    public function exists(string $key, string $subkey, ?string $entry = null): bool
     {
         $basename = 'registryExists';
         $resultFile = Vbs::getResultFile($basename);
@@ -120,12 +119,12 @@ class Registry
         $scriptContent .= 'objFile.Close' . PHP_EOL;
 
         $result = Vbs::exec($basename, $resultFile, $scriptContent);
-        $result = isset($result[0]) ? $result[0] : null;
+        $result = $result[0] ?? null;
 
         $this->writeLog('Exists ' . $key . '\\' . $subkey . '\\' . $entry);
         $this->writeLog('-> result: ' . $result);
 
-        return !empty($result) && intval($result) == 1;
+        return !empty($result) && intval($result) === 1;
     }
 
     /**
@@ -136,7 +135,7 @@ class Registry
      * @param string|null $entry The entry name (optional).
      * @return mixed The value of the registry entry, or false on error.
      */
-    public function getValue($key, $subkey, $entry = null)
+    public function getValue(string $key, string $subkey, ?string $entry = null): mixed
     {
         global $bearsamppLang;
 
@@ -163,7 +162,7 @@ class Registry
         $scriptContent .= 'objFile.Close' . PHP_EOL;
 
         $result = Vbs::exec($basename, $resultFile, $scriptContent);
-        $result = isset($result[0]) ? $result[0] : null;
+        $result = $result[0] ?? null;
         $this->writeLog('GetValue ' . $key . '\\' . $subkey . '\\' . $entry);
         $this->writeLog('-> result: ' . $result);
         if (Util::startWith($result, self::REG_ERROR_ENTRY)) {
@@ -183,7 +182,7 @@ class Registry
      * @param string $value The value to set.
      * @return bool True if the value was set successfully, false otherwise.
      */
-    public function setStringValue($key, $subkey, $entry, $value)
+    public function setStringValue(string $key, string $subkey, string $entry, string $value): bool
     {
         return $this->setValue($key, $subkey, $entry, $value, 'SetStringValue');
     }
@@ -197,7 +196,7 @@ class Registry
      * @param string $value The value to set.
      * @return bool True if the value was set successfully, false otherwise.
      */
-    public function setExpandStringValue($key, $subkey, $entry, $value)
+    public function setExpandStringValue(string $key, string $subkey, string $entry, string $value): bool
     {
         return $this->setValue($key, $subkey, $entry, $value, 'SetExpandedStringValue');
     }
@@ -210,7 +209,7 @@ class Registry
      * @param string $entry The entry name.
      * @return bool True if the entry was deleted successfully, false otherwise.
      */
-    public function deleteValue($key, $subkey, $entry)
+    public function deleteValue(string $key, string $subkey, string $entry): bool
     {
         $this->writeLog('delete');
         return $this->setValue($key, $subkey, $entry, null, 'DeleteValue');
@@ -226,7 +225,7 @@ class Registry
      * @param string $type The type of value to set (e.g., SetStringValue).
      * @return bool True if the value was set successfully, false otherwise.
      */
-    private function setValue($key, $subkey, $entry, $value, $type)
+    private function setValue(string $key, string $subkey, string $entry, ?string $value, string $type): bool
     {
         global $bearsamppLang;
 
@@ -235,13 +234,13 @@ class Registry
         $this->latestError = null;
 
         $strKey = $key;
-        if ($key == self::HKEY_CLASSES_ROOT) {
+        if ($key === self::HKEY_CLASSES_ROOT) {
             $key = '&H80000000';
-        } elseif ($key == self::HKEY_CURRENT_USER) {
+        } elseif ($key === self::HKEY_CURRENT_USER) {
             $key = '&H80000001';
-        } elseif ($key == self::HKEY_LOCAL_MACHINE) {
+        } elseif ($key === self::HKEY_LOCAL_MACHINE) {
             $key = '&H80000002';
-        } elseif ($key == self::HKEY_LOCAL_MACHINE) {
+        } elseif ($key === self::HKEY_USERS) {
             $key = '&H80000003';
         }
 
@@ -283,9 +282,9 @@ class Registry
         $scriptContent .= 'objFile.Close' . PHP_EOL;
 
         $result = Vbs::exec($basename, $resultFile, $scriptContent);
-        $result = isset($result[0]) ? $result[0] : null;
+        $result = $result[0] ?? null;
 
-        if ($subkey == self::ENV_KEY) {
+        if ($subkey === self::ENV_KEY) {
             Batch::refreshEnvVars();
         }
 
@@ -300,7 +299,7 @@ class Registry
             return false;
         }
 
-        return $result == self::REG_NO_ERROR;
+        return $result === self::REG_NO_ERROR;
     }
 
     /**
@@ -308,7 +307,7 @@ class Registry
      *
      * @return string|null The latest error message, or null if no error occurred.
      */
-    public function getLatestError()
+    public function getLatestError(): ?string
     {
         return $this->latestError;
     }

@@ -10,10 +10,10 @@
 /**
  * Class Batch
  *
- * This class provides various utility functions for managing processes, services, and environment variables
- * within the Bearsampp application. It includes methods for finding executables by process ID, checking which
- * process is using a specific port, exiting and restarting the application, managing services, and executing
- * batch scripts.
+ * Provides utility functions for managing processes, services, and environment variables
+ * within the Bearsampp application. Includes methods for finding executables by process ID,
+ * checking which process is using a specific port, exiting and restarting the application,
+ * managing services, and executing batch scripts.
  *
  * Key functionalities include:
  * - Finding executables by process ID.
@@ -25,12 +25,12 @@
  * - Creating and removing symbolic links.
  * - Retrieving operating system information.
  *
- * The class utilizes global variables to access application settings and paths, and logs operations for debugging purposes.
+ * Utilizes global variables to access application settings and paths, and logs operations for debugging purposes.
  */
 class Batch
 {
-    const END_PROCESS_STR = 'FINISHED!';
-    const CATCH_OUTPUT_FALSE = 'bearsamppCatchOutputFalse';
+    public const END_PROCESS_STR = 'FINISHED!';
+    public const CATCH_OUTPUT_FALSE = 'bearsamppCatchOutputFalse';
 
     /**
      * Constructor for the Batch class.
@@ -43,8 +43,9 @@ class Batch
      * Writes a log entry to the batch log file.
      *
      * @param string $log The log message to write.
+     * @return void
      */
-    private static function writeLog($log)
+    private static function writeLog(string $log): void
     {
         global $bearsamppRoot;
         Util::logDebug($log, $bearsamppRoot->getBatchLogFilePath());
@@ -56,7 +57,7 @@ class Batch
      * @param int $pid The process ID to search for.
      * @return string|false The executable name if found, false otherwise.
      */
-    public static function findExeByPid($pid)
+    public static function findExeByPid(int $pid): string|false
     {
         $result = self::exec('findExeByPid', 'TASKLIST /FO CSV /NH /FI "PID eq ' . $pid . '"', 5);
         if ($result !== false) {
@@ -75,7 +76,7 @@ class Batch
      * @param int $port The port number to check.
      * @return string|int|null The executable name and PID if found, the PID if executable not found, or null if no process is using the port.
      */
-    public static function getProcessUsingPort($port)
+    public static function getProcessUsingPort(int $port): string|int|null
     {
         $result = self::exec('getProcessUsingPort', 'NETSTAT -aon', 4);
         if ($result !== false) {
@@ -102,8 +103,9 @@ class Batch
      * Exits the application, optionally restarting it.
      *
      * @param bool $restart Whether to restart the application after exiting.
+     * @return void
      */
-    public static function exitApp($restart = false)
+    public static function exitApp(bool $restart = false): void
     {
         global $bearsamppRoot, $bearsamppCore;
 
@@ -124,8 +126,10 @@ class Batch
 
     /**
      * Restarts the application.
+     *
+     * @return void
      */
-    public static function restartApp()
+    public static function restartApp(): void
     {
         self::exitApp(true);
     }
@@ -135,7 +139,7 @@ class Batch
      *
      * @return string|null The PEAR version if found, null otherwise.
      */
-    public static function getPearVersion()
+    public static function getPearVersion(): ?string
     {
         global $bearsamppBins;
 
@@ -156,8 +160,10 @@ class Batch
 
     /**
      * Refreshes the environment variables.
+     *
+     * @return void
      */
-    public static function refreshEnvVars()
+    public static function refreshEnvVars(): void
     {
         global $bearsamppRoot, $bearsamppCore;
         self::execStandalone('refreshEnvVars', '"' . $bearsamppCore->getSetEnvExe() . '" -a ' . Registry::APP_PATH_REG_ENTRY . ' "' . Util::formatWindowsPath($bearsamppRoot->getRootPath()) . '"');
@@ -168,7 +174,7 @@ class Batch
      *
      * @return bool True if the service was installed successfully, false otherwise.
      */
-    public static function installFilezillaService()
+    public static function installFilezillaService(): bool
     {
         global $bearsamppBins;
 
@@ -188,7 +194,7 @@ class Batch
      *
      * @return bool True if the service was uninstalled successfully, false otherwise.
      */
-    public static function uninstallFilezillaService()
+    public static function uninstallFilezillaService(): bool
     {
         global $bearsamppBins;
 
@@ -200,8 +206,9 @@ class Batch
      * Initializes MySQL using a specified path.
      *
      * @param string $path The path to the MySQL initialization script.
+     * @return void
      */
-    public static function initializeMysql($path)
+    public static function initializeMysql(string $path): void
     {
         if (!file_exists($path . '/init.bat')) {
             Util::logWarning($path . '/init.bat does not exist');
@@ -215,7 +222,7 @@ class Batch
      *
      * @return bool True if the service was installed successfully, false otherwise.
      */
-    public static function installPostgresqlService()
+    public static function installPostgresqlService(): bool
     {
         global $bearsamppBins;
 
@@ -240,7 +247,7 @@ class Batch
      *
      * @return bool True if the service was uninstalled successfully, false otherwise.
      */
-    public static function uninstallPostgresqlService()
+    public static function uninstallPostgresqlService(): bool
     {
         global $bearsamppBins;
 
@@ -254,8 +261,9 @@ class Batch
      * Initializes PostgreSQL using a specified path.
      *
      * @param string $path The path to the PostgreSQL initialization script.
+     * @return void
      */
-    public static function initializePostgresql($path)
+    public static function initializePostgresql(string $path): void
     {
         if (!file_exists($path . '/init.bat')) {
             Util::logWarning($path . '/init.bat does not exist');
@@ -269,8 +277,9 @@ class Batch
      *
      * @param string $src The source path.
      * @param string $dest The destination path.
+     * @return void
      */
-    public static function createSymlink($src, $dest)
+    public static function createSymlink(string $src, string $dest): void
     {
         global $bearsamppCore;
         $src = Util::formatWindowsPath($src);
@@ -282,8 +291,9 @@ class Batch
      * Removes a symbolic link.
      *
      * @param string $link The path to the symbolic link.
+     * @return void
      */
-    public static function removeSymlink($link)
+    public static function removeSymlink(string $link): void
     {
         self::exec('removeSymlink', 'rmdir /Q "' . Util::formatWindowsPath($link) . '"', true, false);
     }
@@ -293,7 +303,7 @@ class Batch
      *
      * @return string The operating system information.
      */
-    public static function getOsInfo()
+    public static function getOsInfo(): string
     {
         $result = self::exec('getOsInfo', 'ver', 5);
         if (is_array($result)) {
@@ -311,8 +321,9 @@ class Batch
      *
      * @param string $serviceName The name of the service.
      * @param string $displayName The display name to set.
+     * @return void
      */
-    public static function setServiceDisplayName($serviceName, $displayName)
+    public static function setServiceDisplayName(string $serviceName, string $displayName): void
     {
         $cmd = 'sc config ' . $serviceName . ' DisplayName= "' . $displayName . '"';
         self::exec('setServiceDisplayName', $cmd, true, false);
@@ -323,8 +334,9 @@ class Batch
      *
      * @param string $serviceName The name of the service.
      * @param string $desc The description to set.
+     * @return void
      */
-    public static function setServiceDescription($serviceName, $desc)
+    public static function setServiceDescription(string $serviceName, string $desc): void
     {
         $cmd = 'sc description ' . $serviceName . ' "' . $desc . '"';
         self::exec('setServiceDescription', $cmd, true, false);
@@ -335,8 +347,9 @@ class Batch
      *
      * @param string $serviceName The name of the service.
      * @param string $startType The start type to set (e.g., "auto", "demand").
+     * @return void
      */
-    public static function setServiceStartType($serviceName, $startType)
+    public static function setServiceStartType(string $serviceName, string $startType): void
     {
         $cmd = 'sc config ' . $serviceName . ' start= ' . $startType;
         self::exec('setServiceStartType', $cmd, true, false);
@@ -350,7 +363,7 @@ class Batch
      * @param bool $silent Whether to execute the script silently.
      * @return array|false The result of the execution, or false on failure.
      */
-    public static function execStandalone($basename, $content, $silent = true)
+    public static function execStandalone(string $basename, string $content, bool $silent = true): array|false
     {
         return self::exec($basename, $content, false, false, true, $silent);
     }
@@ -367,7 +380,7 @@ class Batch
      * @param bool $rebuild Whether to rebuild the result array.
      * @return array|false The result of the execution, or false on failure.
      */
-    public static function exec($basename, $content, $timeout = true, $catchOutput = true, $standalone = false, $silent = true, $rebuild = true)
+    public static function exec(string $basename, string $content, int|bool $timeout = true, bool $catchOutput = true, bool $standalone = false, bool $silent = true, bool $rebuild = true): array|false
     {
         global $bearsamppConfig, $bearsamppWinbinder;
         $result = false;
@@ -421,7 +434,7 @@ class Batch
 
         if ($result !== false && !empty($result) && is_array($result)) {
             if ($rebuild) {
-                $rebuildResult = array();
+                $rebuildResult = [];
                 foreach ($result as $row) {
                     $row = trim($row);
                     if (!empty($row)) {
@@ -445,7 +458,7 @@ class Batch
      * @param string|null $customName An optional custom name for the file.
      * @return string The temporary file path.
      */
-    private static function getTmpFile($ext, $customName = null)
+    private static function getTmpFile(string $ext, ?string $customName = null): string
     {
         global $bearsamppCore;
         return Util::formatWindowsPath($bearsamppCore->getTmpPath() . '/' . (!empty($customName) ? $customName . '-' : '') . Util::random() . $ext);

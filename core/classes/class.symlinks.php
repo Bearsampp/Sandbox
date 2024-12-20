@@ -1,12 +1,12 @@
 <?php
 /*
- *
- *  * Copyright (c) 2021-2024 Bearsampp
- *  * License:  GNU General Public License version 3 or later; see LICENSE.txt
- *  * Website: https://bearsampp.com
- *  * Github: https://github.com/Bearsampp
- *
+ * Copyright (c) 2021-2024 Bearsampp
+ * License: GNU General Public License version 3 or later; see LICENSE.txt
+ * Website: https://bearsampp.com
+ * Github: https://github.com/Bearsampp
  */
+
+declare(strict_types=1);
 
 /**
  * Manages the creation and deletion of symbolic links for various components within the Bearsampp environment.
@@ -16,14 +16,14 @@ class Symlinks
     /**
      * @var Root The root object providing access to system paths.
      */
-    private $root;
+    private Root $root;
 
     /**
      * Constructs a Symlinks object and initializes paths to current directories.
      *
      * @param Root $root The root object associated with the Bearsampp environment.
      */
-    public function __construct($root)
+    public function __construct(Root $root)
     {
         $this->root = $root;
         $this->initializePaths();
@@ -39,7 +39,7 @@ class Symlinks
      * @global Root $bearsamppRoot The root object providing access to system paths.
      * @global Core $bearsamppCore The core object providing core functionalities.
      */
-    public static function deleteCurrentSymlinks()
+    public static function deleteCurrentSymlinks(): void
     {
         global $bearsamppRoot, $bearsamppCore;
 
@@ -72,12 +72,12 @@ class Symlinks
             '21' => Util::formatWindowsPath($toolsPath . '/ruby/current'),
             '22' => Util::formatWindowsPath($toolsPath . '/xdc/current'),
             '23' => Util::formatWindowsPath($toolsPath . '/yarn/current'),
-            '24'  => Util::formatWindowsPath($binPath . '/xlight/current'),
-            '25'  => Util::formatWindowsPath($binPath . '/mailpit/current'),
-            '26'  => Util::formatWindowsPath($binPath . '/bruno/current')
+            '24' => Util::formatWindowsPath($binPath . '/xlight/current'),
+            '25' => Util::formatWindowsPath($binPath . '/mailpit/current'),
+            '26' => Util::formatWindowsPath($binPath . '/bruno/current')
         ];
 
-        if (!is_array($array) || empty($array)) {
+        if (empty($array)) {
             Util::logError('Current symlinks array is not initialized or empty.');
             return;
         }
@@ -87,10 +87,10 @@ class Symlinks
             if (!file_exists($startPath)) {
                 Util::logError('Symlink does not exist: ' . $startPath);
                 continue;
-            } else {
-                if (@Batch::removeSymlink($startPath)) {
-                    Util::logDebug('Deleted: ' . $startPath);
-                }
+            }
+
+            if (@Batch::removeSymlink($startPath)) {
+                Util::logDebug('Deleted: ' . $startPath);
             }
         }
     }

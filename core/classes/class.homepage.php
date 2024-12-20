@@ -1,11 +1,9 @@
 <?php
 /*
- *
- *  * Copyright (c) 2021-2024 Bearsampp
- *  * License:  GNU General Public License version 3 or later; see LICENSE.txt
- *  * Website: https://bearsampp.com
- *  * Github: https://github.com/Bearsampp
- *
+ * Copyright (c) 2021-2024 Bearsampp
+ * License: GNU General Public License version 3 or later; see LICENSE.txt
+ * Website: https://bearsampp.com
+ * Github: https://github.com/Bearsampp
  */
 
 /**
@@ -16,18 +14,18 @@
  */
 class Homepage
 {
-    const PAGE_INDEX = 'index';
-    const PAGE_PHPINFO = 'phpinfo';
+    public const PAGE_INDEX = 'index';
+    public const PAGE_PHPINFO = 'phpinfo';
 
-    private $page;
+    private string $page;
 
     /**
      * @var array List of valid pages for the homepage.
      */
-    private $pageList = array(
+    private array $pageList = [
         self::PAGE_INDEX,
         self::PAGE_PHPINFO,
-    );
+    ];
 
     /**
      * Homepage constructor.
@@ -38,7 +36,7 @@ class Homepage
         Util::logInitClass($this);
 
         $page = Util::cleanGetVar('p');
-        $this->page = !empty($page) && in_array($page, $this->pageList) ? $page : self::PAGE_INDEX;
+        $this->page = !empty($page) && in_array($page, $this->pageList, true) ? $page : self::PAGE_INDEX;
     }
 
     /**
@@ -46,7 +44,7 @@ class Homepage
      *
      * @return string The current page.
      */
-    public function getPage()
+    public function getPage(): string
     {
         return $this->page;
     }
@@ -57,14 +55,14 @@ class Homepage
      * @param string $query The query string to construct.
      * @return string The constructed page query string.
      */
-    public function getPageQuery($query)
+    public function getPageQuery(string $query): string
     {
         $request = '';
-        if (!empty($query) && in_array($query, $this->pageList) && $query != self::PAGE_INDEX) {
+        if (!empty($query) && in_array($query, $this->pageList, true) && $query !== self::PAGE_INDEX) {
             $request = '?p=' . $query;
-        } elseif (!empty($query) && in_array($query, $this->pageStdl)) {
+        } elseif (!empty($query) && in_array($query, $this->pageList, true)) {
             $request = $query;
-        } elseif (!empty($query) && self::PAGE_INDEX) {
+        } elseif (!empty($query) && $query === self::PAGE_INDEX) {
             $request = "index.php";
         }
         return $request;
@@ -76,7 +74,7 @@ class Homepage
      * @param string $query The query string to construct the URL for.
      * @return string The constructed page URL.
      */
-    public function getPageUrl($query)
+    public function getPageUrl(string $query): string
     {
         global $bearsamppRoot;
         return $bearsamppRoot->getLocalUrl($this->getPageQuery($query));
@@ -87,7 +85,7 @@ class Homepage
      *
      * @return string The homepage directory path.
      */
-    public function getHomepagePath()
+    public function getHomepagePath(): string
     {
         global $bearsamppCore;
         return $bearsamppCore->getResourcesPath(false) . '/homepage';
@@ -98,7 +96,7 @@ class Homepage
      *
      * @return string The images directory path.
      */
-    public function getImagesPath()
+    public function getImagesPath(): string
     {
         return $this->getResourcesPath(false) . '/img/';
     }
@@ -108,7 +106,7 @@ class Homepage
      *
      * @return string The icons directory path.
      */
-    public function getIconsPath()
+    public function getIconsPath(): string
     {
         return $this->getResourcesPath(false) . '/img/icons/';
     }
@@ -118,7 +116,7 @@ class Homepage
      *
      * @return string The resources directory path.
      */
-    public function getResourcesPath()
+    public function getResourcesPath(): string
     {
         global $bearsamppCore;
         return md5(APP_TITLE);
@@ -129,7 +127,7 @@ class Homepage
      *
      * @return string The resources directory URL.
      */
-    public function getResourcesUrl()
+    public function getResourcesUrl(): string
     {
         global $bearsamppRoot;
         return $bearsamppRoot->getLocalUrl($this->getResourcesPath());
@@ -140,7 +138,7 @@ class Homepage
      *
      * @return bool True if the alias content was successfully refreshed, false otherwise.
      */
-    public function refreshAliasContent()
+    public function refreshAliasContent(): bool
     {
         global $bearsamppBins;
 
@@ -154,12 +152,14 @@ class Homepage
 
     /**
      * Refreshes the commons JavaScript content by updating the _commons.js file.
+     *
+     * @return void
      */
-    public function refreshCommonsJsContent()
+    public function refreshCommonsJsContent(): void
     {
-        Util::replaceInFile($this->getHomepagePath() . '/js/_commons.js', array(
+        Util::replaceInFile($this->getHomepagePath() . '/js/_commons.js', [
             '/^\s\surl:.*/' => '  url: "' . $this->getResourcesPath() . '/ajax.php"',
             '/AJAX_URL.*=.*/' => 'const AJAX_URL = "' . $this->getResourcesPath() . '/ajax.php"',
-        ));
+        ]);
     }
 }
