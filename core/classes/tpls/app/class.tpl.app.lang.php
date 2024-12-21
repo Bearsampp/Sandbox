@@ -17,7 +17,7 @@
 class TplAppLang
 {
     // Constant for the language menu identifier
-    const MENU = 'lang';
+    public const MENU = 'lang';
 
     /**
      * Processes and generates the language menu.
@@ -25,15 +25,15 @@ class TplAppLang
      * This method generates the language menu for the application, including the available
      * languages and the actions to be taken when a language is selected.
      *
-     * @global object $bearsamppLang Provides language support for retrieving language-specific values.
+     * @global \BearsamppLang $bearsamppLang Provides language support for retrieving language-specific values.
      *
      * @return array The generated language menu and actions.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang;
 
-        return TplApp::getMenu($bearsamppLang->getValue(Lang::LANG), self::MENU, get_called_class());
+        return TplApp::getMenu($bearsamppLang->getValue(Lang::LANG), self::MENU, static::class);
     }
 
     /**
@@ -43,11 +43,11 @@ class TplAppLang
      * when a language menu item is selected. It uses the global language object to retrieve the list
      * of available languages and the current language.
      *
-     * @global object $bearsamppLang Provides language support for retrieving language-specific values.
+     * @global \BearsamppLang $bearsamppLang Provides language support for retrieving language-specific values.
      *
      * @return string The generated language menu items and actions.
      */
-    public static function getMenuLang()
+    public static function getMenuLang(): string
     {
         global $bearsamppLang;
         $items = '';
@@ -55,16 +55,18 @@ class TplAppLang
 
         foreach ($bearsamppLang->getList() as $lang) {
             $tplSwitchLang = TplApp::getActionMulti(
-                Action::SWITCH_LANG, array($lang),
-                array(ucfirst($lang), $lang == $bearsamppLang->getCurrent() ? TplAestan::GLYPH_CHECK : ''),
-                false, get_called_class()
+                Action::SWITCH_LANG,
+                [$lang],
+                [ucfirst($lang), $lang === $bearsamppLang->getCurrent() ? TplAestan::GLYPH_CHECK : ''],
+                false,
+                static::class
             );
 
             // Item
             $items .= $tplSwitchLang[TplApp::SECTION_CALL] . PHP_EOL;
 
             // Action
-            $actions .= PHP_EOL . $tplSwitchLang[TplApp::SECTION_CONTENT] .  PHP_EOL;
+            $actions .= PHP_EOL . $tplSwitchLang[TplApp::SECTION_CONTENT] . PHP_EOL;
         }
 
         return $items . $actions;
@@ -81,9 +83,9 @@ class TplAppLang
      *
      * @return string The generated action string for switching the language.
      */
-    public static function getActionSwitchLang($lang)
+    public static function getActionSwitchLang(string $lang): string
     {
-        return TplApp::getActionRun(Action::SWITCH_LANG, array($lang)) . PHP_EOL .
+        return TplApp::getActionRun(Action::SWITCH_LANG, [$lang]) . PHP_EOL .
             TplAppReload::getActionReload();
     }
 }

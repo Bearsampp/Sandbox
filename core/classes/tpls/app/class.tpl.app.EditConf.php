@@ -2,11 +2,17 @@
 /*
  * Copyright (c) 2021-2024 Bearsampp
  * License:  GNU General Public License version 3 or later; see LICENSE.txt
- * Author: bear
+ * Author: Bear
  * Website: https://bearsampp.com
  * Github: https://github.com/Bearsampp
  */
 
+/**
+ * Class TplAppEditConf
+ *
+ * This class provides a method to process the request for editing the configuration file.
+ * It generates a Notepad item string that allows the user to edit the `bearsampp.conf` file.
+ */
 class TplAppEditConf
 {
     /**
@@ -19,7 +25,7 @@ class TplAppEditConf
      * @global Root $bearsamppRoot The root object for accessing application paths.
      * @return string The Notepad item string for editing the configuration file.
      */
-    public static function process()
+    public static function process(): string
     {
         global $bearsamppLang, $bearsamppRoot;
 

@@ -16,30 +16,30 @@
 class TplAppNodejs
 {
     // Constants for menu and action identifiers
-    const MENU = 'nodejs';
-    const MENU_VERSIONS = 'nodejsVersions';
+    public const MENU = 'nodejs';
+    public const MENU_VERSIONS = 'nodejsVersions';
 
-    const ACTION_ENABLE = 'enableNodejs';
-    const ACTION_SWITCH_VERSION = 'switchNodejsVersion';
+    public const ACTION_ENABLE = 'enableNodejs';
+    public const ACTION_SWITCH_VERSION = 'switchNodejsVersion';
 
     /**
      * Processes and generates the Node.js menu.
      *
      * This method generates the menu for Node.js, including options to enable/disable Node.js and switch versions.
      *
-     * @global object $bearsamppLang Provides language support for retrieving language-specific values.
-     * @global object $bearsamppBins Provides access to system binaries and their configurations.
+     * @global \BearsamppLang $bearsamppLang Provides language support for retrieving language-specific values.
+     * @global \BearsamppBins $bearsamppBins Provides access to system binaries and their configurations.
      *
      * @return array The generated menu for Node.js.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang, $bearsamppBins;
 
         return TplApp::getMenuEnable(
             $bearsamppLang->getValue(Lang::NODEJS),
             self::MENU,
-            get_called_class(),
+            static::class,
             $bearsamppBins->getNodejs()->isEnable()
         );
     }
@@ -50,13 +50,13 @@ class TplAppNodejs
      * This method creates menu items for Node.js, including options to download more versions, enable/disable Node.js,
      * switch versions, open a console, and edit the configuration file.
      *
-     * @global object $bearsamppBins Provides access to system binaries and their configurations.
-     * @global object $bearsamppLang Provides language support for retrieving language-specific values.
-     * @global object $bearsamppTools Provides access to various tools used in the application.
+     * @global \BearsamppBins $bearsamppBins Provides access to system binaries and their configurations.
+     * @global \BearsamppLang $bearsamppLang Provides language support for retrieving language-specific values.
+     * @global \BearsamppTools $bearsamppTools Provides access to various tools used in the application.
      *
      * @return string The generated menu items and actions for Node.js.
      */
-    public static function getMenuNodejs()
+    public static function getMenuNodejs(): string
     {
         global $bearsamppBins, $bearsamppLang, $bearsamppTools;
         $resultItems = $resultActions = '';
@@ -74,10 +74,10 @@ class TplAppNodejs
         // Enable
         $tplEnable = TplApp::getActionMulti(
             self::ACTION_ENABLE,
-            array($isEnabled ? Config::DISABLED : Config::ENABLED),
-            array($bearsamppLang->getValue(Lang::MENU_ENABLE), $isEnabled ? TplAestan::GLYPH_CHECK : ''),
+            [$isEnabled ? Config::DISABLED : Config::ENABLED],
+            [$bearsamppLang->getValue(Lang::MENU_ENABLE), $isEnabled ? TplAestan::GLYPH_CHECK : ''],
             false,
-            get_called_class()
+            static::class
         );
         $resultItems .= $tplEnable[TplApp::SECTION_CALL] . PHP_EOL;
         $resultActions .= $tplEnable[TplApp::SECTION_CONTENT] . PHP_EOL;
@@ -89,7 +89,7 @@ class TplAppNodejs
             $tplVersions = TplApp::getMenu(
                 $bearsamppLang->getValue(Lang::VERSIONS),
                 self::MENU_VERSIONS,
-                get_called_class()
+                static::class
             );
             $resultItems .= $tplVersions[TplApp::SECTION_CALL] . PHP_EOL;
             $resultActions .= $tplVersions[TplApp::SECTION_CONTENT];
@@ -116,11 +116,11 @@ class TplAppNodejs
      *
      * This method creates menu items for switching between different Node.js versions.
      *
-     * @global object $bearsamppBins Provides access to system binaries and their configurations.
+     * @global \BearsamppBins $bearsamppBins Provides access to system binaries and their configurations.
      *
      * @return string The generated menu items and actions for Node.js versions.
      */
-    public static function getMenuNodejsVersions()
+    public static function getMenuNodejsVersions(): string
     {
         global $bearsamppBins;
         $items = '';
@@ -129,10 +129,10 @@ class TplAppNodejs
         foreach ($bearsamppBins->getNodejs()->getVersionList() as $version) {
             $tplSwitchNodejsVersion = TplApp::getActionMulti(
                 self::ACTION_SWITCH_VERSION,
-                array($version),
-                array($version, $version == $bearsamppBins->getNodejs()->getVersion() ? TplAestan::GLYPH_CHECK : ''),
+                [$version],
+                [$version, $version === $bearsamppBins->getNodejs()->getVersion() ? TplAestan::GLYPH_CHECK : ''],
                 false,
-                get_called_class()
+                static::class
             );
 
             // Item
@@ -152,17 +152,17 @@ class TplAppNodejs
      *
      * @param int $enable The flag indicating whether to enable (1) or disable (0) Node.js.
      *
-     * @global object $bearsamppBins Provides access to system binaries and their configurations.
+     * @global \BearsamppBins $bearsamppBins Provides access to system binaries and their configurations.
      *
      * @return string The generated action string for enabling or disabling Node.js.
      */
-    public static function getActionEnableNodejs($enable)
+    public static function getActionEnableNodejs(int $enable): string
     {
         global $bearsamppBins;
 
         return TplApp::getActionRun(
             Action::ENABLE,
-            array($bearsamppBins->getNodejs()->getName(), $enable)
+            [$bearsamppBins->getNodejs()->getName(), $enable]
         ) . PHP_EOL . TplAppReload::getActionReload();
     }
 
@@ -173,17 +173,17 @@ class TplAppNodejs
      *
      * @param string $version The version of Node.js to switch to.
      *
-     * @global object $bearsamppBins Provides access to system binaries and their configurations.
+     * @global \BearsamppBins $bearsamppBins Provides access to system binaries and their configurations.
      *
      * @return string The generated action string for switching Node.js versions.
      */
-    public static function getActionSwitchNodejsVersion($version)
+    public static function getActionSwitchNodejsVersion(string $version): string
     {
         global $bearsamppBins;
 
         return TplApp::getActionRun(
             Action::SWITCH_VERSION,
-            array($bearsamppBins->getNodejs()->getName(), $version)
+            [$bearsamppBins->getNodejs()->getName(), $version]
         ) . PHP_EOL . TplAppReload::getActionReload() . PHP_EOL;
     }
 }

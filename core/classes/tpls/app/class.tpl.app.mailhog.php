@@ -15,15 +15,15 @@
  */
 class TplAppMailhog
 {
-    const MENU = 'mailhog';
-    const MENU_VERSIONS = 'mailhogVersions';
-    const MENU_SERVICE = 'mailhogService';
+    public const MENU = 'mailhog';
+    public const MENU_VERSIONS = 'mailhogVersions';
+    public const MENU_SERVICE = 'mailhogService';
 
-    const ACTION_ENABLE = 'enableMailhog';
-    const ACTION_SWITCH_VERSION = 'switchMailhogVersion';
-    const ACTION_CHANGE_PORT = 'changeMailhogPort';
-    const ACTION_INSTALL_SERVICE = 'installMailhogService';
-    const ACTION_REMOVE_SERVICE = 'removeMailhogService';
+    public const ACTION_ENABLE = 'enableMailhog';
+    public const ACTION_SWITCH_VERSION = 'switchMailhogVersion';
+    public const ACTION_CHANGE_PORT = 'changeMailhogPort';
+    public const ACTION_INSTALL_SERVICE = 'installMailhogService';
+    public const ACTION_REMOVE_SERVICE = 'removeMailhogService';
 
     /**
      * Processes the Mailhog menu.
@@ -36,11 +36,16 @@ class TplAppMailhog
      *
      * @return array The generated menu for enabling or disabling Mailhog.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang, $bearsamppBins;
 
-        return TplApp::getMenuEnable($bearsamppLang->getValue(Lang::MAILHOG), self::MENU, get_called_class(), $bearsamppBins->getMailhog()->isEnable());
+        return TplApp::getMenuEnable(
+            $bearsamppLang->getValue(Lang::MAILHOG),
+            self::MENU,
+            static::class,
+            $bearsamppBins->getMailhog()->isEnable()
+        );
     }
 
     /**
@@ -56,7 +61,7 @@ class TplAppMailhog
      *
      * @return string The generated Mailhog menu items and actions.
      */
-    public static function getMenuMailhog()
+    public static function getMenuMailhog(): string
     {
         global $bearsamppRoot, $bearsamppConfig, $bearsamppBins, $bearsamppLang;
         $resultItems = $resultActions = '';
@@ -65,41 +70,43 @@ class TplAppMailhog
 
         // Download
         $resultItems .= TplAestan::getItemLink(
-                $bearsamppLang->getValue(Lang::DOWNLOAD_MORE),
-                Util::getWebsiteUrl('module/mailhog', '#releases'),
-                false,
-                TplAestan::GLYPH_BROWSER
-            ) . PHP_EOL;
+            $bearsamppLang->getValue(Lang::DOWNLOAD_MORE),
+            Util::getWebsiteUrl('module/mailhog', '#releases'),
+            false,
+            TplAestan::GLYPH_BROWSER
+        ) . PHP_EOL;
 
         // Enable
-        $tplEnable     = TplApp::getActionMulti(
-            self::ACTION_ENABLE, array($isEnabled ? Config::DISABLED : Config::ENABLED),
-            array($bearsamppLang->getValue(Lang::MENU_ENABLE), $isEnabled ? TplAestan::GLYPH_CHECK : ''),
-            false, get_called_class()
+        $tplEnable = TplApp::getActionMulti(
+            self::ACTION_ENABLE,
+            [$isEnabled ? Config::DISABLED : Config::ENABLED],
+            [$bearsamppLang->getValue(Lang::MENU_ENABLE), $isEnabled ? TplAestan::GLYPH_CHECK : ''],
+            false,
+            static::class
         );
-        $resultItems   .= $tplEnable[TplApp::SECTION_CALL] . PHP_EOL;
+        $resultItems .= $tplEnable[TplApp::SECTION_CALL] . PHP_EOL;
         $resultActions .= $tplEnable[TplApp::SECTION_CONTENT] . PHP_EOL;
 
         if ($isEnabled) {
             $resultItems .= TplAestan::getItemSeparator() . PHP_EOL;
 
             // Versions
-            $tplVersions   = TplApp::getMenu($bearsamppLang->getValue(Lang::VERSIONS), self::MENU_VERSIONS, get_called_class());
-            $resultItems   .= $tplVersions[TplApp::SECTION_CALL] . PHP_EOL;
+            $tplVersions = TplApp::getMenu($bearsamppLang->getValue(Lang::VERSIONS), self::MENU_VERSIONS, static::class);
+            $resultItems .= $tplVersions[TplApp::SECTION_CALL] . PHP_EOL;
             $resultActions .= $tplVersions[TplApp::SECTION_CONTENT] . PHP_EOL;
 
             // Service
-            $tplService    = TplApp::getMenu($bearsamppLang->getValue(Lang::SERVICE), self::MENU_SERVICE, get_called_class());
-            $resultItems   .= $tplService[TplApp::SECTION_CALL] . PHP_EOL;
+            $tplService = TplApp::getMenu($bearsamppLang->getValue(Lang::SERVICE), self::MENU_SERVICE, static::class);
+            $resultItems .= $tplService[TplApp::SECTION_CALL] . PHP_EOL;
             $resultActions .= $tplService[TplApp::SECTION_CONTENT] . PHP_EOL;
 
             // Web page
             $resultItems .= TplAestan::getItemExe(
-                    $bearsamppLang->getValue(Lang::MAILHOG),
-                    $bearsamppConfig->getBrowser(),
-                    TplAestan::GLYPH_WEB_PAGE,
-                    $bearsamppRoot->getLocalUrl() . ':' . $bearsamppBins->getMailhog()->getUiPort()
-                ) . PHP_EOL;
+                $bearsamppLang->getValue(Lang::MAILHOG),
+                $bearsamppConfig->getBrowser(),
+                TplAestan::GLYPH_WEB_PAGE,
+                $bearsamppRoot->getLocalUrl() . ':' . $bearsamppBins->getMailhog()->getUiPort()
+            ) . PHP_EOL;
 
             // Log
             $resultItems .= TplAestan::getItemNotepad($bearsamppLang->getValue(Lang::MENU_LOGS), $bearsamppBins->getMailhog()->getLog()) . PHP_EOL;
@@ -117,17 +124,19 @@ class TplAppMailhog
      *
      * @return string The generated Mailhog versions menu items and actions.
      */
-    public static function getMenuMailhogVersions()
+    public static function getMenuMailhogVersions(): string
     {
         global $bearsamppBins;
-        $items   = '';
+        $items = '';
         $actions = '';
 
         foreach ($bearsamppBins->getMailhog()->getVersionList() as $version) {
             $tplSwitchMailhogVersion = TplApp::getActionMulti(
-                self::ACTION_SWITCH_VERSION, array($version),
-                array($version, $version == $bearsamppBins->getMailhog()->getVersion() ? TplAestan::GLYPH_CHECK : ''),
-                false, get_called_class()
+                self::ACTION_SWITCH_VERSION,
+                [$version],
+                [$version, $version === $bearsamppBins->getMailhog()->getVersion() ? TplAestan::GLYPH_CHECK : ''],
+                false,
+                static::class
             );
 
             // Item
@@ -150,12 +159,14 @@ class TplAppMailhog
      * @param int $enable The enable flag (1 to enable, 0 to disable).
      * @return string The generated action string for enabling or disabling Mailhog.
      */
-    public static function getActionEnableMailhog($enable)
+    public static function getActionEnableMailhog(int $enable): string
     {
         global $bearsamppBins;
 
-        return TplApp::getActionRun(Action::ENABLE, array($bearsamppBins->getMailhog()->getName(), $enable)) . PHP_EOL .
-            TplAppReload::getActionReload();
+        return TplApp::getActionRun(
+            Action::ENABLE,
+            [$bearsamppBins->getMailhog()->getName(), $enable]
+        ) . PHP_EOL . TplAppReload::getActionReload();
     }
 
     /**
@@ -168,12 +179,14 @@ class TplAppMailhog
      * @param string $version The version to switch to.
      * @return string The generated action string for switching the Mailhog version.
      */
-    public static function getActionSwitchMailhogVersion($version)
+    public static function getActionSwitchMailhogVersion(string $version): string
     {
         global $bearsamppBins;
 
-        return TplApp::getActionRun(Action::SWITCH_VERSION, array($bearsamppBins->getMailhog()->getName(), $version)) . PHP_EOL .
-            TplAppReload::getActionReload() . PHP_EOL;
+        return TplApp::getActionRun(
+            Action::SWITCH_VERSION,
+            [$bearsamppBins->getMailhog()->getName(), $version]
+        ) . PHP_EOL . TplAppReload::getActionReload() . PHP_EOL;
     }
 
     /**
@@ -188,14 +201,16 @@ class TplAppMailhog
      *
      * @return string The generated Mailhog service menu items and actions.
      */
-    public static function getMenuMailhogService()
+    public static function getMenuMailhogService(): string
     {
         global $bearsamppRoot, $bearsamppLang, $bearsamppBins;
 
         $tplChangePort = TplApp::getActionMulti(
-            self::ACTION_CHANGE_PORT, null,
-            array($bearsamppLang->getValue(Lang::MENU_CHANGE_PORT), TplAestan::GLYPH_NETWORK),
-            false, get_called_class()
+            self::ACTION_CHANGE_PORT,
+            null,
+            [$bearsamppLang->getValue(Lang::MENU_CHANGE_PORT), TplAestan::GLYPH_NETWORK],
+            false,
+            static::class
         );
 
         $isInstalled = $bearsamppBins->getMailhog()->getService()->isInstalled();
@@ -205,26 +220,31 @@ class TplAppMailhog
             TplAestan::getItemActionServiceRestart($bearsamppBins->getMailhog()->getService()->getName()) . PHP_EOL .
             TplAestan::getItemSeparator() . PHP_EOL .
             TplApp::getActionRun(
-                Action::CHECK_PORT, array($bearsamppBins->getMailhog()->getName(), $bearsamppBins->getMailhog()->getSmtpPort()),
-                array(sprintf($bearsamppLang->getValue(Lang::MENU_CHECK_PORT), $bearsamppBins->getMailhog()->getSmtpPort()), TplAestan::GLYPH_LIGHT)
+                Action::CHECK_PORT,
+                [$bearsamppBins->getMailhog()->getName(), $bearsamppBins->getMailhog()->getSmtpPort()],
+                [sprintf($bearsamppLang->getValue(Lang::MENU_CHECK_PORT), $bearsamppBins->getMailhog()->getSmtpPort()), TplAestan::GLYPH_LIGHT]
             ) . PHP_EOL .
             $tplChangePort[TplApp::SECTION_CALL] . PHP_EOL .
             TplAestan::getItemNotepad($bearsamppLang->getValue(Lang::MENU_UPDATE_ENV_PATH), $bearsamppRoot->getRootPath() . '/nssmEnvPaths.dat') . PHP_EOL;
 
         if (!$isInstalled) {
             $tplInstallService = TplApp::getActionMulti(
-                self::ACTION_INSTALL_SERVICE, null,
-                array($bearsamppLang->getValue(Lang::MENU_INSTALL_SERVICE), TplAestan::GLYPH_SERVICE_INSTALL),
-                $isInstalled, get_called_class()
+                self::ACTION_INSTALL_SERVICE,
+                null,
+                [$bearsamppLang->getValue(Lang::MENU_INSTALL_SERVICE), TplAestan::GLYPH_SERVICE_INSTALL],
+                $isInstalled,
+                static::class
             );
 
             $result .= $tplInstallService[TplApp::SECTION_CALL] . PHP_EOL . PHP_EOL .
                 $tplInstallService[TplApp::SECTION_CONTENT] . PHP_EOL;
         } else {
             $tplRemoveService = TplApp::getActionMulti(
-                self::ACTION_REMOVE_SERVICE, null,
-                array($bearsamppLang->getValue(Lang::MENU_REMOVE_SERVICE), TplAestan::GLYPH_SERVICE_REMOVE),
-                !$isInstalled, get_called_class()
+                self::ACTION_REMOVE_SERVICE,
+                null,
+                [$bearsamppLang->getValue(Lang::MENU_REMOVE_SERVICE), TplAestan::GLYPH_SERVICE_REMOVE],
+                !$isInstalled,
+                static::class
             );
 
             $result .= $tplRemoveService[TplApp::SECTION_CALL] . PHP_EOL . PHP_EOL .
@@ -245,12 +265,14 @@ class TplAppMailhog
      *
      * @return string The generated action string for changing the Mailhog port.
      */
-    public static function getActionChangeMailhogPort()
+    public static function getActionChangeMailhogPort(): string
     {
         global $bearsamppBins;
 
-        return TplApp::getActionRun(Action::CHANGE_PORT, array($bearsamppBins->getMailhog()->getName())) . PHP_EOL .
-            TplAppReload::getActionReload();
+        return TplApp::getActionRun(
+            Action::CHANGE_PORT,
+            [$bearsamppBins->getMailhog()->getName()]
+        ) . PHP_EOL . TplAppReload::getActionReload();
     }
 
     /**
@@ -260,10 +282,12 @@ class TplAppMailhog
      *
      * @return string The generated action string for installing the Mailhog service.
      */
-    public static function getActionInstallMailhogService()
+    public static function getActionInstallMailhogService(): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array(BinMailhog::SERVICE_NAME, ActionService::INSTALL)) . PHP_EOL .
-            TplAppReload::getActionReload();
+        return TplApp::getActionRun(
+            Action::SERVICE,
+            [BinMailhog::SERVICE_NAME, ActionService::INSTALL]
+        ) . PHP_EOL . TplAppReload::getActionReload();
     }
 
     /**
@@ -273,9 +297,11 @@ class TplAppMailhog
      *
      * @return string The generated action string for removing the Mailhog service.
      */
-    public static function getActionRemoveMailhogService()
+    public static function getActionRemoveMailhogService(): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array(BinMailhog::SERVICE_NAME, ActionService::REMOVE)) . PHP_EOL .
-            TplAppReload::getActionReload();
+        return TplApp::getActionRun(
+            Action::SERVICE,
+            [BinMailhog::SERVICE_NAME, ActionService::REMOVE]
+        ) . PHP_EOL . TplAppReload::getActionReload();
     }
 }

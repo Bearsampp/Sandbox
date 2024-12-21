@@ -16,7 +16,7 @@
 class TplAppLaunchStartup
 {
     // Constant for the launch startup action identifier
-    const ACTION = 'launchStartup';
+    public const ACTION = 'launchStartup';
 
     /**
      * Generates the launch startup menu item and associated actions.
@@ -25,19 +25,19 @@ class TplAppLaunchStartup
      * when the launch startup menu item is selected. It checks the current launch startup status and toggles it.
      * It uses the global language object to retrieve the localized string for the launch startup action.
      *
-     * @global object $bearsamppLang Provides language support for retrieving language-specific values.
+     * @global \BearsamppLang $bearsamppLang Provides language support for retrieving language-specific values.
      *
      * @return array The generated menu item and actions for launching the application at startup.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang;
 
         $isLaunchStartup = Util::isLaunchStartup();
         return TplApp::getActionMulti(
-            self::ACTION, array($isLaunchStartup ? Config::DISABLED : Config::ENABLED),
-            array($bearsamppLang->getValue(Lang::MENU_LAUNCH_STARTUP), $isLaunchStartup ? TplAestan::GLYPH_CHECK : ''),
-            false, get_called_class()
+            self::ACTION, [$isLaunchStartup ? Config::DISABLED : Config::ENABLED],
+            [$bearsamppLang->getValue(Lang::MENU_LAUNCH_STARTUP), $isLaunchStartup ? TplAestan::GLYPH_CHECK : ''],
+            false, static::class
         );
     }
 
@@ -52,9 +52,9 @@ class TplAppLaunchStartup
      *
      * @return string The generated action string for launching the application at startup.
      */
-    public static function getActionLaunchStartup($launchStartup)
+    public static function getActionLaunchStartup(int $launchStartup): string
     {
-        return TplApp::getActionRun(Action::LAUNCH_STARTUP, array($launchStartup)) . PHP_EOL .
+        return TplApp::getActionRun(Action::LAUNCH_STARTUP, [$launchStartup]) . PHP_EOL .
             TplAppReload::getActionReload() . PHP_EOL;
     }
 }

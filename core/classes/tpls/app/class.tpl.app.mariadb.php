@@ -9,17 +9,17 @@
 
 class TplAppMariadb
 {
-    const MENU = 'mariadb';
-    const MENU_VERSIONS = 'mariadbVersions';
-    const MENU_SERVICE = 'mariadbService';
-    const MENU_DEBUG = 'mariadbDebug';
+    public const MENU = 'mariadb';
+    public const MENU_VERSIONS = 'mariadbVersions';
+    public const MENU_SERVICE = 'mariadbService';
+    public const MENU_DEBUG = 'mariadbDebug';
 
-    const ACTION_ENABLE = 'enableMariadb';
-    const ACTION_SWITCH_VERSION = 'switchMariadbVersion';
-    const ACTION_CHANGE_PORT = 'changeMariadbPort';
-    const ACTION_CHANGE_ROOT_PWD = 'changeMariadbRootPwd';
-    const ACTION_INSTALL_SERVICE = 'installMariadbService';
-    const ACTION_REMOVE_SERVICE = 'removeMariadbService';
+    public const ACTION_ENABLE = 'enableMariadb';
+    public const ACTION_SWITCH_VERSION = 'switchMariadbVersion';
+    public const ACTION_CHANGE_PORT = 'changeMariadbPort';
+    public const ACTION_CHANGE_ROOT_PWD = 'changeMariadbRootPwd';
+    public const ACTION_INSTALL_SERVICE = 'installMariadbService';
+    public const ACTION_REMOVE_SERVICE = 'removeMariadbService';
 
     /**
      * Processes the MariaDB menu.
@@ -32,11 +32,16 @@ class TplAppMariadb
      *
      * @return array The generated MariaDB menu.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang, $bearsamppBins;
 
-        return TplApp::getMenuEnable($bearsamppLang->getValue(Lang::MARIADB), self::MENU, get_called_class(), $bearsamppBins->getMariadb()->isEnable());
+        return TplApp::getMenuEnable(
+            $bearsamppLang->getValue(Lang::MARIADB),
+            self::MENU,
+            static::class,
+            $bearsamppBins->getMariadb()->isEnable()
+        );
     }
 
     /**
@@ -52,7 +57,7 @@ class TplAppMariadb
      *
      * @return string The generated MariaDB menu items and actions.
      */
-    public static function getMenuMariadb()
+    public static function getMenuMariadb(): string
     {
         global $bearsamppBins, $bearsamppLang, $bearsamppTools;
         $resultItems = $resultActions = '';
@@ -60,7 +65,8 @@ class TplAppMariadb
         $isEnabled = $bearsamppBins->getMariadb()->isEnable();
 
         // Download
-        $resultItems .= TplAestan::getItemLink( $bearsamppLang->getValue(Lang::DOWNLOAD_MORE),
+        $resultItems .= TplAestan::getItemLink(
+            $bearsamppLang->getValue(Lang::DOWNLOAD_MORE),
             Util::getWebsiteUrl('module/mariadb', '#releases'),
             false,
             TplAestan::GLYPH_BROWSER
@@ -68,9 +74,11 @@ class TplAppMariadb
 
         // Enable
         $tplEnable = TplApp::getActionMulti(
-            self::ACTION_ENABLE, array($isEnabled ? Config::DISABLED : Config::ENABLED),
-            array($bearsamppLang->getValue(Lang::MENU_ENABLE), $isEnabled ? TplAestan::GLYPH_CHECK : ''),
-            false, get_called_class()
+            self::ACTION_ENABLE,
+            [$isEnabled ? Config::DISABLED : Config::ENABLED],
+            [$bearsamppLang->getValue(Lang::MENU_ENABLE), $isEnabled ? TplAestan::GLYPH_CHECK : ''],
+            false,
+            static::class
         );
         $resultItems .= $tplEnable[TplApp::SECTION_CALL] . PHP_EOL;
         $resultActions .= $tplEnable[TplApp::SECTION_CONTENT] . PHP_EOL;
@@ -79,17 +87,17 @@ class TplAppMariadb
             $resultItems .= TplAestan::getItemSeparator() . PHP_EOL;
 
             // Versions
-            $tplVersions = TplApp::getMenu($bearsamppLang->getValue(Lang::VERSIONS), self::MENU_VERSIONS, get_called_class());
+            $tplVersions = TplApp::getMenu($bearsamppLang->getValue(Lang::VERSIONS), self::MENU_VERSIONS, static::class);
             $resultItems .= $tplVersions[TplApp::SECTION_CALL] . PHP_EOL;
             $resultActions .= $tplVersions[TplApp::SECTION_CONTENT] . PHP_EOL;
 
             // Service
-            $tplService = TplApp::getMenu($bearsamppLang->getValue(Lang::SERVICE), self::MENU_SERVICE, get_called_class());
+            $tplService = TplApp::getMenu($bearsamppLang->getValue(Lang::SERVICE), self::MENU_SERVICE, static::class);
             $resultItems .= $tplService[TplApp::SECTION_CALL] . PHP_EOL;
             $resultActions .= $tplService[TplApp::SECTION_CONTENT] . PHP_EOL;
 
             // Debug
-            $tplDebug = TplApp::getMenu($bearsamppLang->getValue(Lang::DEBUG), self::MENU_DEBUG, get_called_class());
+            $tplDebug = TplApp::getMenu($bearsamppLang->getValue(Lang::DEBUG), self::MENU_DEBUG, static::class);
             $resultItems .= $tplDebug[TplApp::SECTION_CALL] . PHP_EOL;
             $resultActions .= $tplDebug[TplApp::SECTION_CONTENT];
 
@@ -101,10 +109,16 @@ class TplAppMariadb
             ) . PHP_EOL;
 
             // Conf
-            $resultItems .= TplAestan::getItemNotepad(basename($bearsamppBins->getMariadb()->getConf()), $bearsamppBins->getMariadb()->getConf()) . PHP_EOL;
+            $resultItems .= TplAestan::getItemNotepad(
+                basename($bearsamppBins->getMariadb()->getConf()),
+                $bearsamppBins->getMariadb()->getConf()
+            ) . PHP_EOL;
 
             // Errors log
-            $resultItems .= TplAestan::getItemNotepad($bearsamppLang->getValue(Lang::MENU_ERROR_LOGS), $bearsamppBins->getMariadb()->getErrorLog()) . PHP_EOL;
+            $resultItems .= TplAestan::getItemNotepad(
+                $bearsamppLang->getValue(Lang::MENU_ERROR_LOGS),
+                $bearsamppBins->getMariadb()->getErrorLog()
+            ) . PHP_EOL;
         }
 
         return $resultItems . PHP_EOL . $resultActions;
@@ -120,7 +134,7 @@ class TplAppMariadb
      *
      * @return string The generated MariaDB versions menu items and actions.
      */
-    public static function getMenuMariadbVersions()
+    public static function getMenuMariadbVersions(): string
     {
         global $bearsamppBins;
         $items = '';
@@ -128,9 +142,11 @@ class TplAppMariadb
 
         foreach ($bearsamppBins->getMariadb()->getVersionList() as $version) {
             $tplSwitchMariadbVersion = TplApp::getActionMulti(
-                self::ACTION_SWITCH_VERSION, array($version),
-                array($version, $version == $bearsamppBins->getMariadb()->getVersion() ? TplAestan::GLYPH_CHECK : ''),
-                false, get_called_class()
+                self::ACTION_SWITCH_VERSION,
+                [$version],
+                [$version, $version === $bearsamppBins->getMariadb()->getVersion() ? TplAestan::GLYPH_CHECK : ''],
+                false,
+                static::class
             );
 
             // Item
@@ -155,12 +171,14 @@ class TplAppMariadb
      *
      * @return string The generated action string for enabling or disabling MariaDB.
      */
-    public static function getActionEnableMariadb($enable)
+    public static function getActionEnableMariadb(int $enable): string
     {
         global $bearsamppBins;
 
-        return TplApp::getActionRun(Action::ENABLE, array($bearsamppBins->getMariadb()->getName(), $enable)) . PHP_EOL .
-            TplAppReload::getActionReload();
+        return TplApp::getActionRun(
+            Action::ENABLE,
+            [$bearsamppBins->getMariadb()->getName(), $enable]
+        ) . PHP_EOL . TplAppReload::getActionReload();
     }
 
     /**
@@ -175,12 +193,14 @@ class TplAppMariadb
      *
      * @return string The generated action string for switching the MariaDB version.
      */
-    public static function getActionSwitchMariadbVersion($version)
+    public static function getActionSwitchMariadbVersion(string $version): string
     {
         global $bearsamppBins;
 
-        return TplApp::getActionRun(Action::SWITCH_VERSION, array($bearsamppBins->getMariadb()->getName(), $version)) . PHP_EOL .
-            TplAppReload::getActionReload() . PHP_EOL;
+        return TplApp::getActionRun(
+            Action::SWITCH_VERSION,
+            [$bearsamppBins->getMariadb()->getName(), $version]
+        ) . PHP_EOL . TplAppReload::getActionReload() . PHP_EOL;
     }
 
     /**
@@ -195,14 +215,16 @@ class TplAppMariadb
      *
      * @return string The generated MariaDB service menu items and actions.
      */
-    public static function getMenuMariadbService()
+    public static function getMenuMariadbService(): string
     {
         global $bearsamppLang, $bearsamppBins;
 
         $tplChangePort = TplApp::getActionMulti(
-            self::ACTION_CHANGE_PORT, null,
-            array($bearsamppLang->getValue(Lang::MENU_CHANGE_PORT), TplAestan::GLYPH_NETWORK),
-            false, get_called_class()
+            self::ACTION_CHANGE_PORT,
+            null,
+            [$bearsamppLang->getValue(Lang::MENU_CHANGE_PORT), TplAestan::GLYPH_NETWORK],
+            false,
+            static::class
         );
 
         $isInstalled = $bearsamppBins->getMariadb()->getService()->isInstalled();
@@ -212,17 +234,20 @@ class TplAppMariadb
             TplAestan::getItemActionServiceRestart($bearsamppBins->getMariadb()->getService()->getName()) . PHP_EOL .
             TplAestan::getItemSeparator() . PHP_EOL .
             TplApp::getActionRun(
-                Action::CHECK_PORT, array($bearsamppBins->getMariadb()->getName(), $bearsamppBins->getMariadb()->getPort()),
-                array(sprintf($bearsamppLang->getValue(Lang::MENU_CHECK_PORT), $bearsamppBins->getMariadb()->getPort()), TplAestan::GLYPH_LIGHT)
+                Action::CHECK_PORT,
+                [$bearsamppBins->getMariadb()->getName(), $bearsamppBins->getMariadb()->getPort()],
+                [sprintf($bearsamppLang->getValue(Lang::MENU_CHECK_PORT), $bearsamppBins->getMariadb()->getPort()), TplAestan::GLYPH_LIGHT]
             ) . PHP_EOL .
             $tplChangePort[TplApp::SECTION_CALL] . PHP_EOL;
 
         $tplChangeRootPwd = null;
         if ($isInstalled) {
             $tplChangeRootPwd = TplApp::getActionMulti(
-                self::ACTION_CHANGE_ROOT_PWD, null,
-                array($bearsamppLang->getValue(Lang::MENU_CHANGE_ROOT_PWD), TplAestan::GLYPH_PASSWORD),
-                !$isInstalled, get_called_class()
+                self::ACTION_CHANGE_ROOT_PWD,
+                null,
+                [$bearsamppLang->getValue(Lang::MENU_CHANGE_ROOT_PWD), TplAestan::GLYPH_PASSWORD],
+                !$isInstalled,
+                static::class
             );
 
             $result .= $tplChangeRootPwd[TplApp::SECTION_CALL] . PHP_EOL;
@@ -230,26 +255,30 @@ class TplAppMariadb
 
         if (!$isInstalled) {
             $tplInstallService = TplApp::getActionMulti(
-                self::ACTION_INSTALL_SERVICE, null,
-                array($bearsamppLang->getValue(Lang::MENU_INSTALL_SERVICE), TplAestan::GLYPH_SERVICE_INSTALL),
-                $isInstalled, get_called_class()
+                self::ACTION_INSTALL_SERVICE,
+                null,
+                [$bearsamppLang->getValue(Lang::MENU_INSTALL_SERVICE), TplAestan::GLYPH_SERVICE_INSTALL],
+                $isInstalled,
+                static::class
             );
 
             $result .= $tplInstallService[TplApp::SECTION_CALL] . PHP_EOL . PHP_EOL .
-            $tplInstallService[TplApp::SECTION_CONTENT] . PHP_EOL;
+                $tplInstallService[TplApp::SECTION_CONTENT] . PHP_EOL;
         } else {
             $tplRemoveService = TplApp::getActionMulti(
-                self::ACTION_REMOVE_SERVICE, null,
-                array($bearsamppLang->getValue(Lang::MENU_REMOVE_SERVICE), TplAestan::GLYPH_SERVICE_REMOVE),
-                !$isInstalled, get_called_class()
+                self::ACTION_REMOVE_SERVICE,
+                null,
+                [$bearsamppLang->getValue(Lang::MENU_REMOVE_SERVICE), TplAestan::GLYPH_SERVICE_REMOVE],
+                !$isInstalled,
+                static::class
             );
 
             $result .= $tplRemoveService[TplApp::SECTION_CALL] . PHP_EOL . PHP_EOL .
-            $tplRemoveService[TplApp::SECTION_CONTENT] . PHP_EOL;
+                $tplRemoveService[TplApp::SECTION_CONTENT] . PHP_EOL;
         }
 
         $result .= $tplChangePort[TplApp::SECTION_CONTENT] . PHP_EOL .
-            ($tplChangeRootPwd != null ? $tplChangeRootPwd[TplApp::SECTION_CONTENT] . PHP_EOL : '');
+            ($tplChangeRootPwd !== null ? $tplChangeRootPwd[TplApp::SECTION_CONTENT] . PHP_EOL : '');
 
         return $result;
     }
@@ -264,21 +293,24 @@ class TplAppMariadb
      *
      * @return string The generated MariaDB debug menu items and actions.
      */
-    public static function getMenuMariadbDebug()
+    public static function getMenuMariadbDebug(): string
     {
         global $bearsamppLang;
 
         return TplApp::getActionRun(
-            Action::DEBUG_MARIADB, array(BinMariadb::CMD_VERSION),
-            array($bearsamppLang->getValue(Lang::DEBUG_MARIADB_VERSION), TplAestan::GLYPH_DEBUG)
+            Action::DEBUG_MARIADB,
+            [BinMariadb::CMD_VERSION],
+            [$bearsamppLang->getValue(Lang::DEBUG_MARIADB_VERSION), TplAestan::GLYPH_DEBUG]
         ) . PHP_EOL .
         TplApp::getActionRun(
-            Action::DEBUG_MARIADB, array(BinMariadb::CMD_VARIABLES),
-            array($bearsamppLang->getValue(Lang::DEBUG_MARIADB_VARIABLES), TplAestan::GLYPH_DEBUG)
+            Action::DEBUG_MARIADB,
+            [BinMariadb::CMD_VARIABLES],
+            [$bearsamppLang->getValue(Lang::DEBUG_MARIADB_VARIABLES), TplAestan::GLYPH_DEBUG]
         ) . PHP_EOL .
         TplApp::getActionRun(
-            Action::DEBUG_MARIADB, array(BinMariadb::CMD_SYNTAX_CHECK),
-            array($bearsamppLang->getValue(Lang::DEBUG_MARIADB_SYNTAX_CHECK), TplAestan::GLYPH_DEBUG)
+            Action::DEBUG_MARIADB,
+            [BinMariadb::CMD_SYNTAX_CHECK],
+            [$bearsamppLang->getValue(Lang::DEBUG_MARIADB_SYNTAX_CHECK), TplAestan::GLYPH_DEBUG]
         ) . PHP_EOL;
     }
 
@@ -292,12 +324,14 @@ class TplAppMariadb
      *
      * @return string The generated action string for changing the MariaDB port.
      */
-    public static function getActionChangeMariadbPort()
+    public static function getActionChangeMariadbPort(): string
     {
         global $bearsamppBins;
 
-        return TplApp::getActionRun(Action::CHANGE_PORT, array($bearsamppBins->getMariadb()->getName())) . PHP_EOL .
-            TplAppReload::getActionReload();
+        return TplApp::getActionRun(
+            Action::CHANGE_PORT,
+            [$bearsamppBins->getMariadb()->getName()]
+        ) . PHP_EOL . TplAppReload::getActionReload();
     }
 
     /**
@@ -310,12 +344,14 @@ class TplAppMariadb
      *
      * @return string The generated action string for changing the MariaDB root password.
      */
-    public static function getActionChangeMariadbRootPwd()
+    public static function getActionChangeMariadbRootPwd(): string
     {
         global $bearsamppBins;
 
-        return TplApp::getActionRun(Action::CHANGE_DB_ROOT_PWD, array($bearsamppBins->getMariadb()->getName())) . PHP_EOL .
-            TplAppReload::getActionReload();
+        return TplApp::getActionRun(
+            Action::CHANGE_DB_ROOT_PWD,
+            [$bearsamppBins->getMariadb()->getName()]
+        ) . PHP_EOL . TplAppReload::getActionReload();
     }
 
     /**
@@ -325,10 +361,12 @@ class TplAppMariadb
      *
      * @return string The generated action string for installing the MariaDB service.
      */
-    public static function getActionInstallMariadbService()
+    public static function getActionInstallMariadbService(): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array(BinMariadb::SERVICE_NAME, ActionService::INSTALL)) . PHP_EOL .
-            TplAppReload::getActionReload();
+        return TplApp::getActionRun(
+            Action::SERVICE,
+            [BinMariadb::SERVICE_NAME, ActionService::INSTALL]
+        ) . PHP_EOL . TplAppReload::getActionReload();
     }
 
     /**
@@ -338,9 +376,11 @@ class TplAppMariadb
      *
      * @return string The generated action string for removing the MariaDB service.
      */
-    public static function getActionRemoveMariadbService()
+    public static function getActionRemoveMariadbService(): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array(BinMariadb::SERVICE_NAME, ActionService::REMOVE)) . PHP_EOL .
-            TplAppReload::getActionReload();
+        return TplApp::getActionRun(
+            Action::SERVICE,
+            [BinMariadb::SERVICE_NAME, ActionService::REMOVE]
+        ) . PHP_EOL . TplAppReload::getActionReload();
     }
 }

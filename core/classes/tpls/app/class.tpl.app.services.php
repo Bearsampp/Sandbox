@@ -2,7 +2,6 @@
 /*
  * Copyright (c) 2021-2024 Bearsampp
  * License:  GNU General Public License version 3 or later; see LICENSE.txt
- * Author: bear
  * Website: https://bearsampp.com
  * Github: https://github.com/Bearsampp
  */
@@ -17,9 +16,9 @@
 class TplAppServices
 {
     // Constants for action identifiers
-    const ACTION_START = 'startServices';
-    const ACTION_STOP = 'stopServices';
-    const ACTION_RESTART = 'restartServices';
+    public const ACTION_START = 'startServices';
+    public const ACTION_STOP = 'stopServices';
+    public const ACTION_RESTART = 'restartServices';
 
     /**
      * Generates the main services menu with options to start, stop, and restart all services.
@@ -28,26 +27,32 @@ class TplAppServices
      *
      * @return array An array containing the generated menu items and actions for services.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang;
 
         $tplStart = TplApp::getActionMulti(
-            self::ACTION_START, null,
-            array($bearsamppLang->getValue(Lang::MENU_START_SERVICES), TplAestan::GLYPH_SERVICES_START),
-            false, get_called_class()
+            self::ACTION_START,
+            null,
+            [$bearsamppLang->getValue(Lang::MENU_START_SERVICES), TplAestan::GLYPH_SERVICES_START],
+            false,
+            static::class
         );
 
         $tplStop = TplApp::getActionMulti(
-            self::ACTION_STOP, null,
-            array($bearsamppLang->getValue(Lang::MENU_STOP_SERVICES), TplAestan::GLYPH_SERVICES_STOP),
-            false, get_called_class()
+            self::ACTION_STOP,
+            null,
+            [$bearsamppLang->getValue(Lang::MENU_STOP_SERVICES), TplAestan::GLYPH_SERVICES_STOP],
+            false,
+            static::class
         );
 
         $tplRestart = TplApp::getActionMulti(
-            self::ACTION_RESTART, null,
-            array($bearsamppLang->getValue(Lang::MENU_RESTART_SERVICES), TplAestan::GLYPH_SERVICES_RESTART),
-            false, get_called_class()
+            self::ACTION_RESTART,
+            null,
+            [$bearsamppLang->getValue(Lang::MENU_RESTART_SERVICES), TplAestan::GLYPH_SERVICES_RESTART],
+            false,
+            static::class
         );
 
         // Items
@@ -60,7 +65,7 @@ class TplAppServices
             PHP_EOL . $tplStop[TplApp::SECTION_CONTENT] .
             PHP_EOL . $tplRestart[TplApp::SECTION_CONTENT];
 
-        return array($items, $actions);
+        return [$items, $actions];
     }
 
     /**
@@ -70,7 +75,7 @@ class TplAppServices
      *
      * @return string The generated actions to start all services.
      */
-    public static function getActionStartServices()
+    public static function getActionStartServices(): string
     {
         global $bearsamppBins;
         $actions = '';
@@ -89,7 +94,7 @@ class TplAppServices
      *
      * @return string The generated actions to stop all services.
      */
-    public static function getActionStopServices()
+    public static function getActionStopServices(): string
     {
         global $bearsamppBins;
         $actions = '';
@@ -106,7 +111,7 @@ class TplAppServices
      *
      * @return string The generated actions to restart all services.
      */
-    public static function getActionRestartServices()
+    public static function getActionRestartServices(): string
     {
         return self::getActionStopServices() . self::getActionStartServices();
     }

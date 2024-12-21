@@ -16,40 +16,40 @@
 class TplAppLogs
 {
     // Constant for the logs menu identifier
-    const MENU = 'logs';
+    public const MENU = 'logs';
 
     /**
      * Processes and generates the logs menu.
      *
      * This method generates the logs menu by retrieving the localized string for logs
-     * and calling the getMenu method from the TplApp class.
+     * and calling the `getMenu` method from the `TplApp` class.
      *
-     * @global object $bearsamppLang Provides language support for retrieving language-specific values.
+     * @global \BearsamppLang $bearsamppLang Provides language support for retrieving language-specific values.
      *
-     * @return array The generated logs menu as a string.
+     * @return array The generated logs menu as an array containing the call string and the menu content.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang;
 
-        return TplApp::getMenu($bearsamppLang->getValue(Lang::LOGS), self::MENU, get_called_class());
+        return TplApp::getMenu($bearsamppLang->getValue(Lang::LOGS), self::MENU, static::class);
     }
 
     /**
      * Generates the logs menu content.
      *
      * This method retrieves the list of log files from the logs directory, sorts them,
-     * and generates menu items for each log file using the getItemNotepad method from the TplAestan class.
+     * and generates menu items for each log file using the `getItemNotepad` method from the `TplAestan` class.
      *
-     * @global object $bearsamppRoot Provides access to the root directory of the application.
+     * @global \BearsamppRoot $bearsamppRoot Provides access to the root directory of the application.
      *
      * @return string The generated logs menu content as a string.
      */
-    public static function getMenuLogs()
+    public static function getMenuLogs(): string
     {
         global $bearsamppRoot;
 
-        $files = array();
+        $files = [];
 
         // Open the logs directory
         $handle = @opendir($bearsamppRoot->getLogsPath());
@@ -59,7 +59,7 @@ class TplAppLogs
 
         // Read log files from the directory
         while (false !== ($file = readdir($handle))) {
-            if ($file != "." && $file != ".." && Util::endWith($file, '.log')) {
+            if ($file !== "." && $file !== ".." && Util::endWith($file, '.log')) {
                 $files[] = $file;
             }
         }

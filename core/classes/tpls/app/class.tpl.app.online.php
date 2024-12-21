@@ -17,7 +17,7 @@
 class TplAppOnline
 {
     // Constant for the status action identifier
-    const ACTION = 'status';
+    public const ACTION = 'status';
 
     /**
      * Generates the menu item and associated actions for switching the online/offline status.
@@ -26,19 +26,21 @@ class TplAppOnline
      * the actions to be taken when the menu item is selected. It uses the global configuration and language
      * objects to retrieve the current status and localized strings.
      *
-     * @global object $bearsamppConfig Provides access to the application's configuration settings.
-     * @global object $bearsamppLang Provides language support for retrieving language-specific values.
+     * @global \BearsamppConfig $bearsamppConfig Provides access to the application's configuration settings.
+     * @global \BearsamppLang $bearsamppLang Provides language support for retrieving language-specific values.
      *
      * @return array The generated menu item and actions for switching the online/offline status.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppConfig, $bearsamppLang;
 
         return TplApp::getActionMulti(
-            self::ACTION, array($bearsamppConfig->isOnline() ? Config::DISABLED : Config::ENABLED),
-            array($bearsamppConfig->isOnline() ? $bearsamppLang->getValue(Lang::MENU_PUT_OFFLINE) : $bearsamppLang->getValue(Lang::MENU_PUT_ONLINE)),
-            false, get_called_class()
+            self::ACTION,
+            [$bearsamppConfig->isOnline() ? Config::DISABLED : Config::ENABLED],
+            [$bearsamppConfig->isOnline() ? $bearsamppLang->getValue(Lang::MENU_PUT_OFFLINE) : $bearsamppLang->getValue(Lang::MENU_PUT_ONLINE)],
+            false,
+            static::class
         );
     }
 
@@ -53,9 +55,9 @@ class TplAppOnline
      *
      * @return string The generated action string for switching the online/offline status.
      */
-    public static function getActionStatus($status)
+    public static function getActionStatus(int $status): string
     {
-        return TplApp::getActionRun(Action::SWITCH_ONLINE, array($status)) . PHP_EOL .
+        return TplApp::getActionRun(Action::SWITCH_ONLINE, [$status]) . PHP_EOL .
             TplService::getActionRestart(BinApache::SERVICE_NAME) . PHP_EOL .
             TplService::getActionRestart(BinFilezilla::SERVICE_NAME) . PHP_EOL .
             TplAppReload::getActionReload() . PHP_EOL;

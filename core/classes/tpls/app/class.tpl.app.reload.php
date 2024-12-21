@@ -2,7 +2,6 @@
 /*
  * Copyright (c) 2021-2024 Bearsampp
  * License:  GNU General Public License version 3 or later; see LICENSE.txt
- * Author: bear
  * Website: https://bearsampp.com
  * Github: https://github.com/Bearsampp
  */
@@ -16,7 +15,7 @@
 class TplAppReload
 {
     // Constant for the reload action identifier
-    const ACTION = 'reload';
+    public const ACTION = 'reload';
 
     /**
      * Generates the reload menu item and associated actions.
@@ -29,14 +28,16 @@ class TplAppReload
      *
      * @return array The generated menu item and actions for reloading the application.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang;
 
         return TplApp::getActionMulti(
-            self::ACTION, null,
-            array($bearsamppLang->getValue(Lang::RELOAD), TplAestan::GLYPH_RELOAD),
-            false, get_called_class()
+            self::ACTION,
+            null,
+            [$bearsamppLang->getValue(Lang::RELOAD), TplAestan::GLYPH_RELOAD],
+            false,
+            static::class
         );
     }
 
@@ -49,7 +50,7 @@ class TplAppReload
      *
      * @return string The generated action string for reloading the application.
      */
-    public static function getActionReload()
+    public static function getActionReload(): string
     {
         return TplApp::getActionRun(Action::RELOAD) . PHP_EOL .
             'Action: resetservices' . PHP_EOL .
