@@ -25,13 +25,13 @@ class ActionLaunchStartup
      * @param array $args An array of arguments where the first element should be either Config::ENABLED or Config::DISABLED
      *                    to indicate the desired launch startup setting.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppConfig;
 
         if (isset($args[0])) {
             Util::startLoading();
-            $launchStartup = $args[0] == Config::ENABLED;
+            $launchStartup = $args[0] === Config::ENABLED;
             if ($launchStartup) {
                 Util::enableLaunchStartup();
             } else {

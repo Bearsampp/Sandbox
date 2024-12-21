@@ -13,44 +13,44 @@
 class Action
 {
     // Constants for different actions
-    const ABOUT = 'about';
-    const ADD_ALIAS = 'addAlias';
-    const ADD_VHOST = 'addVhost';
-    const CHANGE_BROWSER = 'changeBrowser';
-    const CHANGE_DB_ROOT_PWD = 'changeDbRootPwd';
-    const CHANGE_PORT = 'changePort';
-    const CHECK_PORT = 'checkPort';
-    const CHECK_VERSION = 'checkVersion';
-    const CLEAR_FOLDERS = 'clearFolders';
-    const DEBUG_APACHE = 'debugApache';
-    const DEBUG_MARIADB = 'debugMariadb';
-    const DEBUG_MYSQL = 'debugMysql';
-    const DEBUG_POSTGRESQL = 'debugPostgresql';
-    const EDIT_ALIAS = 'editAlias';
-    const EDIT_VHOST = 'editVhost';
-    const ENABLE = 'enable';
-    const EXEC = 'exec';
-    const GEN_SSL_CERTIFICATE = 'genSslCertificate';
-    const LAUNCH_STARTUP = 'launchStartup';
-    const MANUAL_RESTART = 'manualRestart';
-    const LOADING = 'loading';
-    const QUIT = 'quit';
-    const REBUILD_INI = 'rebuildIni';
-    const REFRESH_REPOS = 'refreshRepos';
-    const REFRESH_REPOS_STARTUP = 'refreshReposStartup';
-    const RELOAD = 'reload';
-    const RESTART = 'restart';
-    const SERVICE = 'service';
-    const STARTUP = 'startup';
-    const SWITCH_APACHE_MODULE = 'switchApacheModule';
-    const SWITCH_LANG = 'switchLang';
-    const SWITCH_LOGS_VERBOSE = 'switchLogsVerbose';
-    const SWITCH_PHP_EXTENSION = 'switchPhpExtension';
-    const SWITCH_PHP_PARAM = 'switchPhpParam';
-    const SWITCH_ONLINE = 'switchOnline';
-    const SWITCH_VERSION = 'switchVersion';
+    public const ABOUT = 'about';
+    public const ADD_ALIAS = 'addAlias';
+    public const ADD_VHOST = 'addVhost';
+    public const CHANGE_BROWSER = 'changeBrowser';
+    public const CHANGE_DB_ROOT_PWD = 'changeDbRootPwd';
+    public const CHANGE_PORT = 'changePort';
+    public const CHECK_PORT = 'checkPort';
+    public const CHECK_VERSION = 'checkVersion';
+    public const CLEAR_FOLDERS = 'clearFolders';
+    public const DEBUG_APACHE = 'debugApache';
+    public const DEBUG_MARIADB = 'debugMariadb';
+    public const DEBUG_MYSQL = 'debugMysql';
+    public const DEBUG_POSTGRESQL = 'debugPostgresql';
+    public const EDIT_ALIAS = 'editAlias';
+    public const EDIT_VHOST = 'editVhost';
+    public const ENABLE = 'enable';
+    public const EXEC = 'exec';
+    public const GEN_SSL_CERTIFICATE = 'genSslCertificate';
+    public const LAUNCH_STARTUP = 'launchStartup';
+    public const MANUAL_RESTART = 'manualRestart';
+    public const LOADING = 'loading';
+    public const QUIT = 'quit';
+    public const REBUILD_INI = 'rebuildIni';
+    public const REFRESH_REPOS = 'refreshRepos';
+    public const REFRESH_REPOS_STARTUP = 'refreshReposStartup';
+    public const RELOAD = 'reload';
+    public const RESTART = 'restart';
+    public const SERVICE = 'service';
+    public const STARTUP = 'startup';
+    public const SWITCH_APACHE_MODULE = 'switchApacheModule';
+    public const SWITCH_LANG = 'switchLang';
+    public const SWITCH_LOGS_VERBOSE = 'switchLogsVerbose';
+    public const SWITCH_PHP_EXTENSION = 'switchPhpExtension';
+    public const SWITCH_PHP_PARAM = 'switchPhpParam';
+    public const SWITCH_ONLINE = 'switchOnline';
+    public const SWITCH_VERSION = 'switchVersion';
 
-    const EXT = 'ext';
+    public const EXT = 'ext';
 
     /**
      * @var mixed Holds the current action instance.
@@ -75,16 +75,16 @@ class Action
      *
      * @return void
      */
-    public function process()
+    public function process(): void
     {
         if ($this->exists()) {
             $action = Util::cleanArgv(1);
             $actionClass = 'Action' . ucfirst($action);
 
-            $args = array();
+            $args = [];
             foreach ($_SERVER['argv'] as $key => $arg) {
                 if ($key > 1) {
-                    $args[] = $action == self::EXT ? $arg : base64_decode($arg);
+                    $args[] = $action === self::EXT ? $arg : base64_decode($arg);
                 }
             }
 
@@ -107,7 +107,7 @@ class Action
      * @param mixed $actionArgs Optional arguments for the action.
      * @return void
      */
-    public function call($actionName, $actionArgs = null)
+    public function call(string $actionName, mixed $actionArgs = null): void
     {
         $actionClass = 'Action' . ucfirst($actionName);
         if (class_exists($actionClass)) {
@@ -124,7 +124,7 @@ class Action
      *
      * @return bool Returns true if the action exists, false otherwise.
      */
-    public function exists()
+    public function exists(): bool
     {
         return isset($_SERVER['argv'])
             && isset($_SERVER['argv'][1])

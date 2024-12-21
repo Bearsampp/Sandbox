@@ -7,6 +7,11 @@
  * Github: https://github.com/Bearsampp
  */
 
+use Core\Classes\Lang;
+use Core\Classes\Bins\BinApache;
+use Core\Classes\Util;
+use Core\Classes\Winbinder;
+
 /**
  * Class ActionDebugApache
  *
@@ -21,7 +26,7 @@ class ActionDebugApache
      *
      * @param array $args An array of arguments specifying the type of Apache debug information to retrieve.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppLang, $bearsamppBins, $bearsamppTools, $bearsamppWinbinder;
 
@@ -31,22 +36,22 @@ class ActionDebugApache
             $caption = $bearsamppLang->getValue(Lang::DEBUG) . ' ' . $bearsamppLang->getValue(Lang::APACHE) . ' - ';
 
             // Determine the type of debug information requested and set the caption accordingly
-            if ($args[0] == BinApache::CMD_VERSION_NUMBER) {
+            if ($args[0] === BinApache::CMD_VERSION_NUMBER) {
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_APACHE_VERSION_NUMBER);
-            } elseif ($args[0] == BinApache::CMD_COMPILE_SETTINGS) {
+            } elseif ($args[0] === BinApache::CMD_COMPILE_SETTINGS) {
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_APACHE_COMPILE_SETTINGS);
-            } elseif ($args[0] == BinApache::CMD_COMPILED_MODULES) {
+            } elseif ($args[0] === BinApache::CMD_COMPILED_MODULES) {
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_APACHE_COMPILED_MODULES);
-            } elseif ($args[0] == BinApache::CMD_CONFIG_DIRECTIVES) {
+            } elseif ($args[0] === BinApache::CMD_CONFIG_DIRECTIVES) {
                 $editor = true;
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_APACHE_CONFIG_DIRECTIVES);
-            } elseif ($args[0] == BinApache::CMD_VHOSTS_SETTINGS) {
+            } elseif ($args[0] === BinApache::CMD_VHOSTS_SETTINGS) {
                 $editor = true;
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_APACHE_VHOSTS_SETTINGS);
-            } elseif ($args[0] == BinApache::CMD_LOADED_MODULES) {
+            } elseif ($args[0] === BinApache::CMD_LOADED_MODULES) {
                 $editor = true;
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_APACHE_LOADED_MODULES);
-            } elseif ($args[0] == BinApache::CMD_SYNTAX_CHECK) {
+            } elseif ($args[0] === BinApache::CMD_SYNTAX_CHECK) {
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_APACHE_SYNTAX_CHECK);
             }
             $caption .= ' (' . $args[0] . ')';
@@ -55,9 +60,9 @@ class ActionDebugApache
             $debugOutput = $bearsamppBins->getApache()->getCmdLineOutput($args[0]);
 
             // Handle syntax check specifically
-            if ($args[0] == BinApache::CMD_SYNTAX_CHECK) {
+            if ($args[0] === BinApache::CMD_SYNTAX_CHECK) {
                 $msgBoxError = !$debugOutput['syntaxOk'];
-                $debugOutput['content'] = $debugOutput['syntaxOk'] ? 'Syntax OK !' : $debugOutput['content'];
+                $debugOutput['content'] = $debugOutput['syntaxOk'] ? 'Syntax OK!' : $debugOutput['content'];
             }
 
             // Display the debug output in an editor or message box

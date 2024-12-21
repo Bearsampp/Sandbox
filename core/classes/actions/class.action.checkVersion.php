@@ -7,6 +7,11 @@
  * Github: https://github.com/Bearsampp
  */
 
+use Bearsampp\Core\Classes\Lang;
+use Bearsampp\Core\Classes\WinBinder;
+use Bearsampp\Core\Classes\Core;
+use Bearsampp\Core\Classes\Util;
+
 /**
  * Class ActionCheckVersion
  *
@@ -18,24 +23,24 @@
  */
 class ActionCheckVersion
 {
-    const DISPLAY_OK = 'displayOk';
+    public const DISPLAY_OK = 'displayOk';
 
-    private $wbWindow;
-    private $wbImage;
-    private $wbLinkChangelog;
-    private $wbLinkFull;
-    private $wbBtnOk;
+    private mixed $wbWindow;
+    private mixed $wbImage;
+    private mixed $wbLinkChangelog;
+    private mixed $wbLinkFull;
+    private mixed $wbBtnOk;
 
-    private $currentVersion;
-    private $latestVersion;
-    private $githubLatestVersionUrl;
+    private string $currentVersion;
+    private string $latestVersion;
+    private string $githubLatestVersionUrl;
 
     /**
      * Constructor for the ActionCheckVersion class.
      *
      * @param array $args Command line arguments passed to the script.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppCore, $bearsamppLang, $bearsamppWinbinder, $appGithubHeader;
 
@@ -46,12 +51,12 @@ class ActionCheckVersion
             // Assuming getLatestVersion now returns an array with version and URL
             $githubVersionData = Util::getLatestVersion(APP_GITHUB_LATEST_URL);
 
-            if ($githubVersionData != null && isset($githubVersionData['version'], $githubVersionData['html_url'])) {
+            if ($githubVersionData !== null && isset($githubVersionData['version'], $githubVersionData['html_url'])) {
                 $githubLatestVersion = $githubVersionData['version'];
                 $this->githubLatestVersionUrl = $githubVersionData['html_url']; // URL of the latest version
                 if (version_compare($this->currentVersion, $githubLatestVersion, '<')) {
                     $this->showVersionUpdateWindow($bearsamppLang, $bearsamppWinbinder, $bearsamppCore, $githubLatestVersion);
-                } elseif (!empty($args[0]) && $args[0] == self::DISPLAY_OK) {
+                } elseif (!empty($args[0]) && $args[0] === self::DISPLAY_OK) {
                     $this->showVersionOkMessageBox($bearsamppLang, $bearsamppWinbinder);
                 }
             }
@@ -66,7 +71,7 @@ class ActionCheckVersion
      * @param Core $core Core instance for accessing application resources.
      * @param string $githubLatestVersion The latest version available on GitHub.
      */
-    private function showVersionUpdateWindow($lang, $winbinder, $core, $githubLatestVersion)
+    private function showVersionUpdateWindow(Lang $lang, WinBinder $winbinder, Core $core, string $githubLatestVersion): void
     {
         $labelFullLink = $lang->getValue(Lang::DOWNLOAD) . ' ' . APP_TITLE . ' ' . $githubLatestVersion;
 
@@ -92,7 +97,7 @@ class ActionCheckVersion
      * @param Lang $lang Language processor instance.
      * @param WinBinder $winbinder WinBinder instance for creating windows and controls.
      */
-    private function showVersionOkMessageBox($lang, $winbinder)
+    private function showVersionOkMessageBox(Lang $lang, WinBinder $winbinder): void
     {
         Util::stopLoading();
         $winbinder->messageBoxInfo(
@@ -104,13 +109,13 @@ class ActionCheckVersion
     /**
      * Processes window events and handles user interactions.
      *
-     * @param resource $window The window resource.
+     * @param mixed $window The window resource.
      * @param int $id The control ID that triggered the event.
-     * @param resource $ctrl The control resource.
+     * @param mixed $ctrl The control resource.
      * @param mixed $param1 Additional parameter 1.
      * @param mixed $param2 Additional parameter 2.
      */
-    public function processWindow($window, $id, $ctrl, $param1, $param2)
+    public function processWindow(mixed $window, int $id, mixed $ctrl, mixed $param1, mixed $param2): void
     {
         global $bearsamppConfig, $bearsamppWinbinder;
 

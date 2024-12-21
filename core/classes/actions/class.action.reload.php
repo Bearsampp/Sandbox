@@ -27,7 +27,7 @@ class ActionReload
      * @global Bins $bearsamppBins The bins object containing various binaries used by the Bearsampp application.
      * @global Homepage $bearsamppHomepage The homepage object for managing homepage-related settings and content.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppRoot, $bearsamppCore, $bearsamppConfig, $bearsamppBins, $bearsamppHomepage;
 

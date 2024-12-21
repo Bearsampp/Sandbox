@@ -7,6 +7,8 @@
  * Github: https://github.com/Bearsampp
  */
 
+use Core\Classes\Util;
+
 /**
  * Handles the action of clearing specific temporary folders within the application.
  *
@@ -24,7 +26,7 @@ class ActionClearFolders
      *
      * @param array $args Arguments that might be used for further extension of constructor functionality.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppRoot, $bearsamppCore;
 
@@ -34,14 +36,17 @@ class ActionClearFolders
          * Util::clearFolder is used to clear the contents of the root temporary path, excluding
          * certain essential items such as 'cachegrind', 'composer', 'openssl', 'mailpit', 'xlight', 'npm-cache',
          * 'pip', 'yarn', and '.gitignore'. This ensures that important data and configurations are not lost.
-         *
-         * @param string $bearsamppRoot->getTmpPath() The root temporary path to be cleared.
-         * @param array $exclusions List of folders and files to be excluded from deletion.
          */
-        Util::clearFolder($bearsamppRoot->getTmpPath(), array('cachegrind', 'composer', 'openssl', 'mailhog', 'mailpit', 'xlight', 'npm-cache', 'pip', 'yarn', '.gitignore'));
+        Util::clearFolder(
+            $bearsamppRoot->getTmpPath(),
+            ['cachegrind', 'composer', 'openssl', 'mailhog', 'mailpit', 'xlight', 'npm-cache', 'pip', 'yarn', '.gitignore']
+        );
 
         // Clear logs
-        Util::clearFolder($bearsamppRoot->getLogsPath(), array('mailpit.err.log', 'mailpit.out.log', 'memcached.err.log', 'memcached.out.log', 'xlight.err.log', 'xlight.log', '.gitignore') );
+        Util::clearFolder(
+            $bearsamppRoot->getLogsPath(),
+            ['mailpit.err.log', 'mailpit.out.log', 'memcached.err.log', 'memcached.out.log', 'xlight.err.log', 'xlight.log', '.gitignore']
+        );
 
         /**
          * Clears the core temporary path.
@@ -49,10 +54,7 @@ class ActionClearFolders
          * Util::clearFolder is used to clear the contents of the core temporary path, excluding
          * the '.gitignore' file. This ensures that the core temporary path is cleaned without
          * removing the '.gitignore' file which might be necessary for version control.
-         *
-         * @param string $bearsamppCore->getTmpPath() The core temporary path to be cleared.
-         * @param array $exclusions List of folders and files to be excluded from deletion.
          */
-        Util::clearFolder($bearsamppCore->getTmpPath(), array('.gitignore'));
+        Util::clearFolder($bearsamppCore->getTmpPath(), ['.gitignore']);
     }
 }

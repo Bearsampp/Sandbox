@@ -19,13 +19,13 @@ class ActionSwitchOnline
      *
      * @param array $args Arguments to determine the online/offline state.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppConfig;
 
-        if (isset($args[0]) && $args[0] == Config::ENABLED || $args[0] == Config::DISABLED) {
+        if (isset($args[0]) && ($args[0] === Config::ENABLED || $args[0] === Config::DISABLED)) {
             Util::startLoading();
-            $putOnline = $args[0] == Config::ENABLED;
+            $putOnline = $args[0] === Config::ENABLED;
 
             $this->switchApache($putOnline);
             $this->switchAlias($putOnline);
@@ -40,7 +40,7 @@ class ActionSwitchOnline
      *
      * @param bool $putOnline True to put online, false to put offline.
      */
-    private function switchApache($putOnline)
+    private function switchApache(bool $putOnline): void
     {
         global $bearsamppBins;
         $bearsamppBins->getApache()->refreshConf($putOnline);
@@ -51,7 +51,7 @@ class ActionSwitchOnline
      *
      * @param bool $putOnline True to put online, false to put offline.
      */
-    private function switchAlias($putOnline)
+    private function switchAlias(bool $putOnline): void
     {
         global $bearsamppBins;
         $bearsamppBins->getApache()->refreshAlias($putOnline);
@@ -62,7 +62,7 @@ class ActionSwitchOnline
      *
      * @param bool $putOnline True to put online, false to put offline.
      */
-    private function switchVhosts($putOnline)
+    private function switchVhosts(bool $putOnline): void
     {
         global $bearsamppBins;
         $bearsamppBins->getApache()->refreshVhosts($putOnline);
@@ -73,20 +73,20 @@ class ActionSwitchOnline
      *
      * @param bool $putOnline True to put online, false to put offline.
      */
-    private function switchFilezilla($putOnline)
+    private function switchFilezilla(bool $putOnline): void
     {
         global $bearsamppBins;
 
         if ($putOnline) {
-            $bearsamppBins->getFilezilla()->setConf(array(
+            $bearsamppBins->getFilezilla()->setConf([
                 BinFilezilla::CFG_IP_FILTER_ALLOWED => '*',
                 BinFilezilla::CFG_IP_FILTER_DISALLOWED => '',
-            ));
+            ]);
         } else {
-            $bearsamppBins->getFilezilla()->setConf(array(
+            $bearsamppBins->getFilezilla()->setConf([
                 BinFilezilla::CFG_IP_FILTER_ALLOWED => '127.0.0.1 ::1',
                 BinFilezilla::CFG_IP_FILTER_DISALLOWED => '*',
-            ));
+            ]);
         }
     }
 }

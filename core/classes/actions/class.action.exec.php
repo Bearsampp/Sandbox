@@ -19,12 +19,12 @@ class ActionExec
     /**
      * Constant representing the 'quit' action.
      */
-    const QUIT = 'quit';
+    public const QUIT = 'quit';
 
     /**
      * Constant representing the 'restart' action.
      */
-    const RESTART = 'restart';
+    public const RESTART = 'restart';
 
     /**
      * ActionExec constructor.
@@ -35,15 +35,15 @@ class ActionExec
      *
      * @param array $args Arguments passed to the constructor (not used in the current implementation).
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppCore;
 
         if (file_exists($bearsamppCore->getExec())) {
             $action = file_get_contents($bearsamppCore->getExec());
-            if ($action == self::QUIT) {
+            if ($action === self::QUIT) {
                 Batch::exitApp();
-            } elseif ($action == self::RESTART) {
+            } elseif ($action === self::RESTART) {
                 Batch::restartApp();
             }
             @unlink($bearsamppCore->getExec());

@@ -7,6 +7,10 @@
  * Github: https://github.com/Bearsampp
  */
 
+use Bearsampp\Core\Classes\Bins\BinMariadb;
+use Bearsampp\Core\Classes\Util;
+use Bearsampp\Core\Classes\Lang;
+
 /**
  * Class ActionDebugMariadb
  *
@@ -19,15 +23,15 @@ class ActionDebugMariadb
     /**
      * ActionDebugMariadb constructor.
      *
-     * @param array $args Command-line arguments specifying the debugging action to perform.
-     *
-     * This constructor initializes the debugging process for MariaDB based on the provided arguments.
+     * Initializes the debugging process for MariaDB based on the provided arguments.
      * It supports three types of debugging actions: version check, variables display, and syntax check.
      * The output of the debugging action is displayed either in an editor or a message box.
+     *
+     * @param array $args Command-line arguments specifying the debugging action to perform.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
-        global $bearsamppLang, $bearsamppBins, $bearsamppTools, $bearsamppWinbinder;
+        global $bearsamppLang, $bearsamppBins, $bearsamppWinbinder;
 
         if (isset($args[0]) && !empty($args[0])) {
             $editor = false;
@@ -35,12 +39,12 @@ class ActionDebugMariadb
             $caption = $bearsamppLang->getValue(Lang::DEBUG) . ' ' . $bearsamppLang->getValue(Lang::MARIADB) . ' - ';
 
             // Determine the type of debugging action based on the first argument
-            if ($args[0] == BinMariadb::CMD_VERSION) {
+            if ($args[0] === BinMariadb::CMD_VERSION) {
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_MARIADB_VERSION);
-            } elseif ($args[0] == BinMariadb::CMD_VARIABLES) {
+            } elseif ($args[0] === BinMariadb::CMD_VARIABLES) {
                 $editor = true;
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_MARIADB_VARIABLES);
-            } elseif ($args[0] == BinMariadb::CMD_SYNTAX_CHECK) {
+            } elseif ($args[0] === BinMariadb::CMD_SYNTAX_CHECK) {
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_MARIADB_SYNTAX_CHECK);
             }
             $caption .= ' (' . $args[0] . ')';
@@ -49,7 +53,7 @@ class ActionDebugMariadb
             $debugOutput = $bearsamppBins->getMariadb()->getCmdLineOutput($args[0]);
 
             // Handle syntax check results
-            if ($args[0] == BinMariadb::CMD_SYNTAX_CHECK) {
+            if ($args[0] === BinMariadb::CMD_SYNTAX_CHECK) {
                 $msgBoxError = !$debugOutput['syntaxOk'];
                 $debugOutput['content'] = $debugOutput['syntaxOk'] ? 'Syntax OK !' : $debugOutput['content'];
             }

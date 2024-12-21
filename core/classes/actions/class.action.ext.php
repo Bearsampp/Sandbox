@@ -13,32 +13,36 @@
 class ActionExt
 {
     // Constants for different actions
-    const START = 'start';
-    const STOP = 'stop';
-    const RELOAD = 'reload';
-    const REFRESH = 'refresh';
+    public const START = 'start';
+    public const STOP = 'stop';
+    public const RELOAD = 'reload';
+    public const REFRESH = 'refresh';
 
     // Constants for status codes
-    const STATUS_ERROR = 2;
-    const STATUS_WARNING = 1;
-    const STATUS_SUCCESS = 0;
+    public const STATUS_ERROR = 2;
+    public const STATUS_WARNING = 1;
+    public const STATUS_SUCCESS = 0;
 
     /**
-     * @var int Holds the current status of the action.
+     * Holds the current status of the action.
+     *
+     * @var int
      */
-    private $status = self::STATUS_SUCCESS;
+    private int $status = self::STATUS_SUCCESS;
 
     /**
-     * @var string Holds the logs generated during the action execution.
+     * Holds the logs generated during the action execution.
+     *
+     * @var string
      */
-    private $logs = '';
+    private string $logs = '';
 
     /**
      * Constructor for the ActionExt class.
      *
      * @param array $args The command line arguments passed to the action.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         if (!isset($args[0]) || empty($args[0])) {
             $this->addLog('No args defined');
@@ -53,7 +57,7 @@ class ActionExt
 
         $action = $args[0];
 
-        $newArgs = array();
+        $newArgs = [];
         foreach ($args as $key => $arg) {
             if ($key > 0) {
                 $newArgs[] = $arg;
@@ -72,7 +76,7 @@ class ActionExt
             return;
         }
 
-        call_user_func(array($this, $method), $newArgs);
+        call_user_func([$this, $method], $newArgs);
         $this->sendLogs();
     }
 
@@ -81,14 +85,14 @@ class ActionExt
      *
      * @return array The list of available actions.
      */
-    private function getProcs()
+    private function getProcs(): array
     {
-        return array(
+        return [
             self::START,
             self::STOP,
             self::RELOAD,
             self::REFRESH
-        );
+        ];
     }
 
     /**
@@ -96,7 +100,7 @@ class ActionExt
      *
      * @param string $data The log entry to add.
      */
-    private function addLog($data)
+    private function addLog(string $data): void
     {
         $this->logs .= $data . "\n";
     }
@@ -106,7 +110,7 @@ class ActionExt
      *
      * @param int $status The status code to set.
      */
-    private function setStatus($status)
+    private function setStatus(int $status): void
     {
         $this->status = $status;
     }
@@ -114,12 +118,12 @@ class ActionExt
     /**
      * Sends the logs as a JSON-encoded response.
      */
-    private function sendLogs()
+    private function sendLogs(): void
     {
-        echo json_encode(array(
+        echo json_encode([
             'status' => $this->status,
             'response' => $this->logs
-        ));
+        ]);
     }
 
     /**
@@ -127,7 +131,7 @@ class ActionExt
      *
      * @param array $args The command line arguments passed to the action.
      */
-    private function procStart($args)
+    private function procStart(array $args): void
     {
         global $bearsamppRoot, $bearsamppWinbinder;
 
@@ -145,7 +149,7 @@ class ActionExt
      *
      * @param array $args The command line arguments passed to the action.
      */
-    private function procStop($args)
+    private function procStop(array $args): void
     {
         global $bearsamppBins;
 
@@ -173,7 +177,7 @@ class ActionExt
      *
      * @param array $args The command line arguments passed to the action.
      */
-    private function procReload($args)
+    private function procReload(array $args): void
     {
         global $bearsamppRoot, $bearsamppBins, $bearsamppWinbinder;
 
@@ -214,7 +218,7 @@ class ActionExt
      *
      * @param array $args The command line arguments passed to the action.
      */
-    private function procRefresh($args)
+    private function procRefresh(array $args): void
     {
         global $bearsamppAction;
 

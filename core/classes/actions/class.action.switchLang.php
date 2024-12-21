@@ -17,14 +17,16 @@ class ActionSwitchLang
     /**
      * ActionSwitchLang constructor.
      *
+     * Initializes the language switch action using the provided arguments.
+     *
      * @param array $args An array of arguments where the first element is expected to be the new language code.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppConfig;
 
         // Check if the first argument is set and not empty, then replace the language configuration.
-        if (isset($args[0]) && !empty($args[0])) {
+        if (!empty($args[0])) {
             $bearsamppConfig->replace(Config::CFG_LANG, $args[0]);
         }
     }

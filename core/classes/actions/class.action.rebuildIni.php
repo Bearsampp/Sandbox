@@ -8,9 +8,10 @@
  */
 
 /**
- * Handles the action of rebuilding the bearsampp.ini file within the application.
+ * Class ActionRebuildini
  *
- * This class is responsible for deleting the existing bearsampp.ini file and creating a new one
+ * Handles the action of rebuilding the `bearsampp.ini` file within the application.
+ * This class is responsible for deleting the existing `bearsampp.ini` file and creating a new one
  * with the specified configuration content.
  */
 class ActionRebuildini
@@ -18,13 +19,13 @@ class ActionRebuildini
     /**
      * Constructor for the ActionRebuildini class.
      *
-     * Upon instantiation, it deletes the existing bearsampp.ini file and creates a new one with
+     * Upon instantiation, it deletes the existing `bearsampp.ini` file and creates a new one with
      * the specified configuration content.
      *
      * @param array $args Arguments that might be used for further extension of constructor functionality.
-     * @throws Exception If the bearsampp.ini file cannot be written.
+     * @throws Exception If the `bearsampp.ini` file cannot be written.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppRoot, $bearsamppCore;
 
