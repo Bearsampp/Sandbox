@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=0);
+
 
 /**
  * WINBINDER - The native Windows binding for PHP

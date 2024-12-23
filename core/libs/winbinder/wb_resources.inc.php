@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=0);
+
 
 /**
  * RC file parser: Converts Windows resource files to WinBinder commands.

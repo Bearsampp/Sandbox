@@ -8,15 +8,6 @@
  * Github: https://github.com/Bearsampp
  */
 
-namespace Core\Classes;
-
-use Core\Classes\Util;
-use Core\Classes\Win32Ps;
-use Core\Classes\Win32Service;
-use Core\Classes\Root;
-use Core\Classes\Config;
-use Core\Classes\Winbinder;
-
 /**
  * Class Vbs
  *

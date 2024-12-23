@@ -7,10 +7,6 @@
  * Github: https://github.com/Bearsampp
  */
 
-declare(strict_types=1);
-
-use Core\Classes\Win32Ps;
-
 /**
  * Class Root
  *
