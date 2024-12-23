@@ -2,6 +2,9 @@
 /*.iml
 /.idea
 
+# Qodo/codium
+/.qodo
+
 # Bearsampp
 /**/*.tmp
 /**/*.log
