@@ -1,10 +1,12 @@
 <?php
+
 /*
  * Copyright (c) 2022 - 2024 Bearsampp
- * License:  GNU General Public License version 3 or later; see LICENSE.txt
+ * License: GNU General Public License version 3 or later; see LICENSE.txt
  * Website: https://bearsampp.com
  * Github: https://github.com/Bearsampp
  */
+
 /**
  * Defines constants used throughout the Bearsampp application.
  */
@@ -16,14 +18,14 @@ define('APP_GITHUB_USER', 'Bearsampp');
 define('APP_GITHUB_REPO', 'Bearsampp');
 define('APP_GITHUB_USERAGENT', 'Bearsampp');
 define('APP_GITHUB_LATEST_URL', 'https://api.github.com/repos/' . APP_GITHUB_USER . '/' . APP_GITHUB_REPO . '/releases/latest');
-define('RETURN_TAB', '	');
+define('RETURN_TAB', "\t"); // Use double quotes for escape sequences
 
 /**
  * Includes the Root class file and creates an instance of Root.
  * Registers the root directory of the application.
  */
-require_once dirname(__FILE__) . '/classes/class.root.php';
-$bearsamppRoot = new Root(dirname(__FILE__));
+require_once __DIR__ . '/classes/class.root.php'; // Use __DIR__ instead of dirname(__FILE__)
+$bearsamppRoot = new Root(__DIR__);
 $bearsamppRoot->register();
 
 /**

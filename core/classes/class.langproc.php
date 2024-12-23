@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (c) 2021-2024 Bearsampp
- * License:  GNU General Public License version 3 or later; see LICENSE.txt
+ * License: GNU General Public License version 3 or later; see LICENSE.txt
  * Author: Bear
  * Website: https://bearsampp.com
  * Github: https://github.com/Bearsampp
@@ -18,12 +18,12 @@ class LangProc
     /**
      * @var string The current language being used.
      */
-    private $current;
+    private string $current;
 
     /**
      * @var array The raw language data loaded from the language file.
      */
-    private $raw;
+    private array $raw;
 
     /**
      * LangProc constructor.
@@ -40,18 +40,20 @@ class LangProc
      *
      * This method retrieves the default language from the configuration,
      * checks if it is available, and then loads the corresponding language file.
+     *
+     * @return void
      */
-    public function load()
+    public function load(): void
     {
         global $bearsamppCore, $bearsamppConfig;
-        $this->raw = null;
+        $this->raw = [];
 
         $this->current = $bearsamppConfig->getDefaultLang();
-        if (!empty($this->current) && in_array($this->current, $this->getList())) {
+        if (!empty($this->current) && in_array($this->current, $this->getList(), true)) {
             $this->current = $bearsamppConfig->getLang();
         }
 
-        $this->raw = parse_ini_file($bearsamppCore->getLangsPath() . '/' . $this->current . '.lang');
+        $this->raw = parse_ini_file($bearsamppCore->getLangsPath() . '/' . $this->current . '.lang') ?: [];
     }
 
     /**
@@ -59,7 +61,7 @@ class LangProc
      *
      * @return string The current language.
      */
-    public function getCurrent()
+    public function getCurrent(): string
     {
         return $this->current;
     }
@@ -71,10 +73,10 @@ class LangProc
      *
      * @return array The list of available languages.
      */
-    public function getList()
+    public function getList(): array
     {
         global $bearsamppCore;
-        $result = array();
+        $result = [];
 
         $handle = @opendir($bearsamppCore->getLangsPath());
         if (!$handle) {
@@ -82,7 +84,7 @@ class LangProc
         }
 
         while (false !== ($file = readdir($handle))) {
-            if ($file != "." && $file != ".." && Util::endWith($file, '.lang')) {
+            if ($file !== "." && $file !== ".." && Util::endWith($file, '.lang')) {
                 $result[] = str_replace('.lang', '', $file);
             }
         }
@@ -100,12 +102,12 @@ class LangProc
      * @param string $key The language key to retrieve the value for.
      * @return string The value associated with the key, or the key itself if not found.
      */
-    public function getValue($key)
+    public function getValue(string $key): string
     {
         global $bearsamppRoot;
 
         if (!isset($this->raw[$key])) {
-            $content = '[' . date('Y-m-d H:i:s', time()) . '] ';
+            $content = '[' . date('Y-m-d H:i:s') . '] ';
             $content .= 'ERROR: Lang var missing ' . $key;
             $content .= ' for ' . $this->current . ' language.' . PHP_EOL;
             file_put_contents($bearsamppRoot->getErrorLogFilePath(), $content, FILE_APPEND);
@@ -113,8 +115,8 @@ class LangProc
         }
 
         // Special chars not handled by Aestan Tray Menu
-        $replace = array("ő", "Ő", "ű", "Ű");
-        $with = array("o", "O", "u", "U");
+        $replace = ["ő", "Ő", "ű", "Ű"];
+        $with = ["o", "O", "u", "U"];
 
         return str_replace($replace, $with, $this->raw[$key]);
     }

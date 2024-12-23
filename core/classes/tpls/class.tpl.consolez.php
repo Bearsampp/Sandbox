@@ -16,19 +16,19 @@
  */
 class TplConsoleZ
 {
-    const ICON_APP = 'app.ico';
-    const ICON_POWERSHELL = 'powershell.ico';
-    const ICON_PEAR = 'pear.ico';
-    const ICON_DB = 'db.ico';
-    const ICON_GHOSTSCRIPT = 'ghostscript.ico';
-    const ICON_GIT = 'git.ico';
-    const ICON_NODEJS = 'nodejs.ico';
-    const ICON_COMPOSER = 'composer.ico';
-    const ICON_PYTHON = 'python.ico';
-    const ICON_RUBY = 'ruby.ico';
-    const ICON_YARN = 'yarn.ico';
-    const ICON_PERL = 'perl.ico';
-    const ICON_NGROK = 'ngrok.ico';
+    public const ICON_APP = 'app.ico';
+    public const ICON_POWERSHELL = 'powershell.ico';
+    public const ICON_PEAR = 'pear.ico';
+    public const ICON_DB = 'db.ico';
+    public const ICON_GHOSTSCRIPT = 'ghostscript.ico';
+    public const ICON_GIT = 'git.ico';
+    public const ICON_NODEJS = 'nodejs.ico';
+    public const ICON_COMPOSER = 'composer.ico';
+    public const ICON_PYTHON = 'python.ico';
+    public const ICON_RUBY = 'ruby.ico';
+    public const ICON_YARN = 'yarn.ico';
+    public const ICON_PERL = 'perl.ico';
+    public const ICON_NGROK = 'ngrok.ico';
 
     /**
      * Private constructor to prevent instantiation.
@@ -44,7 +44,7 @@ class TplConsoleZ
      * various helper methods to generate different sections of the configuration.
      * The resulting XML is then written to the configuration file.
      */
-    public static function process()
+    public static function process(): void
     {
         global $bearsamppTools;
         $result = '<?xml version="1.0"?>' . PHP_EOL . '<settings>' . PHP_EOL .
@@ -67,7 +67,7 @@ class TplConsoleZ
      *
      * @return string The XML string representing the console settings.
      */
-    private static function getConsoleSection()
+    private static function getConsoleSection(): string
     {
         global $bearsamppRoot, $bearsamppTools;
 
@@ -115,7 +115,7 @@ class TplConsoleZ
      *
      * @return string The XML string representing the appearance settings.
      */
-    private static function getAppearanceSection()
+    private static function getAppearanceSection(): string
     {
         $sectionFont = self::getIncrStr(2) . '<font name="Courier New" size="10" bold="0" italic="0" smoothing="0">' . PHP_EOL .
             self::getIncrStr(3) . '<color use="0" r="0" g="255" b="0"/>' . PHP_EOL .
@@ -180,7 +180,7 @@ class TplConsoleZ
      *
      * @return string The XML string representing the behavior settings.
      */
-    private static function getBehaviorSection()
+    private static function getBehaviorSection(): string
     {
         $sectionCopyPaste = self::getIncrStr(2) . '<copy_paste ' .
             'copy_on_select="0" ' .
@@ -209,7 +209,7 @@ class TplConsoleZ
      *
      * @return string The XML string representing the hotkeys settings.
      */
-    private static function getHotkeysSection()
+    private static function getHotkeysSection(): string
     {
         return self::getIncrStr(1) . '<hotkeys use_scroll_lock="0">' . PHP_EOL .
             self::getIncrStr(2) . '<hotkey ctrl="1" shift="0" alt="0" extended="0" code="83" command="settings"/>' . PHP_EOL .
@@ -265,7 +265,7 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the mouse section.
      */
-    private static function getMouseSection()
+    private static function getMouseSection(): string
     {
         return self::getIncrStr(1) . '<mouse>' . PHP_EOL .
             self::getIncrStr(2) . '<actions>' . PHP_EOL .
@@ -287,7 +287,7 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the tabs section.
      */
-    private static function getTabsSection()
+    private static function getTabsSection(): string
     {
         return self::getIncrStr(1) . '<tabs>' . PHP_EOL .
             self::getTabCmdSection() .
@@ -316,10 +316,9 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the command tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     *
-     * @global Root  $bearsamppRoot The root object of the application.
+     * @global Root $bearsamppRoot The root object of the application.
      */
-    private static function getTabCmdSection()
+    private static function getTabCmdSection(): string
     {
         global $bearsamppRoot, $bearsamppTools;
 
@@ -339,10 +338,9 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the PowerShell tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     *
-     * @global Root  $bearsamppRoot The root object of the application.
+     * @global Root $bearsamppRoot The root object of the application.
      */
-    private static function getTabPowerShellSection()
+    private static function getTabPowerShellSection(): string
     {
         global $bearsamppRoot, $bearsamppTools;
 
@@ -367,10 +365,9 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the PEAR tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     *
-     * @global Bins  $bearsamppBins The bins object of the application.
+     * @global Bins $bearsamppBins The bins object of the application.
      */
-    private static function getTabPearSection()
+    private static function getTabPearSection(): string
     {
         global $bearsamppBins, $bearsamppTools;
 
@@ -395,10 +392,9 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the MySQL tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     *
-     * @global Bins  $bearsamppBins The bins object of the application.
+     * @global Bins $bearsamppBins The bins object of the application.
      */
-    private static function getTabMysqlSection()
+    private static function getTabMysqlSection(): string
     {
         global $bearsamppBins, $bearsamppTools;
 
@@ -425,10 +421,9 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the MariaDB tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     *
-     * @global Bins  $bearsamppBins The bins object of the application.
+     * @global Bins $bearsamppBins The bins object of the application.
      */
-    private static function getTabMariadbSection()
+    private static function getTabMariadbSection(): string
     {
         global $bearsamppBins, $bearsamppTools;
 
@@ -455,10 +450,9 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the PostgreSQL tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     *
-     * @global Bins  $bearsamppBins The bins object of the application.
+     * @global Bins $bearsamppBins The bins object of the application.
      */
-    private static function getTabPostgresqlSection()
+    private static function getTabPostgresqlSection(): string
     {
         global $bearsamppBins, $bearsamppTools;
 
@@ -487,10 +481,9 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the Git tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     *
-     * @global Root  $bearsamppRoot The root object of the application.
+     * @global Root $bearsamppRoot The root object of the application.
      */
-    private static function getTabGitSection()
+    private static function getTabGitSection(): string
     {
         global $bearsamppRoot, $bearsamppTools;
 
@@ -514,12 +507,11 @@ class TplConsoleZ
      * It retrieves the Node.js launch path and sets the WWW path.
      *
      * @return string The formatted XML string for the Node.js tab section.
-     * @global Bins  $bearsamppBins The bins object of the application.
+     * @global Bins $bearsamppBins The bins object of the application.
      * @global Tools $bearsamppTools The tools object of the application.
-     *
-     * @global Root  $bearsamppRoot The root object of the application.
+     * @global Root $bearsamppRoot The root object of the application.
      */
-    private static function getTabNodejsSection()
+    private static function getTabNodejsSection(): string
     {
         global $bearsamppRoot, $bearsamppBins, $bearsamppTools;
 
@@ -544,10 +536,9 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the Composer tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     *
-     * @global Root  $bearsamppRoot The root object of the application.
+     * @global Root $bearsamppRoot The root object of the application.
      */
-    private static function getTabComposerSection()
+    private static function getTabComposerSection(): string
     {
         global $bearsamppRoot, $bearsamppTools;
 
@@ -572,10 +563,9 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the Python tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     *
-     * @global Root  $bearsamppRoot The root object of the application.
+     * @global Root $bearsamppRoot The root object of the application.
      */
-    private static function getTabPythonSection()
+    private static function getTabPythonSection(): string
     {
         global $bearsamppRoot, $bearsamppTools;
 
@@ -600,10 +590,9 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the Ruby tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     *
-     * @global Root  $bearsamppRoot The root object of the application.
+     * @global Root $bearsamppRoot The root object of the application.
      */
-    private static function getTabRubySection()
+    private static function getTabRubySection(): string
     {
         global $bearsamppRoot, $bearsamppTools;
 
@@ -628,10 +617,9 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the Yarn tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     *
-     * @global Root  $bearsamppRoot The root object of the application.
+     * @global Root $bearsamppRoot The root object of the application.
      */
-    private static function getTabYarnSection()
+    private static function getTabYarnSection(): string
     {
         global $bearsamppRoot, $bearsamppTools;
 
@@ -656,10 +644,9 @@ class TplConsoleZ
      *
      * @return string The formatted XML string for the Perl tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     *
-     * @global Root  $bearsamppRoot The root object of the application.
+     * @global Root $bearsamppRoot The root object of the application.
      */
-    private static function getTabPerlSection()
+    private static function getTabPerlSection(): string
     {
         global $bearsamppRoot, $bearsamppTools;
 
@@ -687,9 +674,9 @@ class TplConsoleZ
      *
      * @return string The HTML structure for the Ghostscript tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     * @global Root  $bearsamppRoot The root object of the application.
+     * @global Root $bearsamppRoot The root object of the application.
      */
-    private static function getTabGhostscriptSection()
+    private static function getTabGhostscriptSection(): string
     {
         global $bearsamppRoot, $bearsamppTools;
 
@@ -717,9 +704,9 @@ class TplConsoleZ
      *
      * @return string The HTML structure for the Ngrok tab section.
      * @global Tools $bearsamppTools The tools object of the application.
-     * @global Root  $bearsamppRoot The root object of the application.
+     * @global Root $bearsamppRoot The root object of the application.
      */
-    private static function getTabNgrokSection()
+    private static function getTabNgrokSection(): string
     {
         global $bearsamppRoot, $bearsamppTools;
 
@@ -747,9 +734,9 @@ class TplConsoleZ
      * @param string $shell The shell command to be executed in the tab.
      * @param string $initDir The initial directory for the tab.
      * @return string The HTML structure for the tab.
-     * @global Core  $bearsamppCore The core object of the application.
+     * @global Core $bearsamppCore The core object of the application.
      */
-    private static function getTab($title, $icon, $shell, $initDir)
+    private static function getTab(string $title, string $icon, string $shell, string $initDir): string
     {
         global $bearsamppCore;
         return self::getIncrStr(2) . '<tab title="' . $title . '" icon="' . $bearsamppCore->getIconsPath(false) . '/' . $icon . '" use_default_icon="0">' . PHP_EOL .
@@ -771,7 +758,7 @@ class TplConsoleZ
      * @param int $size The number of tabs to include in the string.
      * @return string The string of incremented tabs.
      */
-    private static function getIncrStr($size = 1)
+    private static function getIncrStr(int $size = 1): string
     {
         $result = '';
         for ($i = 0; $i <= $size; $i++) {

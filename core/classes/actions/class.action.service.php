@@ -13,21 +13,21 @@
  */
 class ActionService
 {
-    const CREATE = 'create';
-    const START = 'start';
-    const STOP = 'stop';
-    const RESTART = 'restart';
+    public const CREATE = 'create';
+    public const START = 'start';
+    public const STOP = 'stop';
+    public const RESTART = 'restart';
 
-    const INSTALL = 'install';
-    const REMOVE = 'remove';
+    public const INSTALL = 'install';
+    public const REMOVE = 'remove';
 
     /**
      * ActionService constructor.
      * Initializes the service action based on provided arguments.
      *
-     * @param   array  $args  Arguments for the service action.
+     * @param array $args Arguments for the service action.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppBins;
         Util::startLoading();
@@ -35,75 +35,62 @@ class ActionService
         // Reload bins
         $bearsamppBins->reload();
 
-        if ( isset( $args[0] ) && !empty( $args[0] ) && isset( $args[1] ) && !empty( $args[1] ) ) {
-            $sName          = $args[0];
-            $bin            = null;
-            $port           = 0;
+        if (!empty($args[0]) && !empty($args[1])) {
+            $sName = $args[0];
+            $bin = null;
+            $port = 0;
             $syntaxCheckCmd = null;
 
-            if ( $sName == BinMailhog::SERVICE_NAME ) {
-                $bin  = $bearsamppBins->getMailhog();
+            if ($sName === BinMailhog::SERVICE_NAME) {
+                $bin = $bearsamppBins->getMailhog();
                 $port = $bin->getSmtpPort();
-            }
-            elseif ( $sName == BinMailpit::SERVICE_NAME ) {
-                $bin  = $bearsamppBins->getMailpit();
+            } elseif ($sName === BinMailpit::SERVICE_NAME) {
+                $bin = $bearsamppBins->getMailpit();
                 $port = $bin->getSmtpPort();
-            }
-            elseif ( $sName == BinMemcached::SERVICE_NAME ) {
-                $bin  = $bearsamppBins->getMemcached();
+            } elseif ($sName === BinMemcached::SERVICE_NAME) {
+                $bin = $bearsamppBins->getMemcached();
                 $port = $bin->getPort();
-            }
-            elseif ( $sName == BinApache::SERVICE_NAME ) {
-                $bin            = $bearsamppBins->getApache();
-                $port           = $bin->getPort();
+            } elseif ($sName === BinApache::SERVICE_NAME) {
+                $bin = $bearsamppBins->getApache();
+                $port = $bin->getPort();
                 $syntaxCheckCmd = BinApache::CMD_SYNTAX_CHECK;
-            }
-            elseif ( $sName == BinMysql::SERVICE_NAME ) {
-                $bin            = $bearsamppBins->getMysql();
-                $port           = $bin->getPort();
+            } elseif ($sName === BinMysql::SERVICE_NAME) {
+                $bin = $bearsamppBins->getMysql();
+                $port = $bin->getPort();
                 $syntaxCheckCmd = BinMysql::CMD_SYNTAX_CHECK;
-            }
-            elseif ( $sName == BinMariadb::SERVICE_NAME ) {
-                $bin            = $bearsamppBins->getMariadb();
-                $port           = $bin->getPort();
+            } elseif ($sName === BinMariadb::SERVICE_NAME) {
+                $bin = $bearsamppBins->getMariadb();
+                $port = $bin->getPort();
                 $syntaxCheckCmd = BinMariadb::CMD_SYNTAX_CHECK;
-            }
-            elseif ( $sName == BinPostgresql::SERVICE_NAME ) {
-                $bin  = $bearsamppBins->getPostgresql();
+            } elseif ($sName === BinPostgresql::SERVICE_NAME) {
+                $bin = $bearsamppBins->getPostgresql();
                 $port = $bin->getPort();
-            }
-            elseif ( $sName == BinFilezilla::SERVICE_NAME ) {
-                $bin  = $bearsamppBins->getFilezilla();
+            } elseif ($sName === BinFilezilla::SERVICE_NAME) {
+                $bin = $bearsamppBins->getFilezilla();
                 $port = $bin->getPort();
-            }
-            elseif ( $sName == BinXlight::SERVICE_NAME ) {
-                $bin  = $bearsamppBins->getXlight();
+            } elseif ($sName === BinXlight::SERVICE_NAME) {
+                $bin = $bearsamppBins->getXlight();
                 $port = $bin->getPort();
             }
 
-            $name    = $bin->getName();
+            $name = $bin->getName();
             $service = $bin->getService();
 
-            if ( !empty( $service ) && $service instanceof Win32Service ) {
-                if ( $args[1] == self::CREATE ) {
-                    $this->create( $service );
-                }
-                elseif ( $args[1] == self::START ) {
-                    $this->start( $bin, $syntaxCheckCmd );
-                }
-                elseif ( $args[1] == self::STOP ) {
-                    $this->stop( $service );
-                }
-                elseif ( $args[1] == self::RESTART ) {
-                    $this->restart( $bin, $syntaxCheckCmd );
-                }
-                elseif ( $args[1] == self::INSTALL ) {
-                    if ( !empty( $port ) ) {
-                        $this->install( $bin, $port, $syntaxCheckCmd );
+            if (!empty($service) && $service instanceof Win32Service) {
+                if ($args[1] === self::CREATE) {
+                    $this->create($service);
+                } elseif ($args[1] === self::START) {
+                    $this->start($bin, $syntaxCheckCmd);
+                } elseif ($args[1] === self::STOP) {
+                    $this->stop($service);
+                } elseif ($args[1] === self::RESTART) {
+                    $this->restart($bin, $syntaxCheckCmd);
+                } elseif ($args[1] === self::INSTALL) {
+                    if (!empty($port)) {
+                        $this->install($bin, $port, $syntaxCheckCmd);
                     }
-                }
-                elseif ( $args[1] == self::REMOVE ) {
-                    $this->remove( $service, $name );
+                } elseif ($args[1] === self::REMOVE) {
+                    $this->remove($service, $name);
                 }
             }
         }
@@ -114,9 +101,9 @@ class ActionService
     /**
      * Creates a service.
      *
-     * @param   Win32Service  $service  The service to create.
+     * @param Win32Service $service The service to create.
      */
-    private function create($service)
+    private function create(Win32Service $service): void
     {
         $service->create();
     }
@@ -124,20 +111,20 @@ class ActionService
     /**
      * Starts a service.
      *
-     * @param   mixed        $bin             The binary object of the service.
-     * @param   string|null  $syntaxCheckCmd  The command to check syntax, if applicable.
+     * @param object $bin The binary object of the service.
+     * @param string|null $syntaxCheckCmd The command to check syntax, if applicable.
      */
-    private function start($bin, $syntaxCheckCmd)
+    private function start(object $bin, ?string $syntaxCheckCmd): void
     {
-        Util::startService( $bin, $syntaxCheckCmd, true );
+        Util::startService($bin, $syntaxCheckCmd, true);
     }
 
     /**
      * Stops a service.
      *
-     * @param   Win32Service  $service  The service to stop.
+     * @param Win32Service $service The service to stop.
      */
-    private function stop($service)
+    private function stop(Win32Service $service): void
     {
         $service->stop();
     }
@@ -145,36 +132,36 @@ class ActionService
     /**
      * Restarts a service.
      *
-     * @param   mixed        $bin             The binary object of the service.
-     * @param   string|null  $syntaxCheckCmd  The command to check syntax, if applicable.
+     * @param object $bin The binary object of the service.
+     * @param string|null $syntaxCheckCmd The command to check syntax, if applicable.
      */
-    private function restart($bin, $syntaxCheckCmd)
+    private function restart(object $bin, ?string $syntaxCheckCmd): void
     {
-        if ( $bin->getService()->stop() ) {
-            $this->start( $bin, $syntaxCheckCmd );
+        if ($bin->getService()->stop()) {
+            $this->start($bin, $syntaxCheckCmd);
         }
     }
 
     /**
      * Installs a service.
      *
-     * @param   mixed        $bin             The binary object of the service.
-     * @param   int          $port            The port number for the service.
-     * @param   string|null  $syntaxCheckCmd  The command to check syntax, if applicable.
+     * @param object $bin The binary object of the service.
+     * @param int $port The port number for the service.
+     * @param string|null $syntaxCheckCmd The command to check syntax, if applicable.
      */
-    private function install($bin, $port, $syntaxCheckCmd)
+    private function install(object $bin, int $port, ?string $syntaxCheckCmd): void
     {
-        Util::installService( $bin, $port, $syntaxCheckCmd, true );
+        Util::installService($bin, $port, $syntaxCheckCmd, true);
     }
 
     /**
      * Removes a service.
      *
-     * @param   Win32Service  $service  The service to remove.
-     * @param   string        $name     The name of the service.
+     * @param Win32Service $service The service to remove.
+     * @param string $name The name of the service.
      */
-    private function remove($service, $name)
+    private function remove(Win32Service $service, string $name): void
     {
-        Util::removeService( $service, $name );
+        Util::removeService($service, $name);
     }
 }

@@ -7,6 +7,10 @@
  * Github: https://github.com/Bearsampp
  */
 
+use Bearsampp\Core\Classes\Bins\BinPostgresql;
+use Bearsampp\Core\Classes\Util;
+use Bearsampp\Core\Classes\Lang;
+
 /**
  * Class ActionDebugPostgresql
  *
@@ -18,25 +22,26 @@ class ActionDebugPostgresql
     /**
      * Constructor for ActionDebugPostgresql.
      *
-     * @param array $args An array of arguments where the first element is expected to be a PostgreSQL command.
-     *
-     * This constructor initializes the debugging process for PostgreSQL. It checks the provided arguments,
+     * Initializes the debugging process for PostgreSQL. It checks the provided arguments,
      * retrieves the command line output for the specified PostgreSQL command, and displays it in a message box.
+     *
+     * @param array $args An array of arguments where the first element is expected to be a PostgreSQL command.
      *
      * Global variables used:
      * - $bearsamppLang: Provides language-specific strings.
      * - $bearsamppBins: Provides access to Bearsampp binaries, including PostgreSQL.
      * - $bearsamppWinbinder: Handles the display of message boxes.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
-        global $bearsamppLang, $bearsamppBins, $bearsamppTools, $bearsamppWinbinder;
+        global $bearsamppLang, $bearsamppBins, $bearsamppWinbinder;
 
         if (isset($args[0]) && !empty($args[0])) {
             $editor = false;
             $msgBoxError = false;
             $caption = $bearsamppLang->getValue(Lang::DEBUG) . ' ' . $bearsamppLang->getValue(Lang::POSTGRESQL) . ' - ';
-            if ($args[0] == BinPostgresql::CMD_VERSION) {
+
+            if ($args[0] === BinPostgresql::CMD_VERSION) {
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_POSTGRESQL_VERSION);
             }
             $caption .= ' (' . $args[0] . ')';

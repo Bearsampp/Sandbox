@@ -28,7 +28,7 @@ class ActionManualRestart
      * 4. Sets the application to restart.
      * 5. Stops the loading process.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppCore, $bearsamppBins;
 

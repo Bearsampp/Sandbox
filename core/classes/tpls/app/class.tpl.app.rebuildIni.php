@@ -2,7 +2,6 @@
 /*
  * Copyright (c) 2021-2024 Bearsampp
  * License:  GNU General Public License version 3 or later; see LICENSE.txt
- * Author: Bear
  * Website: https://bearsampp.com
  * Github: https://github.com/Bearsampp
  */
@@ -20,20 +19,20 @@ class TplAppRebuildIni
      *
      * This method generates the action string to run the REBUILD_INI command.
      * It uses the global `$bearsamppLang` object to retrieve the localized string
-     * for the menu item and the glyph icon for the trashcan.
+     * for the menu item and the glyph icon for the rebuild action.
      *
-     * @global object $bearsamppLang Provides language support for retrieving language-specific values.
+     * @global LangProc $bearsamppLang Provides language support for retrieving language-specific values.
      *
      * @return string The generated action string to rebuild the INI configuration.
      */
-    public static function process()
+    public static function process(): string
     {
         global $bearsamppLang;
 
         return TplApp::getActionRun(
             Action::REBUILD_INI,
-            null,
-            array($bearsamppLang->getValue(Lang::MENU_REBUILD_INI), TplAestan::GLYPH_REBUILD_INI)
+            [],
+            [$bearsamppLang->getValue(Lang::MENU_REBUILD_INI), TplAestan::GLYPH_REBUILD_INI]
         );
     }
 }

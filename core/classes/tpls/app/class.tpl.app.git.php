@@ -17,11 +17,11 @@
 class TplAppGit
 {
     // Constants for menu and action identifiers
-    const MENU = 'git';
-    const MENU_REPOS = 'gitRepos';
+    public const MENU = 'git';
+    public const MENU_REPOS = 'gitRepos';
 
-    const ACTION_REFRESH_REPOS = 'refreshGitRepos';
-    const ACTION_REFRESH_REPOS_STARTUP = 'refreshGitReposStartup';
+    public const ACTION_REFRESH_REPOS = 'refreshGitRepos';
+    public const ACTION_REFRESH_REPOS_STARTUP = 'refreshGitReposStartup';
 
     /**
      * Processes and generates the main Git menu.
@@ -33,11 +33,11 @@ class TplAppGit
      *
      * @return array The generated Git menu item and actions.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang;
 
-        return TplApp::getMenu($bearsamppLang->getValue(Lang::GIT), self::MENU, get_called_class());
+        return TplApp::getMenu($bearsamppLang->getValue(Lang::GIT), self::MENU, static::class);
     }
 
     /**
@@ -51,23 +51,27 @@ class TplAppGit
      *
      * @return string The generated Git menu content.
      */
-    public static function getMenuGit()
+    public static function getMenuGit(): string
     {
         global $bearsamppLang, $bearsamppTools;
 
-        $tplRepos = TplApp::getMenu($bearsamppLang->getValue(Lang::REPOS), self::MENU_REPOS, get_called_class());
-        $emptyRepos = count(explode(PHP_EOL, $tplRepos[TplApp::SECTION_CONTENT])) == 2;
+        $tplRepos = TplApp::getMenu($bearsamppLang->getValue(Lang::REPOS), self::MENU_REPOS, static::class);
+        $emptyRepos = count(explode(PHP_EOL, $tplRepos[TplApp::SECTION_CONTENT])) === 2;
         $isScanStartup = $bearsamppTools->getGit()->isScanStartup();
 
         $tplRefreshRepos = TplApp::getActionMulti(
-            self::ACTION_REFRESH_REPOS, null,
-            array($bearsamppLang->getValue(Lang::MENU_REFRESH_REPOS), TplAestan::GLYPH_RELOAD),
-            false, get_called_class()
+            self::ACTION_REFRESH_REPOS,
+            [],
+            [$bearsamppLang->getValue(Lang::MENU_REFRESH_REPOS), TplAestan::GLYPH_RELOAD],
+            false,
+            static::class
         );
         $tplRefreshReposStartup = TplApp::getActionMulti(
-            self::ACTION_REFRESH_REPOS_STARTUP, array($isScanStartup ? Config::DISABLED : Config::ENABLED),
-            array($bearsamppLang->getValue(Lang::MENU_SCAN_REPOS_STARTUP), $isScanStartup ? TplAestan::GLYPH_CHECK : ''),
-            false, get_called_class()
+            self::ACTION_REFRESH_REPOS_STARTUP,
+            [$isScanStartup ? Config::DISABLED : Config::ENABLED],
+            [$bearsamppLang->getValue(Lang::MENU_SCAN_REPOS_STARTUP), $isScanStartup ? TplAestan::GLYPH_CHECK : ''],
+            false,
+            static::class
         );
 
         /* get path for git gui */
@@ -79,10 +83,10 @@ class TplAppGit
                 $bearsamppTools->getConsoleZ()->getTabTitleGit()
             ) . PHP_EOL .
             TplAestan::getItemExe(
-                    $bearsamppLang->getValue(Lang::GITGUI),
-                    $gitgui . '/git-gui',
-                    TplAestan::GLYPH_GIT
-                ) . PHP_EOL .
+                $bearsamppLang->getValue(Lang::GITGUI),
+                $gitgui . '/git-gui',
+                TplAestan::GLYPH_GIT
+            ) . PHP_EOL .
             TplAestan::getItemSeparator() . PHP_EOL .
 
             // Items
@@ -106,7 +110,7 @@ class TplAppGit
      *
      * @return string The generated Git repositories menu content.
      */
-    public static function getMenuGitRepos()
+    public static function getMenuGitRepos(): string
     {
         global $bearsamppTools;
         $result = '';
@@ -132,9 +136,9 @@ class TplAppGit
      *
      * @return string The generated action string for refreshing Git repositories.
      */
-    public static function getActionRefreshGitRepos()
+    public static function getActionRefreshGitRepos(): string
     {
-        return TplApp::getActionRun(Action::REFRESH_REPOS, array(ActionRefreshRepos::GIT)) . PHP_EOL .
+        return TplApp::getActionRun(Action::REFRESH_REPOS, [ActionRefreshRepos::GIT]) . PHP_EOL .
             TplAppReload::getActionReload() . PHP_EOL;
     }
 
@@ -148,9 +152,9 @@ class TplAppGit
      *
      * @return string The generated action string for refreshing Git repositories at startup.
      */
-    public static function getActionRefreshGitReposStartup($scanStartup)
+    public static function getActionRefreshGitReposStartup(int $scanStartup): string
     {
-        return TplApp::getActionRun(Action::REFRESH_REPOS_STARTUP, array(ActionRefreshRepos::GIT, $scanStartup)) . PHP_EOL .
+        return TplApp::getActionRun(Action::REFRESH_REPOS_STARTUP, [ActionRefreshRepos::GIT, $scanStartup]) . PHP_EOL .
             TplAppReload::getActionReload() . PHP_EOL;
     }
 }

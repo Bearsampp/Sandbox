@@ -15,29 +15,29 @@
  */
 class Config
 {
-    const CFG_MAX_LOGS_ARCHIVES = 'maxLogsArchives';
-    const CFG_LOGS_VERBOSE = 'logsVerbose';
-    const CFG_LANG = 'lang';
-    const CFG_TIMEZONE = 'timezone';
-    const CFG_NOTEPAD = 'notepad';
-    const CFG_SCRIPTS_TIMEOUT = 'scriptsTimeout';
-    const DOWNLOAD_ID = 'DownloadId';
+    public const CFG_MAX_LOGS_ARCHIVES = 'maxLogsArchives';
+    public const CFG_LOGS_VERBOSE = 'logsVerbose';
+    public const CFG_LANG = 'lang';
+    public const CFG_TIMEZONE = 'timezone';
+    public const CFG_NOTEPAD = 'notepad';
+    public const CFG_SCRIPTS_TIMEOUT = 'scriptsTimeout';
+    public const DOWNLOAD_ID = 'DownloadId';
 
-    const CFG_DEFAULT_LANG = 'defaultLang';
-    const CFG_HOSTNAME = 'hostname';
-    const CFG_BROWSER = 'browser';
-    const CFG_ONLINE = 'online';
-    const CFG_LAUNCH_STARTUP = 'launchStartup';
+    public const CFG_DEFAULT_LANG = 'defaultLang';
+    public const CFG_HOSTNAME = 'hostname';
+    public const CFG_BROWSER = 'browser';
+    public const CFG_ONLINE = 'online';
+    public const CFG_LAUNCH_STARTUP = 'launchStartup';
 
-    const ENABLED = 1;
-    const DISABLED = 0;
+    public const ENABLED = 1;
+    public const DISABLED = 0;
 
-    const VERBOSE_SIMPLE = 0;
-    const VERBOSE_REPORT = 1;
-    const VERBOSE_DEBUG = 2;
-    const VERBOSE_TRACE = 3;
+    public const VERBOSE_SIMPLE = 0;
+    public const VERBOSE_REPORT = 1;
+    public const VERBOSE_DEBUG = 2;
+    public const VERBOSE_TRACE = 3;
 
-    private $raw;
+    private array $raw;
 
     /**
      * Constructs a Config object and initializes the configuration settings.
@@ -47,7 +47,7 @@ class Config
     {
         global $bearsamppRoot;
 
-        // Set current timezone to match whats in .conf
+        // Set current timezone to match what's in .conf
         $this->raw = parse_ini_file($bearsamppRoot->getConfigFilePath());
         date_default_timezone_set($this->getTimezone());
     }
@@ -58,9 +58,9 @@ class Config
      * @param string $key The configuration key.
      * @return mixed The configuration value.
      */
-    public function getRaw($key)
+    public function getRaw(string $key): mixed
     {
-        return $this->raw[$key];
+        return $this->raw[$key] ?? null;
     }
 
     /**
@@ -68,25 +68,27 @@ class Config
      *
      * @param string $key The configuration key.
      * @param mixed $value The new configuration value.
+     * @return void
      */
-    public function replace($key, $value)
+    public function replace(string $key, mixed $value): void
     {
-        $this->replaceAll(array($key => $value));
+        $this->replaceAll([$key => $value]);
     }
 
     /**
      * Replaces multiple configuration values with the specified key-value pairs.
      *
      * @param array $params An associative array of key-value pairs to replace.
+     * @return void
      */
-    public function replaceAll($params)
+    public function replaceAll(array $params): void
     {
         global $bearsamppRoot;
 
         Util::logTrace('Replace config:');
         $content = file_get_contents($bearsamppRoot->getConfigFilePath());
         foreach ($params as $key => $value) {
-            $content = preg_replace('/^' . $key . '\s=\s.*/m', $key . ' = ' . '"' . $value.'"', $content, -1, $count);
+            $content = preg_replace('/^' . preg_quote($key, '/') . '\s*=\s*.*/m', $key . ' = "' . $value . '"', $content, -1, $count);
             Util::logTrace('## ' . $key . ': ' . $value . ' (' . $count . ' replacements done)');
             $this->raw[$key] = $value;
         }
@@ -97,41 +99,41 @@ class Config
     /**
      * Retrieves the language setting from the configuration.
      *
-     * @return string The language setting.
+     * @return string|null The language setting or null if not set.
      */
-    public function getLang()
+    public function getLang(): ?string
     {
-        return $this->raw[self::CFG_LANG];
+        return $this->raw[self::CFG_LANG] ?? null;
     }
 
     /**
      * Retrieves the default language setting from the configuration.
      *
-     * @return string The default language setting.
+     * @return string|null The default language setting or null if not set.
      */
-    public function getDefaultLang()
+    public function getDefaultLang(): ?string
     {
-        return $this->raw[self::CFG_DEFAULT_LANG];
+        return $this->raw[self::CFG_DEFAULT_LANG] ?? null;
     }
 
     /**
      * Retrieves the timezone setting from the configuration.
      *
-     * @return string The timezone setting.
+     * @return string|null The timezone setting or null if not set.
      */
-    public function getTimezone()
+    public function getTimezone(): ?string
     {
-        return $this->raw[self::CFG_TIMEZONE];
+        return $this->raw[self::CFG_TIMEZONE] ?? null;
     }
 
     /**
      * Retrieves the license key from the configuration.
      *
-     * @return string The license key.
+     * @return string|null The license key or null if not set.
      */
-    public function getDownloadId()
+    public function getDownloadId(): ?string
     {
-        return $this->raw[self::DOWNLOAD_ID];
+        return $this->raw[self::DOWNLOAD_ID] ?? null;
     }
 
     /**
@@ -139,9 +141,9 @@ class Config
      *
      * @return bool True if online, false otherwise.
      */
-    public function isOnline()
+    public function isOnline(): bool
     {
-        return $this->raw[self::CFG_ONLINE] == self::ENABLED;
+        return ($this->raw[self::CFG_ONLINE] ?? self::DISABLED) == self::ENABLED;
     }
 
     /**
@@ -149,29 +151,29 @@ class Config
      *
      * @return bool True if set to launch at startup, false otherwise.
      */
-    public function isLaunchStartup()
+    public function isLaunchStartup(): bool
     {
-        return $this->raw[self::CFG_LAUNCH_STARTUP] == self::ENABLED;
+        return ($this->raw[self::CFG_LAUNCH_STARTUP] ?? self::DISABLED) == self::ENABLED;
     }
 
     /**
      * Retrieves the browser setting from the configuration.
      *
-     * @return string The browser setting.
+     * @return string|null The browser setting or null if not set.
      */
-    public function getBrowser()
+    public function getBrowser(): ?string
     {
-        return $this->raw[self::CFG_BROWSER];
+        return $this->raw[self::CFG_BROWSER] ?? null;
     }
 
     /**
      * Retrieves the hostname setting from the configuration.
      *
-     * @return string The hostname setting.
+     * @return string|null The hostname setting or null if not set.
      */
-    public function getHostname()
+    public function getHostname(): ?string
     {
-        return $this->raw[self::CFG_HOSTNAME];
+        return $this->raw[self::CFG_HOSTNAME] ?? null;
     }
 
     /**
@@ -179,19 +181,19 @@ class Config
      *
      * @return int The scripts timeout setting.
      */
-    public function getScriptsTimeout()
+    public function getScriptsTimeout(): int
     {
-        return intval($this->raw[self::CFG_SCRIPTS_TIMEOUT]);
+        return intval($this->raw[self::CFG_SCRIPTS_TIMEOUT] ?? 0);
     }
 
     /**
      * Retrieves the notepad setting from the configuration.
      *
-     * @return string The notepad setting.
+     * @return string|null The notepad setting or null if not set.
      */
-    public function getNotepad()
+    public function getNotepad(): ?string
     {
-        return $this->raw[self::CFG_NOTEPAD];
+        return $this->raw[self::CFG_NOTEPAD] ?? null;
     }
 
     /**
@@ -199,9 +201,9 @@ class Config
      *
      * @return int The logs verbosity setting.
      */
-    public function getLogsVerbose()
+    public function getLogsVerbose(): int
     {
-        return intval($this->raw[self::CFG_LOGS_VERBOSE]);
+        return intval($this->raw[self::CFG_LOGS_VERBOSE] ?? self::VERBOSE_SIMPLE);
     }
 
     /**
@@ -209,8 +211,8 @@ class Config
      *
      * @return int The maximum logs archives setting.
      */
-    public function getMaxLogsArchives()
+    public function getMaxLogsArchives(): int
     {
-        return intval($this->raw[self::CFG_MAX_LOGS_ARCHIVES]);
+        return intval($this->raw[self::CFG_MAX_LOGS_ARCHIVES] ?? 0);
     }
 }

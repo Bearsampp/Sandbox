@@ -36,7 +36,7 @@ class ActionLoading
      *
      * @param array $args The arguments passed to the constructor.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppCore, $bearsamppLang, $bearsamppWinbinder;
 
@@ -65,7 +65,7 @@ class ActionLoading
      *
      * @param int $nb The number of steps to increment the progress bar by. Default is 1.
      */
-    public function incrProgressBar($nb = 1)
+    public function incrProgressBar(int $nb = 1): void
     {
         global $bearsamppCore, $bearsamppWinbinder;
 
@@ -87,7 +87,7 @@ class ActionLoading
      * @param mixed $param1 The first parameter of the event.
      * @param mixed $param2 The second parameter of the event.
      */
-    public function processLoading($window, $id, $ctrl, $param1, $param2)
+    public function processLoading(mixed $window, int $id, mixed $ctrl, mixed $param1, mixed $param2): void
     {
         global $bearsamppRoot, $bearsamppWinbinder;
 

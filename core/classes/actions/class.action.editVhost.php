@@ -7,24 +7,29 @@
  * Github: https://github.com/Bearsampp
  */
 
+use Bearsampp\Core\Classes\Util;
+use Bearsampp\Core\Classes\Lang;
+use Bearsampp\Core\Classes\TplService;
+use Bearsampp\Core\Classes\Bins\BinApache;
+
 /**
  * Class ActionEditVhost
  * Handles the editing of virtual hosts within the Bearsampp application.
  */
 class ActionEditVhost
 {
-    private $initServerName;
-    private $wbWindow;
-    private $wbLabelServerName;
-    private $wbInputServerName;
-    private $wbLabelDocRoot;
-    private $wbInputDocRoot;
-    private $wbBtnDocRoot;
-    private $wbLabelExp;
-    private $wbProgressBar;
-    private $wbBtnSave;
-    private $wbBtnDelete;
-    private $wbBtnCancel;
+    private string $initServerName;
+    private object $wbWindow;
+    private object $wbLabelServerName;
+    private object $wbInputServerName;
+    private object $wbLabelDocRoot;
+    private object $wbInputDocRoot;
+    private object $wbBtnDocRoot;
+    private object $wbLabelExp;
+    private object $wbProgressBar;
+    private object $wbBtnSave;
+    private object $wbBtnDelete;
+    private object $wbBtnCancel;
 
     const GAUGE_SAVE = 3;
     const GAUGE_DELETE = 2;
@@ -35,7 +40,7 @@ class ActionEditVhost
      *
      * @param array $args Arguments passed to the constructor, typically containing the server name.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppRoot, $bearsamppLang, $bearsamppWinbinder;
 
@@ -47,21 +52,44 @@ class ActionEditVhost
                 $initDocumentRoot = Util::formatWindowsPath(trim($matchDocumentRoot[1]));
 
                 $bearsamppWinbinder->reset();
-                $this->wbWindow = $bearsamppWinbinder->createAppWindow(sprintf($bearsamppLang->getValue(Lang::EDIT_VHOST_TITLE), $this->initServerName), 490, 200, WBC_NOTIFY, WBC_KEYDOWN | WBC_KEYUP);
+                $this->wbWindow = $bearsamppWinbinder->createAppWindow(
+                    sprintf($bearsamppLang->getValue(Lang::EDIT_VHOST_TITLE), $this->initServerName),
+                    490, 200, WBC_NOTIFY, WBC_KEYDOWN | WBC_KEYUP
+                );
 
-                $this->wbLabelServerName = $bearsamppWinbinder->createLabel($this->wbWindow, $bearsamppLang->getValue(Lang::VHOST_SERVER_NAME_LABEL) . ' :', 15, 15, 85, null, WBC_RIGHT);
-                $this->wbInputServerName = $bearsamppWinbinder->createInputText($this->wbWindow, $this->initServerName, 105, 13, 150, null);
+                $this->wbLabelServerName = $bearsamppWinbinder->createLabel(
+                    $this->wbWindow, $bearsamppLang->getValue(Lang::VHOST_SERVER_NAME_LABEL) . ' :', 15, 15, 85, null, WBC_RIGHT
+                );
+                $this->wbInputServerName = $bearsamppWinbinder->createInputText(
+                    $this->wbWindow, $this->initServerName, 105, 13, 150, null
+                );
 
-                $this->wbLabelDocRoot = $bearsamppWinbinder->createLabel($this->wbWindow, $bearsamppLang->getValue(Lang::VHOST_DOCUMENT_ROOT_LABEL) . ' :', 15, 45, 85, null, WBC_RIGHT);
-                $this->wbInputDocRoot = $bearsamppWinbinder->createInputText($this->wbWindow, $initDocumentRoot, 105, 43, 190, null, null, WBC_READONLY);
-                $this->wbBtnDocRoot = $bearsamppWinbinder->createButton($this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_BROWSE), 300, 43, 110);
+                $this->wbLabelDocRoot = $bearsamppWinbinder->createLabel(
+                    $this->wbWindow, $bearsamppLang->getValue(Lang::VHOST_DOCUMENT_ROOT_LABEL) . ' :', 15, 45, 85, null, WBC_RIGHT
+                );
+                $this->wbInputDocRoot = $bearsamppWinbinder->createInputText(
+                    $this->wbWindow, $initDocumentRoot, 105, 43, 190, null, null, WBC_READONLY
+                );
+                $this->wbBtnDocRoot = $bearsamppWinbinder->createButton(
+                    $this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_BROWSE), 300, 43, 110
+                );
 
-                $this->wbLabelExp = $bearsamppWinbinder->createLabel($this->wbWindow, sprintf($bearsamppLang->getValue(Lang::VHOST_EXP_LABEL), $this->initServerName, $initDocumentRoot), 15, 80, 470, 50);
+                $this->wbLabelExp = $bearsamppWinbinder->createLabel(
+                    $this->wbWindow, sprintf($bearsamppLang->getValue(Lang::VHOST_EXP_LABEL), $this->initServerName, $initDocumentRoot), 15, 80, 470, 50
+                );
 
-                $this->wbProgressBar = $bearsamppWinbinder->createProgressBar($this->wbWindow, self::GAUGE_SAVE + 1, 15, 137, 190);
-                $this->wbBtnSave = $bearsamppWinbinder->createButton($this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_SAVE), 215, 132);
-                $this->wbBtnDelete = $bearsamppWinbinder->createButton($this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_DELETE), 300, 132);
-                $this->wbBtnCancel = $bearsamppWinbinder->createButton($this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_CANCEL), 385, 132);
+                $this->wbProgressBar = $bearsamppWinbinder->createProgressBar(
+                    $this->wbWindow, self::GAUGE_SAVE + 1, 15, 137, 190
+                );
+                $this->wbBtnSave = $bearsamppWinbinder->createButton(
+                    $this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_SAVE), 215, 132
+                );
+                $this->wbBtnDelete = $bearsamppWinbinder->createButton(
+                    $this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_DELETE), 300, 132
+                );
+                $this->wbBtnCancel = $bearsamppWinbinder->createButton(
+                    $this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_CANCEL), 385, 132
+                );
 
                 $bearsamppWinbinder->setHandler($this->wbWindow, $this, 'processWindow');
                 $bearsamppWinbinder->mainLoop();
@@ -73,13 +101,13 @@ class ActionEditVhost
     /**
      * Processes window events and handles user interactions.
      *
-     * @param mixed $window The window object.
+     * @param object $window The window object.
      * @param int $id The ID of the control that triggered the event.
-     * @param mixed $ctrl The control object.
+     * @param object $ctrl The control object.
      * @param mixed $param1 Additional parameter 1.
      * @param mixed $param2 Additional parameter 2.
      */
-    public function processWindow($window, $id, $ctrl, $param1, $param2)
+    public function processWindow(object $window, int $id, object $ctrl, mixed $param1, mixed $param2): void
     {
         global $bearsamppRoot, $bearsamppBins, $bearsamppLang, $bearsamppOpenSsl, $bearsamppWinbinder;
 
@@ -92,7 +120,7 @@ class ActionEditVhost
                     $this->wbLabelExp[WinBinder::CTRL_OBJ],
                     sprintf($bearsamppLang->getValue(Lang::VHOST_EXP_LABEL), $serverName, $documentRoot)
                 );
-                $bearsamppWinbinder->setEnabled($this->wbBtnSave[WinBinder::CTRL_OBJ], empty($serverName) ? false : true);
+                $bearsamppWinbinder->setEnabled($this->wbBtnSave[WinBinder::CTRL_OBJ], !empty($serverName));
                 break;
             case $this->wbBtnDocRoot[WinBinder::CTRL_ID]:
                 $documentRoot = $bearsamppWinbinder->sysDlgPath($window, $bearsamppLang->getValue(Lang::VHOST_DOC_ROOT_PATH), $documentRoot);
@@ -113,15 +141,17 @@ class ActionEditVhost
                 if (!Util::isValidDomainName($serverName)) {
                     $bearsamppWinbinder->messageBoxError(
                         sprintf($bearsamppLang->getValue(Lang::VHOST_NOT_VALID_DOMAIN), $serverName),
-                        $bearsamppLang->getValue(Lang::ADD_VHOST_TITLE));
+                        $bearsamppLang->getValue(Lang::ADD_VHOST_TITLE)
+                    );
                     $bearsamppWinbinder->resetProgressBar($this->wbProgressBar);
                     break;
                 }
 
-                if ($serverName != $this->initServerName && is_file($bearsamppRoot->getVhostsPath() . '/' . $serverName . '.conf')) {
+                if ($serverName !== $this->initServerName && is_file($bearsamppRoot->getVhostsPath() . '/' . $serverName . '.conf')) {
                     $bearsamppWinbinder->messageBoxError(
                         sprintf($bearsamppLang->getValue(Lang::VHOST_ALREADY_EXISTS), $serverName),
-                        sprintf($bearsamppLang->getValue(Lang::EDIT_VHOST_TITLE), $this->initServerName));
+                        sprintf($bearsamppLang->getValue(Lang::EDIT_VHOST_TITLE), $this->initServerName)
+                    );
                     $bearsamppWinbinder->resetProgressBar($this->wbProgressBar);
                     break;
                 }
@@ -138,12 +168,14 @@ class ActionEditVhost
 
                     $bearsamppWinbinder->messageBoxInfo(
                         sprintf($bearsamppLang->getValue(Lang::VHOST_CREATED), $serverName, $serverName, $documentRoot),
-                        sprintf($bearsamppLang->getValue(Lang::EDIT_VHOST_TITLE), $this->initServerName));
+                        sprintf($bearsamppLang->getValue(Lang::EDIT_VHOST_TITLE), $this->initServerName)
+                    );
                     $bearsamppWinbinder->destroyWindow($window);
                 } else {
                     $bearsamppWinbinder->messageBoxError(
                         $bearsamppLang->getValue(Lang::VHOST_CREATED_ERROR),
-                        sprintf($bearsamppLang->getValue(Lang::EDIT_VHOST_TITLE), $this->initServerName));
+                        sprintf($bearsamppLang->getValue(Lang::EDIT_VHOST_TITLE), $this->initServerName)
+                    );
                     $bearsamppWinbinder->resetProgressBar($this->wbProgressBar);
                 }
                 // Reload to remove host
@@ -156,7 +188,8 @@ class ActionEditVhost
                 $boxTitle = $bearsamppLang->getValue(Lang::DELETE_VHOST_TITLE);
                 $confirm = $bearsamppWinbinder->messageBoxYesNo(
                     sprintf($bearsamppLang->getValue(Lang::DELETE_VHOST), $this->initServerName),
-                    $boxTitle);
+                    $boxTitle
+                );
 
                 $bearsamppWinbinder->incrProgressBar($this->wbProgressBar);
 
@@ -169,12 +202,14 @@ class ActionEditVhost
 
                         $bearsamppWinbinder->messageBoxInfo(
                             sprintf($bearsamppLang->getValue(Lang::VHOST_REMOVED), $this->initServerName),
-                            $boxTitle);
+                            $boxTitle
+                        );
                         $bearsamppWinbinder->destroyWindow($window);
                     } else {
                         $bearsamppWinbinder->messageBoxError(
                             sprintf($bearsamppLang->getValue(Lang::VHOST_REMOVE_ERROR), $bearsamppRoot->getVhostsPath() . '/' . $this->initServerName . '.conf'),
-                            $boxTitle);
+                            $boxTitle
+                        );
                         $bearsamppWinbinder->resetProgressBar($this->wbProgressBar);
                     }
                 }

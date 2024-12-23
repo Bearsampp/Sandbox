@@ -17,7 +17,7 @@ class ActionRefreshRepos
     /**
      * Constant representing the 'git' command.
      */
-    const GIT = 'git';
+    public const GIT = 'git';
 
     /**
      * ActionRefreshRepos constructor.
@@ -26,7 +26,7 @@ class ActionRefreshRepos
      *
      * @param array $args An array of arguments where the first argument can be 'git' to trigger the git repository refresh.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         // Global variable for accessing bearsamppTools
         global $bearsamppTools;
@@ -35,9 +35,9 @@ class ActionRefreshRepos
         Util::startLoading();
 
         // Check if the first argument is set and not empty
-        if (isset($args[0]) && !empty($args[0])) {
+        if (!empty($args[0] ?? null)) {
             // If the first argument is 'git', trigger the git repository refresh
-            if ($args[0] == self::GIT) {
+            if ($args[0] === self::GIT) {
                 $bearsamppTools->getGit()->findRepos(false);
             }
         }

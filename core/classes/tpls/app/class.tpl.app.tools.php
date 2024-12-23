@@ -1,11 +1,9 @@
 <?php
 /*
- *
- *  * Copyright (c) 2021-2024 Bearsampp
- *  * License:  GNU General Public License version 3 or later; see LICENSE.txt
- *  * Website: https://bearsampp.com
- *  * Github: https://github.com/Bearsampp
- *
+ * Copyright (c) 2021-2024 Bearsampp
+ * License:  GNU General Public License version 3 or later; see LICENSE.txt
+ * Website: https://bearsampp.com
+ * Github: https://github.com/Bearsampp
  */
 
 /**
@@ -18,25 +16,30 @@
 class TplAppTools
 {
     // Constants for menu and action identifiers
-    const MENU = 'tools';
-    const ACTION_GEN_SSL_CERTIFICATE = 'genSslCertificate';
+    public const MENU = 'tools';
+    public const ACTION_GEN_SSL_CERTIFICATE = 'genSslCertificate';
 
     /**
      * Generates the main Tools menu with options to access various tools.
+     *
+     * This method utilizes the global language object to retrieve the localized string for Tools.
      *
      * @global object $bearsamppLang Provides language support for retrieving language-specific values.
      *
      * @return array The generated menu items and actions for Tools.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang;
 
-        return TplApp::getMenu($bearsamppLang->getValue(Lang::TOOLS), self::MENU, get_called_class());
+        return TplApp::getMenu($bearsamppLang->getValue(Lang::TOOLS), self::MENU, static::class);
     }
 
     /**
      * Generates the Tools menu with options for accessing various tools like Git, Python, Composer, etc.
+     *
+     * This method creates menu items and associated actions for various tools, utilizing global objects
+     * for language support, core functionalities, and tool configurations.
      *
      * @global object $bearsamppLang Provides language support for retrieving language-specific values.
      * @global object $bearsamppCore Provides access to core functionalities and configurations.
@@ -44,7 +47,7 @@ class TplAppTools
      *
      * @return string The generated menu items and actions for Tools.
      */
-    public static function getMenuTools()
+    public static function getMenuTools(): string
     {
         global $bearsamppLang, $bearsamppCore, $bearsamppTools;
         $resultItems = $resultActions = '';
@@ -61,10 +64,10 @@ class TplAppTools
 
         // Bruno postman IDE
         $resultItems .= TplAestan::getItemExe(
-                $bearsamppLang->getValue(Lang::BRUNO),
-                $bearsamppTools->getBruno()->getExe(),
-                TplAestan::GLYPH_BRUNO
-            ) . PHP_EOL;
+            $bearsamppLang->getValue(Lang::BRUNO),
+            $bearsamppTools->getBruno()->getExe(),
+            TplAestan::GLYPH_BRUNO
+        ) . PHP_EOL;
 
         // Composer
         $resultItems .= TplAestan::getItemConsoleZ(
@@ -138,16 +141,18 @@ class TplAppTools
 
         // Pwgen password manager
         $resultItems .= TplAestan::getItemExe(
-                $bearsamppLang->getValue(Lang::PWGEN),
-                $bearsamppCore->getPwgenExe(),
-                TplAestan::GLYPH_PWGEN
-            ) . PHP_EOL;
+            $bearsamppLang->getValue(Lang::PWGEN),
+            $bearsamppCore->getPwgenExe(),
+            TplAestan::GLYPH_PWGEN
+        ) . PHP_EOL;
 
         // Generate SSL Certificate
         $tplGenSslCertificate = TplApp::getActionMulti(
-            self::ACTION_GEN_SSL_CERTIFICATE, null,
-            array($bearsamppLang->getValue(Lang::MENU_GEN_SSL_CERTIFICATE), TplAestan::GLYPH_SSL_CERTIFICATE),
-            false, get_called_class()
+            self::ACTION_GEN_SSL_CERTIFICATE,
+            null,
+            [$bearsamppLang->getValue(Lang::MENU_GEN_SSL_CERTIFICATE), TplAestan::GLYPH_SSL_CERTIFICATE],
+            false,
+            static::class
         );
         $resultItems .= $tplGenSslCertificate[TplApp::SECTION_CALL] . PHP_EOL;
         $resultActions .= $tplGenSslCertificate[TplApp::SECTION_CONTENT];
@@ -158,9 +163,11 @@ class TplAppTools
     /**
      * Generates the action to generate an SSL certificate.
      *
+     * This method creates the action string for generating an SSL certificate.
+     *
      * @return string The generated action to generate an SSL certificate.
      */
-    public static function getActionGenSslCertificate()
+    public static function getActionGenSslCertificate(): string
     {
         return TplApp::getActionRun(Action::GEN_SSL_CERTIFICATE);
     }

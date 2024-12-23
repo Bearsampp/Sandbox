@@ -13,16 +13,55 @@
  */
 class ActionAddVhost
 {
-    private $wbWindow;
-    private $wbLabelServerName;
-    private $wbInputServerName;
-    private $wbLabelDocRoot;
-    private $wbInputDocRoot;
-    private $wbBtnDocRoot;
-    private $wbLabelExp;
-    private $wbProgressBar;
-    private $wbBtnSave;
-    private $wbBtnCancel;
+    /**
+     * @var object The main window object created by WinBinder.
+     */
+    private object $wbWindow;
+
+    /**
+     * @var object The label for the server name input field.
+     */
+    private object $wbLabelServerName;
+
+    /**
+     * @var object The input field for the server name.
+     */
+    private object $wbInputServerName;
+
+    /**
+     * @var object The label for the document root input field.
+     */
+    private object $wbLabelDocRoot;
+
+    /**
+     * @var object The input field for the document root.
+     */
+    private object $wbInputDocRoot;
+
+    /**
+     * @var object The button to browse for the document root.
+     */
+    private object $wbBtnDocRoot;
+
+    /**
+     * @var object The label for the explanation text.
+     */
+    private object $wbLabelExp;
+
+    /**
+     * @var object The progress bar to show the progress of adding the vhost.
+     */
+    private object $wbProgressBar;
+
+    /**
+     * @var object The save button to confirm the vhost creation.
+     */
+    private object $wbBtnSave;
+
+    /**
+     * @var object The cancel button to abort the vhost creation process.
+     */
+    private object $wbBtnCancel;
 
     const GAUGE_SAVE = 2;
 
@@ -32,7 +71,7 @@ class ActionAddVhost
      *
      * @param array $args Arguments passed to the constructor.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppRoot, $bearsamppLang, $bearsamppWinbinder;
 
@@ -40,20 +79,40 @@ class ActionAddVhost
         $initDocumentRoot = Util::formatWindowsPath($bearsamppRoot->getWwwPath()) . '\\' . $initServerName;
 
         $bearsamppWinbinder->reset();
-        $this->wbWindow = $bearsamppWinbinder->createAppWindow($bearsamppLang->getValue(Lang::ADD_VHOST_TITLE), 490, 200, WBC_NOTIFY, WBC_KEYDOWN | WBC_KEYUP);
+        $this->wbWindow = $bearsamppWinbinder->createAppWindow(
+            $bearsamppLang->getValue(Lang::ADD_VHOST_TITLE), 490, 200, WBC_NOTIFY, WBC_KEYDOWN | WBC_KEYUP
+        );
 
-        $this->wbLabelServerName = $bearsamppWinbinder->createLabel($this->wbWindow, $bearsamppLang->getValue(Lang::VHOST_SERVER_NAME_LABEL) . ' :', 15, 15, 85, null, WBC_RIGHT);
-        $this->wbInputServerName = $bearsamppWinbinder->createInputText($this->wbWindow, $initServerName, 105, 13, 150, null);
+        $this->wbLabelServerName = $bearsamppWinbinder->createLabel(
+            $this->wbWindow, $bearsamppLang->getValue(Lang::VHOST_SERVER_NAME_LABEL) . ' :', 15, 15, 85, null, WBC_RIGHT
+        );
+        $this->wbInputServerName = $bearsamppWinbinder->createInputText(
+            $this->wbWindow, $initServerName, 105, 13, 150, null
+        );
 
-        $this->wbLabelDocRoot = $bearsamppWinbinder->createLabel($this->wbWindow, $bearsamppLang->getValue(Lang::VHOST_DOCUMENT_ROOT_LABEL) . ' :', 15, 45, 85, null, WBC_RIGHT);
-        $this->wbInputDocRoot = $bearsamppWinbinder->createInputText($this->wbWindow, $initDocumentRoot, 105, 43, 190, null, null, WBC_READONLY);
-        $this->wbBtnDocRoot = $bearsamppWinbinder->createButton($this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_BROWSE), 300, 43, 110);
+        $this->wbLabelDocRoot = $bearsamppWinbinder->createLabel(
+            $this->wbWindow, $bearsamppLang->getValue(Lang::VHOST_DOCUMENT_ROOT_LABEL) . ' :', 15, 45, 85, null, WBC_RIGHT
+        );
+        $this->wbInputDocRoot = $bearsamppWinbinder->createInputText(
+            $this->wbWindow, $initDocumentRoot, 105, 43, 190, null, null, WBC_READONLY
+        );
+        $this->wbBtnDocRoot = $bearsamppWinbinder->createButton(
+            $this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_BROWSE), 300, 43, 110
+        );
 
-        $this->wbLabelExp = $bearsamppWinbinder->createLabel($this->wbWindow, sprintf($bearsamppLang->getValue(Lang::VHOST_EXP_LABEL), $initServerName, $initDocumentRoot), 15, 80, 470, 50);
+        $this->wbLabelExp = $bearsamppWinbinder->createLabel(
+            $this->wbWindow, sprintf($bearsamppLang->getValue(Lang::VHOST_EXP_LABEL), $initServerName, $initDocumentRoot), 15, 80, 470, 50
+        );
 
-        $this->wbProgressBar = $bearsamppWinbinder->createProgressBar($this->wbWindow, self::GAUGE_SAVE + 1, 15, 137, 275);
-        $this->wbBtnSave = $bearsamppWinbinder->createButton($this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_SAVE), 300, 132);
-        $this->wbBtnCancel = $bearsamppWinbinder->createButton($this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_CANCEL), 387, 132);
+        $this->wbProgressBar = $bearsamppWinbinder->createProgressBar(
+            $this->wbWindow, self::GAUGE_SAVE + 1, 15, 137, 275
+        );
+        $this->wbBtnSave = $bearsamppWinbinder->createButton(
+            $this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_SAVE), 300, 132
+        );
+        $this->wbBtnCancel = $bearsamppWinbinder->createButton(
+            $this->wbWindow, $bearsamppLang->getValue(Lang::BUTTON_CANCEL), 387, 132
+        );
 
         $bearsamppWinbinder->setHandler($this->wbWindow, $this, 'processWindow');
         $bearsamppWinbinder->mainLoop();
@@ -63,13 +122,13 @@ class ActionAddVhost
     /**
      * Processes window events and handles user interactions.
      *
-     * @param resource $window The window resource.
+     * @param object $window The window object.
      * @param int $id The ID of the control that triggered the event.
-     * @param resource $ctrl The control resource.
+     * @param object $ctrl The control object.
      * @param mixed $param1 Additional parameter 1.
      * @param mixed $param2 Additional parameter 2.
      */
-    public function processWindow($window, $id, $ctrl, $param1, $param2)
+    public function processWindow(object $window, int $id, object $ctrl, mixed $param1, mixed $param2): void
     {
         global $bearsamppRoot, $bearsamppBins, $bearsamppLang, $bearsamppOpenSsl, $bearsamppWinbinder;
 
@@ -82,7 +141,7 @@ class ActionAddVhost
                     $this->wbLabelExp[WinBinder::CTRL_OBJ],
                     sprintf($bearsamppLang->getValue(Lang::VHOST_EXP_LABEL), $serverName, $documentRoot)
                 );
-                $bearsamppWinbinder->setEnabled($this->wbBtnSave[WinBinder::CTRL_OBJ], empty($serverName) ? false : true);
+                $bearsamppWinbinder->setEnabled($this->wbBtnSave[WinBinder::CTRL_OBJ], !empty($serverName));
                 break;
             case $this->wbBtnDocRoot[WinBinder::CTRL_ID]:
                 $documentRoot = $bearsamppWinbinder->sysDlgPath($window, $bearsamppLang->getValue(Lang::VHOST_DOC_ROOT_PATH), $documentRoot);
@@ -101,7 +160,8 @@ class ActionAddVhost
                 if (!Util::isValidDomainName($serverName)) {
                     $bearsamppWinbinder->messageBoxError(
                         sprintf($bearsamppLang->getValue(Lang::VHOST_NOT_VALID_DOMAIN), $serverName),
-                        $bearsamppLang->getValue(Lang::ADD_VHOST_TITLE));
+                        $bearsamppLang->getValue(Lang::ADD_VHOST_TITLE)
+                    );
                     $bearsamppWinbinder->resetProgressBar($this->wbProgressBar);
                     break;
                 }
@@ -109,7 +169,8 @@ class ActionAddVhost
                 if (is_file($bearsamppRoot->getVhostsPath() . '/' . $serverName . '.conf')) {
                     $bearsamppWinbinder->messageBoxError(
                         sprintf($bearsamppLang->getValue(Lang::VHOST_ALREADY_EXISTS), $serverName),
-                        $bearsamppLang->getValue(Lang::ADD_VHOST_TITLE));
+                        $bearsamppLang->getValue(Lang::ADD_VHOST_TITLE)
+                    );
                     $bearsamppWinbinder->resetProgressBar($this->wbProgressBar);
                     break;
                 }
@@ -122,10 +183,14 @@ class ActionAddVhost
 
                     $bearsamppWinbinder->messageBoxInfo(
                         sprintf($bearsamppLang->getValue(Lang::VHOST_CREATED), $serverName, $serverName, $documentRoot),
-                        $bearsamppLang->getValue(Lang::ADD_VHOST_TITLE));
+                        $bearsamppLang->getValue(Lang::ADD_VHOST_TITLE)
+                    );
                     $bearsamppWinbinder->destroyWindow($window);
                 } else {
-                    $bearsamppWinbinder->messageBoxError($bearsamppLang->getValue(Lang::VHOST_CREATED_ERROR), $bearsamppLang->getValue(Lang::ADD_VHOST_TITLE));
+                    $bearsamppWinbinder->messageBoxError(
+                        $bearsamppLang->getValue(Lang::VHOST_CREATED_ERROR),
+                        $bearsamppLang->getValue(Lang::ADD_VHOST_TITLE)
+                    );
                     $bearsamppWinbinder->resetProgressBar($this->wbProgressBar);
                 }
                 break;

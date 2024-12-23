@@ -15,9 +15,9 @@ class TplService
      * @param string $sName The name of the service to create.
      * @return string The generated action string for creating the service.
      */
-    public static function getActionCreate($sName)
+    public static function getActionCreate(string $sName): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array($sName, ActionService::CREATE));
+        return TplApp::getActionRun(Action::SERVICE, [$sName, ActionService::CREATE]);
     }
 
     /**
@@ -26,9 +26,9 @@ class TplService
      * @param string $sName The name of the service to start.
      * @return string The generated action string for starting the service.
      */
-    public static function getActionStart($sName)
+    public static function getActionStart(string $sName): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array($sName, ActionService::START));
+        return TplApp::getActionRun(Action::SERVICE, [$sName, ActionService::START]);
     }
 
     /**
@@ -37,9 +37,9 @@ class TplService
      * @param string $sName The name of the service to stop.
      * @return string The generated action string for stopping the service.
      */
-    public static function getActionStop($sName)
+    public static function getActionStop(string $sName): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array($sName, ActionService::STOP));
+        return TplApp::getActionRun(Action::SERVICE, [$sName, ActionService::STOP]);
     }
 
     /**
@@ -48,9 +48,9 @@ class TplService
      * @param string $sName The name of the service to restart.
      * @return string The generated action string for restarting the service.
      */
-    public static function getActionRestart($sName)
+    public static function getActionRestart(string $sName): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array($sName, ActionService::RESTART));
+        return TplApp::getActionRun(Action::SERVICE, [$sName, ActionService::RESTART]);
     }
 
     /**
@@ -59,9 +59,9 @@ class TplService
      * @param string $sName The name of the service to install.
      * @return string The generated action string for installing the service.
      */
-    public static function getActionInstall($sName)
+    public static function getActionInstall(string $sName): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array($sName, ActionService::INSTALL));
+        return TplApp::getActionRun(Action::SERVICE, [$sName, ActionService::INSTALL]);
     }
 
     /**
@@ -70,9 +70,9 @@ class TplService
      * @param string $sName The name of the service to remove.
      * @return string The generated action string for removing the service.
      */
-    public static function getActionRemove($sName)
+    public static function getActionRemove(string $sName): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array($sName, ActionService::REMOVE));
+        return TplApp::getActionRun(Action::SERVICE, [$sName, ActionService::REMOVE]);
     }
 
     /**
@@ -81,13 +81,13 @@ class TplService
      * @param string $sName The name of the service to start.
      * @return string The generated menu item string for starting the service.
      */
-    public static function getItemStart($sName)
+    public static function getItemStart(string $sName): string
     {
         global $bearsamppLang;
 
         return TplApp::getActionRun(
-            Action::SERVICE, array($sName, ActionService::START),
-            array($bearsamppLang->getValue(Lang::MENU_START_SERVICE), TplAestan::GLYPH_START)
+            Action::SERVICE, [$sName, ActionService::START],
+            [$bearsamppLang->getValue(Lang::MENU_START_SERVICE), TplAestan::GLYPH_START]
         );
     }
 
@@ -97,13 +97,13 @@ class TplService
      * @param string $sName The name of the service to stop.
      * @return string The generated menu item string for stopping the service.
      */
-    public static function getItemStop($sName)
+    public static function getItemStop(string $sName): string
     {
         global $bearsamppLang;
 
         return TplApp::getActionRun(
-            Action::SERVICE, array($sName, ActionService::STOP),
-            array($bearsamppLang->getValue(Lang::MENU_STOP_SERVICE), TplAestan::GLYPH_STOP)
+            Action::SERVICE, [$sName, ActionService::STOP],
+            [$bearsamppLang->getValue(Lang::MENU_STOP_SERVICE), TplAestan::GLYPH_STOP]
         );
     }
 
@@ -113,13 +113,13 @@ class TplService
      * @param string $sName The name of the service to restart.
      * @return string The generated menu item string for restarting the service.
      */
-    public static function getItemRestart($sName)
+    public static function getItemRestart(string $sName): string
     {
         global $bearsamppLang;
 
         return TplApp::getActionRun(
-            Action::SERVICE, array($sName, ActionService::RESTART),
-            array($bearsamppLang->getValue(Lang::MENU_RESTART_SERVICE), TplAestan::GLYPH_RELOAD)
+            Action::SERVICE, [$sName, ActionService::RESTART],
+            [$bearsamppLang->getValue(Lang::MENU_RESTART_SERVICE), TplAestan::GLYPH_RELOAD]
         );
     }
 
@@ -129,13 +129,13 @@ class TplService
      * @param string $sName The name of the service to install.
      * @return string The generated menu item string for installing the service.
      */
-    public static function getItemInstall($sName)
+    public static function getItemInstall(string $sName): string
     {
         global $bearsamppLang;
 
         return TplApp::getActionRun(
-            Action::SERVICE, array($sName, ActionService::INSTALL),
-            array($bearsamppLang->getValue(Lang::MENU_INSTALL_SERVICE), TplAestan::GLYPH_SERVICE_INSTALL)
+            Action::SERVICE, [$sName, ActionService::INSTALL],
+            [$bearsamppLang->getValue(Lang::MENU_INSTALL_SERVICE), TplAestan::GLYPH_SERVICE_INSTALL]
         );
     }
 
@@ -145,13 +145,13 @@ class TplService
      * @param string $sName The name of the service to remove.
      * @return string The generated menu item string for removing the service.
      */
-    public static function getItemRemove($sName)
+    public static function getItemRemove(string $sName): string
     {
         global $bearsamppLang;
 
         return TplApp::getActionRun(
-            Action::SERVICE, array($sName, ActionService::REMOVE),
-            array($bearsamppLang->getValue(Lang::MENU_REMOVE_SERVICE), TplAestan::GLYPH_SERVICE_REMOVE)
+            Action::SERVICE, [$sName, ActionService::REMOVE],
+            [$bearsamppLang->getValue(Lang::MENU_REMOVE_SERVICE), TplAestan::GLYPH_SERVICE_REMOVE]
         );
     }
 }

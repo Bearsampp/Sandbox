@@ -7,6 +7,10 @@
  * Github: https://github.com/Bearsampp
  */
 
+use Bearsampp\Core\Classes\Bins\BinMysql;
+use Bearsampp\Core\Classes\Util;
+use Bearsampp\Core\Classes\Lang;
+
 /**
  * Class ActionDebugMysql
  *
@@ -18,15 +22,15 @@ class ActionDebugMysql
     /**
      * Constructor for ActionDebugMysql.
      *
-     * @param array $args An array of arguments specifying the MySQL command to execute.
-     *
-     * This constructor initializes the debugging process for MySQL based on the provided arguments.
+     * Initializes the debugging process for MySQL based on the provided arguments.
      * It supports commands for retrieving the MySQL version, variables, and performing a syntax check.
      * The output is displayed in a message box or editor based on the command.
+     *
+     * @param array $args An array of arguments specifying the MySQL command to execute.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
-        global $bearsamppLang, $bearsamppBins, $bearsamppTools, $bearsamppWinbinder;
+        global $bearsamppLang, $bearsamppBins, $bearsamppWinbinder;
 
         if (isset($args[0]) && !empty($args[0])) {
             $editor = false;
@@ -34,12 +38,12 @@ class ActionDebugMysql
             $caption = $bearsamppLang->getValue(Lang::DEBUG) . ' ' . $bearsamppLang->getValue(Lang::MYSQL) . ' - ';
 
             // Determine the command and set the caption accordingly
-            if ($args[0] == BinMysql::CMD_VERSION) {
+            if ($args[0] === BinMysql::CMD_VERSION) {
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_MYSQL_VERSION);
-            } elseif ($args[0] == BinMysql::CMD_VARIABLES) {
+            } elseif ($args[0] === BinMysql::CMD_VARIABLES) {
                 $editor = true;
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_MYSQL_VARIABLES);
-            } elseif ($args[0] == BinMysql::CMD_SYNTAX_CHECK) {
+            } elseif ($args[0] === BinMysql::CMD_SYNTAX_CHECK) {
                 $caption .= $bearsamppLang->getValue(Lang::DEBUG_MYSQL_SYNTAX_CHECK);
             }
             $caption .= ' (' . $args[0] . ')';
@@ -48,7 +52,7 @@ class ActionDebugMysql
             $debugOutput = $bearsamppBins->getMysql()->getCmdLineOutput($args[0]);
 
             // Handle syntax check results
-            if ($args[0] == BinMysql::CMD_SYNTAX_CHECK) {
+            if ($args[0] === BinMysql::CMD_SYNTAX_CHECK) {
                 $msgBoxError = !$debugOutput['syntaxOk'];
                 $debugOutput['content'] = $debugOutput['syntaxOk'] ? 'Syntax OK !' : $debugOutput['content'];
             }

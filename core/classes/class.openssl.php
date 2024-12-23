@@ -16,7 +16,7 @@ class OpenSsl
      * @param string|null $destPath The destination path where the certificate files will be saved. If null, the default SSL path is used.
      * @return bool True if the certificate was created successfully, false otherwise.
      */
-    public function createCrt($name, $destPath = null)
+    public function createCrt(string $name, ?string $destPath = null): bool
     {
         global $bearsamppRoot, $bearsamppCore;
         $destPath = empty($destPath) ? $bearsamppRoot->getSslPath() : $destPath;
@@ -29,25 +29,25 @@ class OpenSsl
         $extension = 'SAN';
         $exe = '"' . $bearsamppCore->getOpenSslExe() . '"';
 
-        // ext
+        // Extension configuration
         $extContent = PHP_EOL . '[' . $extension . ']' . PHP_EOL;
         $extContent .= 'subjectAltName=DNS:*.' . $name . ',DNS:' . $name . PHP_EOL;
 
-        // tmp openssl.cfg
+        // Temporary openssl.cfg
         $conf = $bearsamppCore->getTmpPath() . '/openssl_' . $name . '_' . Util::random() . '.cfg';
         file_put_contents($conf, file_get_contents($bearsamppCore->getOpenSslConf()) . $extContent);
 
-        // ppk
-        $batch = $exe . ' genrsa -des3 -passout ' . $password . ' -out ' . $ppkPath . ' 2048 -noout -config ' . $conf. PHP_EOL;
+        // Generate private key
+        $batch = $exe . ' genrsa -des3 -passout ' . $password . ' -out ' . $ppkPath . ' 2048 -noout -config ' . $conf . PHP_EOL;
         $batch .= 'IF %ERRORLEVEL% GEQ 1 GOTO EOF' . PHP_EOL . PHP_EOL;
 
-        // pub
+        // Generate public key
         $batch .= $exe . ' rsa -in ' . $ppkPath . ' -passin ' . $password . ' -out ' . $pubPath . PHP_EOL . PHP_EOL;
         $batch .= 'IF %ERRORLEVEL% GEQ 1 GOTO EOF' . PHP_EOL . PHP_EOL;
 
-        // crt
+        // Generate certificate
         $batch .= $exe . ' req -x509 -nodes -sha256 -new -key ' . $pubPath . ' -out ' . $crtPath . ' -passin ' . $password;
-        $batch .= ' -subj ' . $subject . ' -reqexts ' . $extension . ' -extensions ' . $extension . ' -config ' . $conf. PHP_EOL;
+        $batch .= ' -subj ' . $subject . ' -reqexts ' . $extension . ' -extensions ' . $extension . ' -config ' . $conf . PHP_EOL;
         $batch .= 'IF %ERRORLEVEL% GEQ 1 GOTO EOF' . PHP_EOL . PHP_EOL;
 
         $batch .= ':EOF' . PHP_EOL;
@@ -56,7 +56,7 @@ class OpenSsl
         $batch .= 'ECHO %RESULT%';
 
         $result = Batch::exec('createCertificate', $batch);
-        return isset($result[0]) && $result[0] == 'OK';
+        return isset($result[0]) && $result[0] === 'OK';
     }
 
     /**
@@ -65,7 +65,7 @@ class OpenSsl
      * @param string $name The name of the certificate.
      * @return bool True if the certificate exists, false otherwise.
      */
-    public function existsCrt($name)
+    public function existsCrt(string $name): bool
     {
         global $bearsamppRoot;
 
@@ -82,7 +82,7 @@ class OpenSsl
      * @param string $name The name of the certificate.
      * @return bool True if the certificate was removed successfully, false otherwise.
      */
-    public function removeCrt($name)
+    public function removeCrt(string $name): bool
     {
         global $bearsamppRoot;
 

@@ -15,15 +15,15 @@
  */
 class TplAppFilezilla
 {
-    const MENU = 'filezilla';
-    const MENU_VERSIONS = 'filezillaVersions';
-    const MENU_SERVICE = 'filezillaService';
+    public const MENU = 'filezilla';
+    public const MENU_VERSIONS = 'filezillaVersions';
+    public const MENU_SERVICE = 'filezillaService';
 
-    const ACTION_ENABLE = 'enableFilezilla';
-    const ACTION_SWITCH_VERSION = 'switchFilezillaVersion';
-    const ACTION_CHANGE_PORT = 'changeFilezillaPort';
-    const ACTION_INSTALL_SERVICE = 'installFilezillaService';
-    const ACTION_REMOVE_SERVICE = 'removeFilezillaService';
+    public const ACTION_ENABLE = 'enableFilezilla';
+    public const ACTION_SWITCH_VERSION = 'switchFilezillaVersion';
+    public const ACTION_CHANGE_PORT = 'changeFilezillaPort';
+    public const ACTION_INSTALL_SERVICE = 'installFilezillaService';
+    public const ACTION_REMOVE_SERVICE = 'removeFilezillaService';
 
     /**
      * Generates the menu item and associated actions for enabling/disabling Filezilla.
@@ -33,11 +33,16 @@ class TplAppFilezilla
      *
      * @return array The generated menu item and actions for enabling/disabling Filezilla.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang, $bearsamppBins;
 
-        return TplApp::getMenuEnable($bearsamppLang->getValue(Lang::FILEZILLA), self::MENU, get_called_class(), $bearsamppBins->getFilezilla()->isEnable());
+        return TplApp::getMenuEnable(
+            $bearsamppLang->getValue(Lang::FILEZILLA),
+            self::MENU,
+            static::class,
+            $bearsamppBins->getFilezilla()->isEnable()
+        );
     }
 
     /**
@@ -51,7 +56,7 @@ class TplAppFilezilla
      *
      * @return string The generated menu items and actions for managing Filezilla.
      */
-    public static function getMenuFilezilla()
+    public static function getMenuFilezilla(): string
     {
         global $bearsamppBins, $bearsamppLang;
         $resultItems = $resultActions = '';
@@ -68,9 +73,11 @@ class TplAppFilezilla
 
         // Enable
         $tplEnable = TplApp::getActionMulti(
-            self::ACTION_ENABLE, array($isEnabled ? Config::DISABLED : Config::ENABLED),
-            array($bearsamppLang->getValue(Lang::MENU_ENABLE), $isEnabled ? TplAestan::GLYPH_CHECK : ''),
-            false, get_called_class()
+            self::ACTION_ENABLE,
+            [$isEnabled ? Config::DISABLED : Config::ENABLED],
+            [$bearsamppLang->getValue(Lang::MENU_ENABLE), $isEnabled ? TplAestan::GLYPH_CHECK : ''],
+            false,
+            static::class
         );
         $resultItems .= $tplEnable[TplApp::SECTION_CALL] . PHP_EOL;
         $resultActions .= $tplEnable[TplApp::SECTION_CONTENT] . PHP_EOL;
@@ -79,12 +86,12 @@ class TplAppFilezilla
             $resultItems .= TplAestan::getItemSeparator() . PHP_EOL;
 
             // Versions
-            $tplVersions = TplApp::getMenu($bearsamppLang->getValue(Lang::VERSIONS), self::MENU_VERSIONS, get_called_class());
+            $tplVersions = TplApp::getMenu($bearsamppLang->getValue(Lang::VERSIONS), self::MENU_VERSIONS, static::class);
             $resultItems .= $tplVersions[TplApp::SECTION_CALL] . PHP_EOL;
             $resultActions .= $tplVersions[TplApp::SECTION_CONTENT] . PHP_EOL;
 
             // Service
-            $tplService = TplApp::getMenu($bearsamppLang->getValue(Lang::SERVICE), self::MENU_SERVICE, get_called_class());
+            $tplService = TplApp::getMenu($bearsamppLang->getValue(Lang::SERVICE), self::MENU_SERVICE, static::class);
             $resultItems .= $tplService[TplApp::SECTION_CALL] . PHP_EOL;
             $resultActions .= $tplService[TplApp::SECTION_CONTENT];
 
@@ -111,7 +118,7 @@ class TplAppFilezilla
      *
      * @return string The generated menu items and actions for switching Filezilla versions.
      */
-    public static function getMenuFilezillaVersions()
+    public static function getMenuFilezillaVersions(): string
     {
         global $bearsamppBins;
         $items = '';
@@ -119,9 +126,11 @@ class TplAppFilezilla
 
         foreach ($bearsamppBins->getFilezilla()->getVersionList() as $version) {
             $tplSwitchFilezillaVersion = TplApp::getActionMulti(
-                self::ACTION_SWITCH_VERSION, array($version),
-                array($version, $version == $bearsamppBins->getFilezilla()->getVersion() ? TplAestan::GLYPH_CHECK : ''),
-                false, get_called_class()
+                self::ACTION_SWITCH_VERSION,
+                [$version],
+                [$version, $version === $bearsamppBins->getFilezilla()->getVersion() ? TplAestan::GLYPH_CHECK : ''],
+                false,
+                static::class
             );
 
             // Item
@@ -144,11 +153,11 @@ class TplAppFilezilla
      * @param int $enable The enable/disable flag (1 for enable, 0 for disable).
      * @return string The generated action string for enabling/disabling Filezilla.
      */
-    public static function getActionEnableFilezilla($enable)
+    public static function getActionEnableFilezilla(int $enable): string
     {
         global $bearsamppBins;
 
-        return TplApp::getActionRun(Action::ENABLE, array($bearsamppBins->getFilezilla()->getName(), $enable)) . PHP_EOL .
+        return TplApp::getActionRun(Action::ENABLE, [$bearsamppBins->getFilezilla()->getName(), $enable]) . PHP_EOL .
             TplAppReload::getActionReload();
     }
 
@@ -162,11 +171,11 @@ class TplAppFilezilla
      * @param string $version The version to switch to.
      * @return string The generated action string for switching Filezilla versions.
      */
-    public static function getActionSwitchFilezillaVersion($version)
+    public static function getActionSwitchFilezillaVersion(string $version): string
     {
         global $bearsamppBins;
 
-        return TplApp::getActionRun(Action::SWITCH_VERSION, array($bearsamppBins->getFilezilla()->getName(), $version)) . PHP_EOL .
+        return TplApp::getActionRun(Action::SWITCH_VERSION, [$bearsamppBins->getFilezilla()->getName(), $version]) . PHP_EOL .
             TplAppReload::getActionReload() . PHP_EOL;
     }
 
@@ -180,14 +189,16 @@ class TplAppFilezilla
      *
      * @return string The generated menu items and actions for managing Filezilla services.
      */
-    public static function getMenuFilezillaService()
+    public static function getMenuFilezillaService(): string
     {
         global $bearsamppLang, $bearsamppBins;
 
         $tplChangePort = TplApp::getActionMulti(
-            self::ACTION_CHANGE_PORT, null,
-            array($bearsamppLang->getValue(Lang::MENU_CHANGE_PORT), TplAestan::GLYPH_NETWORK),
-            false, get_called_class()
+            self::ACTION_CHANGE_PORT,
+            null,
+            [$bearsamppLang->getValue(Lang::MENU_CHANGE_PORT), TplAestan::GLYPH_NETWORK],
+            false,
+            static::class
         );
 
         $result = TplAestan::getItemActionServiceStart($bearsamppBins->getFilezilla()->getService()->getName()) . PHP_EOL .
@@ -195,30 +206,36 @@ class TplAppFilezilla
             TplAestan::getItemActionServiceRestart($bearsamppBins->getFilezilla()->getService()->getName()) . PHP_EOL .
             TplAestan::getItemSeparator() . PHP_EOL .
             TplApp::getActionRun(
-                Action::CHECK_PORT, array($bearsamppBins->getFilezilla()->getName(), $bearsamppBins->getFilezilla()->getPort()),
-                array(sprintf($bearsamppLang->getValue(Lang::MENU_CHECK_PORT), $bearsamppBins->getFilezilla()->getPort()), TplAestan::GLYPH_LIGHT)
+                Action::CHECK_PORT,
+                [$bearsamppBins->getFilezilla()->getName(), $bearsamppBins->getFilezilla()->getPort()],
+                [sprintf($bearsamppLang->getValue(Lang::MENU_CHECK_PORT), $bearsamppBins->getFilezilla()->getPort()), TplAestan::GLYPH_LIGHT]
             ) . PHP_EOL .
             TplApp::getActionRun(
-                Action::CHECK_PORT, array($bearsamppBins->getFilezilla()->getName(), $bearsamppBins->getFilezilla()->getSslPort(), true),
-                array(sprintf($bearsamppLang->getValue(Lang::MENU_CHECK_PORT), $bearsamppBins->getFilezilla()->getSslPort()) . ' (SSL)', TplAestan::GLYPH_RED_LIGHT)
+                Action::CHECK_PORT,
+                [$bearsamppBins->getFilezilla()->getName(), $bearsamppBins->getFilezilla()->getSslPort(), true],
+                [sprintf($bearsamppLang->getValue(Lang::MENU_CHECK_PORT), $bearsamppBins->getFilezilla()->getSslPort()) . ' (SSL)', TplAestan::GLYPH_RED_LIGHT]
             ) . PHP_EOL .
             $tplChangePort[TplApp::SECTION_CALL] . PHP_EOL;
 
         $isInstalled = $bearsamppBins->getFilezilla()->getService()->isInstalled();
         if (!$isInstalled) {
             $tplInstallService = TplApp::getActionMulti(
-                self::ACTION_INSTALL_SERVICE, null,
-                array($bearsamppLang->getValue(Lang::MENU_INSTALL_SERVICE), TplAestan::GLYPH_SERVICE_INSTALL),
-                $isInstalled, get_called_class()
+                self::ACTION_INSTALL_SERVICE,
+                null,
+                [$bearsamppLang->getValue(Lang::MENU_INSTALL_SERVICE), TplAestan::GLYPH_SERVICE_INSTALL],
+                $isInstalled,
+                static::class
             );
 
             $result .= $tplInstallService[TplApp::SECTION_CALL] . PHP_EOL . PHP_EOL .
                 $tplInstallService[TplApp::SECTION_CONTENT] . PHP_EOL;
         } else {
             $tplRemoveService = TplApp::getActionMulti(
-                self::ACTION_REMOVE_SERVICE, null,
-                array($bearsamppLang->getValue(Lang::MENU_REMOVE_SERVICE), TplAestan::GLYPH_SERVICE_REMOVE),
-                !$isInstalled, get_called_class()
+                self::ACTION_REMOVE_SERVICE,
+                null,
+                [$bearsamppLang->getValue(Lang::MENU_REMOVE_SERVICE), TplAestan::GLYPH_SERVICE_REMOVE],
+                !$isInstalled,
+                static::class
             );
 
             $result .= $tplRemoveService[TplApp::SECTION_CALL] . PHP_EOL . PHP_EOL .
@@ -239,11 +256,11 @@ class TplAppFilezilla
      *
      * @return string The generated action string for changing the Filezilla port.
      */
-    public static function getActionChangeFilezillaPort()
+    public static function getActionChangeFilezillaPort(): string
     {
         global $bearsamppBins;
 
-        return TplApp::getActionRun(Action::CHANGE_PORT, array($bearsamppBins->getFilezilla()->getName())) . PHP_EOL .
+        return TplApp::getActionRun(Action::CHANGE_PORT, [$bearsamppBins->getFilezilla()->getName()]) . PHP_EOL .
             TplAppReload::getActionReload();
     }
 
@@ -254,9 +271,9 @@ class TplAppFilezilla
      *
      * @return string The generated action string for installing the Filezilla service.
      */
-    public static function getActionInstallFilezillaService()
+    public static function getActionInstallFilezillaService(): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array(BinFilezilla::SERVICE_NAME, ActionService::INSTALL)) . PHP_EOL .
+        return TplApp::getActionRun(Action::SERVICE, [BinFilezilla::SERVICE_NAME, ActionService::INSTALL]) . PHP_EOL .
             TplAppReload::getActionReload();
     }
 
@@ -267,9 +284,9 @@ class TplAppFilezilla
      *
      * @return string The generated action string for removing the Filezilla service.
      */
-    public static function getActionRemoveFilezillaService()
+    public static function getActionRemoveFilezillaService(): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array(BinFilezilla::SERVICE_NAME, ActionService::REMOVE)) . PHP_EOL .
+        return TplApp::getActionRun(Action::SERVICE, [BinFilezilla::SERVICE_NAME, ActionService::REMOVE]) . PHP_EOL .
             TplAppReload::getActionReload();
     }
 }

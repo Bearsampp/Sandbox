@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 2021-2024 Bearsampp
  * License:  GNU General Public License version 3 or later; see LICENSE.txt
- * Author: bear
+ * Author: Bear
  * Website: https://bearsampp.com
  * Github: https://github.com/Bearsampp
  */
@@ -16,7 +16,7 @@
 class TplAppBrowser
 {
     // Constant for the change browser action identifier
-    const ACTION = 'changeBrowser';
+    public const ACTION = 'changeBrowser';
 
     /**
      * Generates the change browser menu item and associated actions.
@@ -25,18 +25,20 @@ class TplAppBrowser
      * when the change browser menu item is selected. It uses the global language object to retrieve the localized
      * string for the change browser action.
      *
-     * @global object $bearsamppLang Provides language support for retrieving language-specific values.
+     * @global \BearsamppLang $bearsamppLang Provides language support for retrieving language-specific values.
      *
      * @return array The generated menu item and actions for changing the browser.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang;
 
         return TplApp::getActionMulti(
-            self::ACTION, null,
-            array($bearsamppLang->getValue(Lang::CHANGE_BROWSER_TITLE), TplAestan::GLYPH_BROWSER),
-            false, get_called_class()
+            self::ACTION,
+            null,
+            [$bearsamppLang->getValue(Lang::CHANGE_BROWSER_TITLE), TplAestan::GLYPH_BROWSER],
+            false,
+            static::class
         );
     }
 
@@ -48,7 +50,7 @@ class TplAppBrowser
      *
      * @return string The generated action string for changing the browser.
      */
-    public static function getActionChangeBrowser()
+    public static function getActionChangeBrowser(): string
     {
         return TplApp::getActionRun(Action::CHANGE_BROWSER) . PHP_EOL .
             TplAppReload::getActionReload();

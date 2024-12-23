@@ -1,11 +1,9 @@
 <?php
 /*
- *
- *  * Copyright (c) 2021-2024 Bearsampp
- *  * License:  GNU General Public License version 3 or later; see LICENSE.txt
- *  * Website: https://bearsampp.com
- *  * Github: https://github.com/Bearsampp
- *
+ * Copyright (c) 2021-2024 Bearsampp
+ * License:  GNU General Public License version 3 or later; see LICENSE.txt
+ * Website: https://bearsampp.com
+ * Github: https://github.com/Bearsampp
  */
 
 /**
@@ -22,92 +20,92 @@
  * - Image files used in the application.
  *
  * Methods:
- * - getGlyphFlah($lang): Retrieves the glyph flag for a given language.
- * - getItemSeparator(): Returns a string representing a separator item.
- * - getItemConsoleZ($caption, $glyph, $id, $title, $initDir, $command): Returns a string representing a ConsoleZ item.
- * - getItemLink($caption, $link, $local, $glyph): Returns a string representing a link item.
- * - getItemNotepad($caption, $path): Returns a string representing a Notepad item.
- * - getItemExe($caption, $exe, $glyph, $params): Returns a string representing an executable item.
- * - getItemExplore($caption, $path): Returns a string representing an explorer item.
- * - getActionService($service, $action, $item): Returns a string representing a service action.
- * - getActionServiceStart($service): Returns a string representing a service start action.
- * - getItemActionServiceStart($service): Returns a string representing a service start item.
- * - getActionServiceStop($service): Returns a string representing a service stop action.
- * - getItemActionServiceStop($service): Returns a string representing a service stop item.
- * - getActionServiceRestart($service): Returns a string representing a service restart action.
- * - getItemActionServiceRestart($service): Returns a string representing a service restart item.
- * - getActionServicesClose(): Returns a string representing a close services action.
- * - getItemActionServicesClose(): Returns a string representing a close services item.
- * - getSectionMessages(): Returns a string representing the messages section.
- * - getSectionConfig(): Returns a string representing the config section.
- * - getSectionMenuRightSettings(): Returns a string representing the right menu settings section.
- * - getSectionMenuLeftSettings($caption): Returns a string representing the left menu settings section.
+ * - getGlyphFlah(string $lang): void
+ * - getItemSeparator(): string
+ * - getItemConsoleZ(string $caption, int $glyph, ?string $id, ?string $title, ?string $initDir, ?string $command): string
+ * - getItemLink(string $caption, string $link, bool $local, int $glyph): string
+ * - getItemNotepad(string $caption, string $path): string
+ * - getItemExe(string $caption, string $exe, int $glyph, ?string $params): string
+ * - getItemExplore(string $caption, string $path): string
+ * - getActionService(?string $service, string $action, bool $item): string
+ * - getActionServiceStart(string $service): string
+ * - getItemActionServiceStart(string $service): string
+ * - getActionServiceStop(string $service): string
+ * - getItemActionServiceStop(string $service): string
+ * - getActionServiceRestart(string $service): string
+ * - getItemActionServiceRestart(string $service): string
+ * - getActionServicesClose(): string
+ * - getItemActionServicesClose(): string
+ * - getSectionMessages(): string
+ * - getSectionConfig(): string
+ * - getSectionMenuRightSettings(): string
+ * - getSectionMenuLeftSettings(string $caption): string
  */
 class TplAestan
 {
     // Glyph constants
-    const GLYPH_CONSOLEZ = 0;
-    const GLYPH_ADD = 1;
-    const GLYPH_FOLDER_OPEN = 2;
-    const GLYPH_FOLDER_CLOSE = 3;
-    const GLYPH_BROWSER = 5;
-    const GLYPH_FILE = 6;
-    const GLYPH_SERVICE_REMOVE = 7;
-    const GLYPH_SERVICE_INSTALL = 8;
-    const GLYPH_START = 9;
-    const GLYPH_PAUSE = 10;
-    const GLYPH_STOP = 11;
-    const GLYPH_RELOAD = 12;
-    const GLYPH_CHECK = 13;
-    const GLYPH_SERVICE_ALL_RUNNING = 16;
-    const GLYPH_SERVICE_SOME_RUNNING = 17;
-    const GLYPH_SERVICE_NONE_RUNNING = 18;
-    const GLYPH_WARNING = 19;
-    const GLYPH_EXIT = 20;
-    const GLYPH_ABOUT = 21;
-    const GLYPH_SERVICES_RESTART = 22;
-    const GLYPH_SERVICES_STOP = 23;
-    const GLYPH_SERVICES_START = 24;
-    const GLYPH_LIGHT = 25;
-    const GLYPH_GIT = 26;
-    const GLYPH_NODEJS = 28;
-    const GLYPH_NETWORK = 29;
-    const GLYPH_WEB_PAGE = 30;
-    const GLYPH_DEBUG = 31;
-    const GLYPH_TRASHCAN = 32;
-    const GLYPH_UPDATE = 33;
-    const GLYPH_RESTART = 34;
-    const GLYPH_SSL_CERTIFICATE = 35;
-    const GLYPH_RED_LIGHT = 36;
-    const GLYPH_COMPOSER = 37;
-    const GLYPH_PEAR = 38;
-    const GLYPH_HOSTSEDITOR = 39;
-    const GLYPH_IMAGEMAGICK = 41;
-    const GLYPH_NOTEPAD2 = 42;
-    const GLYPH_PASSWORD = 45;
-    const GLYPH_FILEZILLA = 47;
-    const GLYPH_FOLDER_DISABLED = 48;
-    const GLYPH_FOLDER_ENABLED = 49;
-    const GLYPH_PYTHON = 50;
-    const GLYPH_RUBY = 52;
-    const GLYPH_YARN = 54;
-    const GLYPH_PERL = 55;
-    const GLYPH_GHOSTSCRIPT = 56;
-    const GLYPH_NGROK = 57;
-    const GLYPH_PWGEN = 58;
-    const GLYPH_XLIGHT = 59;
-    const GLYPH_REBUILD_INI = 60;
-    const GLYPH_BRUNO = 61;
+    public const GLYPH_CONSOLEZ = 0;
+    public const GLYPH_ADD = 1;
+    public const GLYPH_FOLDER_OPEN = 2;
+    public const GLYPH_FOLDER_CLOSE = 3;
+    public const GLYPH_BROWSER = 5;
+    public const GLYPH_FILE = 6;
+    public const GLYPH_SERVICE_REMOVE = 7;
+    public const GLYPH_SERVICE_INSTALL = 8;
+    public const GLYPH_START = 9;
+    public const GLYPH_PAUSE = 10;
+    public const GLYPH_STOP = 11;
+    public const GLYPH_RELOAD = 12;
+    public const GLYPH_CHECK = 13;
+    public const GLYPH_SERVICE_ALL_RUNNING = 16;
+    public const GLYPH_SERVICE_SOME_RUNNING = 17;
+    public const GLYPH_SERVICE_NONE_RUNNING = 18;
+    public const GLYPH_WARNING = 19;
+    public const GLYPH_EXIT = 20;
+    public const GLYPH_ABOUT = 21;
+    public const GLYPH_SERVICES_RESTART = 22;
+    public const GLYPH_SERVICES_STOP = 23;
+    public const GLYPH_SERVICES_START = 24;
+    public const GLYPH_LIGHT = 25;
+    public const GLYPH_GIT = 26;
+    public const GLYPH_NODEJS = 28;
+    public const GLYPH_NETWORK = 29;
+    public const GLYPH_WEB_PAGE = 30;
+    public const GLYPH_DEBUG = 31;
+    public const GLYPH_TRASHCAN = 32;
+    public const GLYPH_UPDATE = 33;
+    public const GLYPH_RESTART = 34;
+    public const GLYPH_SSL_CERTIFICATE = 35;
+    public const GLYPH_RED_LIGHT = 36;
+    public const GLYPH_COMPOSER = 37;
+    public const GLYPH_PEAR = 38;
+    public const GLYPH_HOSTSEDITOR = 39;
+    public const GLYPH_IMAGEMAGICK = 41;
+    public const GLYPH_NOTEPAD2 = 42;
+    public const GLYPH_PASSWORD = 45;
+    public const GLYPH_FILEZILLA = 47;
+    public const GLYPH_FOLDER_DISABLED = 48;
+    public const GLYPH_FOLDER_ENABLED = 49;
+    public const GLYPH_PYTHON = 50;
+    public const GLYPH_RUBY = 52;
+    public const GLYPH_YARN = 54;
+    public const GLYPH_PERL = 55;
+    public const GLYPH_GHOSTSCRIPT = 56;
+    public const GLYPH_NGROK = 57;
+    public const GLYPH_PWGEN = 58;
+    public const GLYPH_XLIGHT = 59;
+    public const GLYPH_REBUILD_INI = 60;
+    public const GLYPH_BRUNO = 61;
 
     // Service actions
-    const SERVICE_START = 'startresume';
-    const SERVICE_STOP = 'stop';
-    const SERVICE_RESTART = 'restart';
-    const SERVICES_CLOSE = 'closeservices';
+    public const SERVICE_START = 'startresume';
+    public const SERVICE_STOP = 'stop';
+    public const SERVICE_RESTART = 'restart';
+    public const SERVICES_CLOSE = 'closeservices';
 
     // Image files
-    const IMG_BAR_PICTURE = 'bar.dat';
-    const IMG_GLYPH_SPRITES = 'sprites.dat';
+    public const IMG_BAR_PICTURE = 'bar.dat';
+    public const IMG_GLYPH_SPRITES = 'sprites.dat';
 
     /**
      * Retrieves the glyph flag for a given language.
@@ -115,7 +113,7 @@ class TplAestan
      * @param string $lang The language code.
      * @return void
      */
-    public static function getGlyphFlah($lang)
+    public static function getGlyphFlah(string $lang): void
     {
     }
 
@@ -124,7 +122,7 @@ class TplAestan
      *
      * @return string The separator item string.
      */
-    public static function getItemSeparator()
+    public static function getItemSeparator(): string
     {
         return 'Type: separator';
     }
@@ -140,21 +138,21 @@ class TplAestan
      * @param string|null $command The command to execute.
      * @return string The ConsoleZ item string.
      */
-    public static function getItemConsoleZ($caption, $glyph, $id = null, $title = null, $initDir = null, $command = null)
+    public static function getItemConsoleZ(string $caption, int $glyph, ?string $id = null, ?string $title = null, ?string $initDir = null, ?string $command = null): string
     {
         global $bearsamppTools;
 
         $args = '';
-        if ($id != null) {
+        if ($id !== null) {
             $args .= ' -t ""' . $id . '""';
         }
-        if ($title != null) {
+        if ($title !== null) {
             $args .= ' -w ""' . $title . '""';
         }
-        if ($initDir != null) {
+        if ($initDir !== null) {
             $args .= ' -d ""' . $initDir . '""';
         }
-        if ($command != null) {
+        if ($command !== null) {
             $args .= ' -r ""' . $command . '""';
         }
 
@@ -175,7 +173,7 @@ class TplAestan
      * @param int $glyph The glyph index.
      * @return string The link item string.
      */
-    public static function getItemLink($caption, $link, $local = false, $glyph = self::GLYPH_WEB_PAGE)
+    public static function getItemLink(string $caption, string $link, bool $local = false, int $glyph = self::GLYPH_WEB_PAGE): string
     {
         global $bearsamppRoot, $bearsamppConfig;
 
@@ -198,7 +196,7 @@ class TplAestan
      * @param string $path The path to the file.
      * @return string The Notepad item string.
      */
-    public static function getItemNotepad($caption, $path)
+    public static function getItemNotepad(string $caption, string $path): string
     {
         global $bearsamppConfig;
 
@@ -219,7 +217,7 @@ class TplAestan
      * @param string|null $params The parameters for the executable.
      * @return string The executable item string.
      */
-    public static function getItemExe($caption, $exe, $glyph, $params = null)
+    public static function getItemExe(string $caption, string $exe, int $glyph, ?string $params = null): string
     {
         return 'Type: item; ' .
             'Caption: "' . $caption . '"; ' .
@@ -236,7 +234,7 @@ class TplAestan
      * @param string $path The path to explore.
      * @return string The explorer item string.
      */
-    public static function getItemExplore($caption, $path)
+    public static function getItemExplore(string $caption, string $path): string
     {
         return 'Type: item; ' .
             'Caption: "' . $caption . '"; ' .
@@ -253,12 +251,12 @@ class TplAestan
      * @param bool $item Whether to return as an item.
      * @return string The service action string.
      */
-    private static function getActionService($service, $action, $item = false)
+    private static function getActionService(?string $service, string $action, bool $item = false): string
     {
         global $bearsamppLang;
         $result = 'Action: ' . $action;
 
-        if ($service != null) {
+        if ($service !== null) {
             $result = 'Action: service; ' .
                 'Service: ' . $service . '; ' .
                 'ServiceAction: ' . $action;
@@ -266,17 +264,17 @@ class TplAestan
 
         if ($item) {
             $result = 'Type: item; ' . $result;
-            if ($action == self::SERVICE_START) {
+            if ($action === self::SERVICE_START) {
                 $result .= '; Caption: "' . $bearsamppLang->getValue(Lang::MENU_START_SERVICE) . '"' .
                     '; Glyph: ' . self::GLYPH_START;
-            } elseif ($action == self::SERVICE_STOP) {
+            } elseif ($action === self::SERVICE_STOP) {
                 $result .= '; Caption: "' . $bearsamppLang->getValue(Lang::MENU_STOP_SERVICE) . '"' .
                     '; Glyph: ' . self::GLYPH_STOP;
-            } elseif ($action == self::SERVICE_RESTART) {
+            } elseif ($action === self::SERVICE_RESTART) {
                 $result .= '; Caption: "' . $bearsamppLang->getValue(Lang::MENU_RESTART_SERVICE) . '"' .
                     '; Glyph: ' . self::GLYPH_RELOAD;
             }
-        } elseif ($action != self::SERVICES_CLOSE) {
+        } elseif ($action !== self::SERVICES_CLOSE) {
             $result .= '; Flags: ignoreerrors waituntilterminated';
         }
 
@@ -289,7 +287,7 @@ class TplAestan
      * @param string $service The service name.
      * @return string The service start action string.
      */
-    public static function getActionServiceStart($service)
+    public static function getActionServiceStart(string $service): string
     {
         return self::getActionService($service, self::SERVICE_START, false);
     }
@@ -300,7 +298,7 @@ class TplAestan
      * @param string $service The service name.
      * @return string The service start item string.
      */
-    public static function getItemActionServiceStart($service)
+    public static function getItemActionServiceStart(string $service): string
     {
         return self::getActionService($service, self::SERVICE_STOP, true);
     }
@@ -311,7 +309,7 @@ class TplAestan
      * @param string $service The service name.
      * @return string The service stop action string.
      */
-    public static function getActionServiceStop($service)
+    public static function getActionServiceStop(string $service): string
     {
         return self::getActionService($service, self::SERVICE_STOP, false);
     }
@@ -322,7 +320,7 @@ class TplAestan
      * @param string $service The service name.
      * @return string The service stop item string.
      */
-    public static function getItemActionServiceStop($service)
+    public static function getItemActionServiceStop(string $service): string
     {
         return self::getActionService($service, self::SERVICE_START, true);
     }
@@ -333,7 +331,7 @@ class TplAestan
      * @param string $service The service name.
      * @return string The service restart action string.
      */
-    public static function getActionServiceRestart($service)
+    public static function getActionServiceRestart(string $service): string
     {
         return self::getActionService($service, self::SERVICE_RESTART, false);
     }
@@ -344,7 +342,7 @@ class TplAestan
      * @param string $service The service name.
      * @return string The service restart item string.
      */
-    public static function getItemActionServiceRestart($service)
+    public static function getItemActionServiceRestart(string $service): string
     {
         return self::getActionService($service, self::SERVICE_RESTART, true);
     }
@@ -354,7 +352,7 @@ class TplAestan
      *
      * @return string The close services action string.
      */
-    public static function getActionServicesClose()
+    public static function getActionServicesClose(): string
     {
         return self::getActionService(null, self::SERVICES_CLOSE, false);
     }
@@ -364,7 +362,7 @@ class TplAestan
      *
      * @return string The close services item string.
      */
-    public static function getItemActionServicesClose()
+    public static function getItemActionServicesClose(): string
     {
         return self::getActionService(null, self::SERVICES_CLOSE, true);
     }
@@ -374,7 +372,7 @@ class TplAestan
      *
      * @return string The messages section string.
      */
-    public static function getSectionMessages()
+    public static function getSectionMessages(): string
     {
         global $bearsamppLang;
 
@@ -389,7 +387,7 @@ class TplAestan
      *
      * @return string The config section string.
      */
-    public static function getSectionConfig()
+    public static function getSectionConfig(): string
     {
         global $bearsamppCore;
         return '[Config]' . PHP_EOL .
@@ -408,7 +406,7 @@ class TplAestan
      *
      * @return string The right menu settings section string.
      */
-    public static function getSectionMenuRightSettings()
+    public static function getSectionMenuRightSettings(): string
     {
         return '[Menu.Right.Settings]' . PHP_EOL .
             'BarVisible=no' . PHP_EOL .
@@ -428,7 +426,7 @@ class TplAestan
      * @param string $caption The caption for the left menu.
      * @return string The left menu settings section string.
      */
-    public static function getSectionMenuLeftSettings($caption)
+    public static function getSectionMenuLeftSettings(string $caption): string
     {
         return '[Menu.Left.Settings]' . PHP_EOL .
             'AutoLineReduction=no' . PHP_EOL .

@@ -35,7 +35,7 @@ class ActionGenSslCertificate
      *
      * @param array $args Command line arguments passed to the script.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppRoot, $bearsamppLang, $bearsamppWinbinder;
 
@@ -73,7 +73,7 @@ class ActionGenSslCertificate
      * @param mixed $param1 Additional parameter 1.
      * @param mixed $param2 Additional parameter 2.
      */
-    public function processWindow($window, $id, $ctrl, $param1, $param2)
+    public function processWindow($window, int $id, $ctrl, mixed $param1, mixed $param2): void
     {
         global $bearsamppLang, $bearsamppOpenSsl, $bearsamppWinbinder;
 

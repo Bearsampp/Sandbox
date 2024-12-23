@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 2021-2024 Bearsampp
  * License:  GNU General Public License version 3 or later; see LICENSE.txt
- * Author: bear
+ * Author: Bear
  * Website: https://bearsampp.com
  * Github: https://github.com/Bearsampp
  */
@@ -18,7 +18,7 @@ class TplAppExit
     /**
      * Constant representing the exit action.
      */
-    const ACTION = 'exit';
+    public const ACTION = 'exit';
 
     /**
      * Processes the exit action and generates the necessary action strings.
@@ -29,16 +29,16 @@ class TplAppExit
      *
      * @return array An array containing the call string and the section content for the exit action.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang;
 
         return TplApp::getActionMulti(
             self::ACTION,
             null,
-            array($bearsamppLang->getValue(Lang::QUIT), TplAestan::GLYPH_EXIT),
+            [$bearsamppLang->getValue(Lang::QUIT), TplAestan::GLYPH_EXIT],
             false,
-            get_called_class()
+            static::class
         );
     }
 
@@ -49,7 +49,7 @@ class TplAppExit
      *
      * @return string The generated action string for the exit action.
      */
-    public static function getActionExit()
+    public static function getActionExit(): string
     {
         return TplApp::getActionRun(Action::QUIT) . PHP_EOL . 'Action: exit';
     }

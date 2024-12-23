@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (c) 2021-2024 Bearsampp
  * License:  GNU General Public License version 3 or later; see LICENSE.txt
@@ -7,32 +8,39 @@
  * Github: https://github.com/Bearsampp
  */
 
+use Core\Classes\Vbs;
+use Core\Classes\Util;
+use Core\Classes\Root;
+
 /**
  * Class Win32Ps
  *
- * This class provides various utility functions for interacting with Windows processes.
- * It includes methods for retrieving process information, checking process existence,
+ * Provides utility functions for interacting with Windows processes.
+ * Includes methods for retrieving process information, checking process existence,
  * finding processes by PID or path, and terminating processes.
  */
 class Win32Ps
 {
-    const NAME = 'Name';
-    const PROCESS_ID = 'ProcessID';
-    const EXECUTABLE_PATH = 'ExecutablePath';
-    const CAPTION = 'Caption';
-    const COMMAND_LINE = 'CommandLine';
+    public const NAME = 'Name';
+    public const PROCESS_ID = 'ProcessID';
+    public const EXECUTABLE_PATH = 'ExecutablePath';
+    public const CAPTION = 'Caption';
+    public const COMMAND_LINE = 'CommandLine';
 
+    /**
+     * Win32Ps constructor.
+     */
     public function __construct()
     {
     }
 
     /**
-     * Calls a specified function if it exists.
+     * Calls a specified Win32 process function if it exists.
      *
      * @param string $function The name of the function to call.
      * @return mixed The result of the function call, or false if the function does not exist.
      */
-    private static function callWin32Ps($function)
+    private static function callWin32Ps(string $function): mixed
     {
         $result = false;
 
@@ -48,15 +56,15 @@ class Win32Ps
      *
      * @return array An array of keys used for process information.
      */
-    public static function getKeys()
+    public static function getKeys(): array
     {
-        return array(
+        return [
             self::NAME,
             self::PROCESS_ID,
             self::EXECUTABLE_PATH,
             self::CAPTION,
-            self::COMMAND_LINE
-        );
+            self::COMMAND_LINE,
+        ];
     }
 
     /**
@@ -64,20 +72,10 @@ class Win32Ps
      *
      * @return int The current process ID, or 0 if not found.
      */
-    public static function getCurrentPid()
+    public static function getCurrentPid(): int
     {
         $procInfo = self::getStatProc();
         return isset($procInfo[self::PROCESS_ID]) ? intval($procInfo[self::PROCESS_ID]) : 0;
-    }
-
-    /**
-     * Retrieves a list of running processes.
-     *
-     * @return array|false An array of process information, or false on failure.
-     */
-    public static function getListProcs()
-    {
-        return Vbs::getListProcs(self::getKeys());
     }
 
     /**
@@ -85,18 +83,28 @@ class Win32Ps
      *
      * @return array|null An array containing the process ID and executable path, or null on failure.
      */
-    public static function getStatProc()
+    public static function getStatProc(): ?array
     {
         $statProc = self::callWin32Ps('win32_ps_stat_proc');
 
         if ($statProc !== false) {
-            return array(
+            return [
                 self::PROCESS_ID => $statProc['pid'],
-                self::EXECUTABLE_PATH => $statProc['exe']
-            );
+                self::EXECUTABLE_PATH => $statProc['exe'],
+            ];
         }
 
         return null;
+    }
+
+    /**
+     * Retrieves a list of running processes.
+     *
+     * @return array|null An array of process information, or null on failure.
+     */
+    public static function getListProcs(): ?array
+    {
+        return Vbs::getListProcs(self::getKeys());
     }
 
     /**
@@ -105,7 +113,7 @@ class Win32Ps
      * @param int $pid The process ID to check.
      * @return bool True if the process exists, false otherwise.
      */
-    public static function exists($pid)
+    public static function exists(int $pid): bool
     {
         return self::findByPid($pid) !== false;
     }
@@ -116,13 +124,13 @@ class Win32Ps
      * @param int $pid The process ID to find.
      * @return array|false An array of process information, or false if not found.
      */
-    public static function findByPid($pid)
+    public static function findByPid(int $pid): array|false
     {
-        if (!empty($pid)) {
+        if ($pid > 0) {
             $procs = self::getListProcs();
-            if ($procs !== false) {
+            if ($procs !== null) {
                 foreach ($procs as $proc) {
-                    if ($proc[self::PROCESS_ID] == $pid) {
+                    if (intval($proc[self::PROCESS_ID]) === $pid) {
                         return $proc;
                     }
                 }
@@ -138,15 +146,15 @@ class Win32Ps
      * @param string $path The path to the executable.
      * @return array|false An array of process information, or false if not found.
      */
-    public static function findByPath($path)
+    public static function findByPath(string $path): array|false
     {
         $path = Util::formatUnixPath($path);
         if (!empty($path) && is_file($path)) {
             $procs = self::getListProcs();
-            if ($procs !== false) {
+            if ($procs !== null) {
                 foreach ($procs as $proc) {
-                    $unixExePath = Util::formatUnixPath($proc[self::EXECUTABLE_PATH]);
-                    if ($unixExePath == $path) {
+                    $unixExePath = Util::formatUnixPath($proc[self::EXECUTABLE_PATH] ?? '');
+                    if ($unixExePath === $path) {
                         return $proc;
                     }
                 }
@@ -160,11 +168,11 @@ class Win32Ps
      * Terminates a process by its PID.
      *
      * @param int $pid The process ID to terminate.
+     * @return void
      */
-    public static function kill($pid)
+    public static function kill(int $pid): void
     {
-        $pid = intval($pid);
-        if (!empty($pid)) {
+        if ($pid > 0) {
             Vbs::killProc($pid);
         }
     }
@@ -175,42 +183,46 @@ class Win32Ps
      * @param bool $refreshProcs Whether to refresh the list of processes before terminating.
      * @return array An array of terminated processes.
      */
-    public static function killBins($refreshProcs = false)
+    public static function killBins(bool $refreshProcs = false): array
     {
         global $bearsamppRoot;
-        $killed = array();
 
-        $procs = $bearsamppRoot->getProcs();
-        if ($refreshProcs) {
-            $procs = self::getListProcs();
-        }
+        $killed = [];
 
-        if ($procs !== false) {
+        $procs = $refreshProcs ? self::getListProcs() : $bearsamppRoot->getProcs();
+
+        if ($procs !== null) {
             foreach ($procs as $proc) {
-                $unixExePath = Util::formatUnixPath($proc[self::EXECUTABLE_PATH]);
-                $unixCommandPath = Util::formatUnixPath($proc[self::COMMAND_LINE]);
+                $unixExePath = Util::formatUnixPath($proc[self::EXECUTABLE_PATH] ?? '');
+                $unixCommandPath = Util::formatUnixPath($proc[self::COMMAND_LINE] ?? '');
 
-                // Not kill current PID (PHP)
-                if ($proc[self::PROCESS_ID] == self::getCurrentPid()) {
+                // Do not kill current process (PHP)
+                if (intval($proc[self::PROCESS_ID] ?? 0) === self::getCurrentPid()) {
                     continue;
                 }
 
-                // Not kill bearsampp
-                if ($unixExePath == $bearsamppRoot->getExeFilePath()) {
+                // Do not kill bearsampp.exe
+                if ($unixExePath === $bearsamppRoot->getExeFilePath()) {
                     continue;
                 }
 
-                // Not kill inside www
-                if (Util::startWith($unixExePath, $bearsamppRoot->getWwwPath() . '/') || Util::contains($unixCommandPath, $bearsamppRoot->getWwwPath() . '/')) {
+                // Do not kill processes inside www directory
+                if (
+                    Util::startWith($unixExePath, $bearsamppRoot->getWwwPath() . '/') ||
+                    Util::contains($unixCommandPath, $bearsamppRoot->getWwwPath() . '/')
+                ) {
                     continue;
                 }
 
-                // Not kill external process
-                if (!Util::startWith($unixExePath, $bearsamppRoot->getRootPath() . '/') && !Util::contains($unixCommandPath, $bearsamppRoot->getRootPath() . '/')) {
+                // Do not kill external processes
+                if (
+                    !Util::startWith($unixExePath, $bearsamppRoot->getRootPath() . '/') &&
+                    !Util::contains($unixCommandPath, $bearsamppRoot->getRootPath() . '/')
+                ) {
                     continue;
                 }
 
-                self::kill($proc[self::PROCESS_ID]);
+                self::kill(intval($proc[self::PROCESS_ID]));
                 $killed[] = $proc;
             }
         }

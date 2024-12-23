@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 2021-2024 Bearsampp
  * License:  GNU General Public License version 3 or later; see LICENSE.txt
- * Author: bear
+ * Author: Bear
  * Website: https://bearsampp.com
  * Github: https://github.com/Bearsampp
  */
@@ -17,7 +17,7 @@
 class TplAppLogsVerbose
 {
     // Constant for the logs verbosity menu identifier
-    const MENU = 'logsVerbose';
+    public const MENU = 'logsVerbose';
 
     /**
      * Generates the logs verbosity menu.
@@ -29,11 +29,11 @@ class TplAppLogsVerbose
      *
      * @return array The generated menu for selecting the logs verbosity level.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang;
 
-        return TplApp::getMenu($bearsamppLang->getValue(Lang::LOGS_VERBOSE), self::MENU, get_called_class());
+        return TplApp::getMenu($bearsamppLang->getValue(Lang::LOGS_VERBOSE), self::MENU, static::class);
     }
 
     /**
@@ -48,32 +48,34 @@ class TplAppLogsVerbose
      *
      * @return string The generated menu items and actions for switching logs verbosity levels.
      */
-    public static function getMenuLogsVerbose()
+    public static function getMenuLogsVerbose(): string
     {
         global $bearsamppLang, $bearsamppConfig;
 
         $items = '';
         $actions = '';
 
-        $verboses = array(
+        $verboses = [
             Config::VERBOSE_SIMPLE => $bearsamppLang->getValue(Lang::VERBOSE_SIMPLE),
             Config::VERBOSE_REPORT => $bearsamppLang->getValue(Lang::VERBOSE_REPORT),
             Config::VERBOSE_DEBUG  => $bearsamppLang->getValue(Lang::VERBOSE_DEBUG),
             Config::VERBOSE_TRACE  => $bearsamppLang->getValue(Lang::VERBOSE_TRACE),
-        );
+        ];
 
         foreach ($verboses as $verbose => $caption) {
             $tplSwitchLogsVerbose = TplApp::getActionMulti(
-                Action::SWITCH_LOGS_VERBOSE, array($verbose),
-                array($caption, $verbose == $bearsamppConfig->getLogsVerbose() ? TplAestan::GLYPH_CHECK : ''),
-                false, get_called_class()
+                Action::SWITCH_LOGS_VERBOSE,
+                [$verbose],
+                [$caption, $verbose === $bearsamppConfig->getLogsVerbose() ? TplAestan::GLYPH_CHECK : ''],
+                false,
+                static::class
             );
 
             // Item
             $items .= $tplSwitchLogsVerbose[TplApp::SECTION_CALL] . PHP_EOL;
 
             // Action
-            $actions .= PHP_EOL . $tplSwitchLogsVerbose[TplApp::SECTION_CONTENT] .  PHP_EOL;
+            $actions .= PHP_EOL . $tplSwitchLogsVerbose[TplApp::SECTION_CONTENT] . PHP_EOL;
         }
 
         return $items . $actions;
@@ -89,9 +91,9 @@ class TplAppLogsVerbose
      *
      * @return string The generated action string for switching the logs verbosity level.
      */
-    public static function getActionSwitchLogsVerbose($verbose)
+    public static function getActionSwitchLogsVerbose(int $verbose): string
     {
-        return TplApp::getActionRun(Action::SWITCH_LOGS_VERBOSE, array($verbose)) . PHP_EOL .
+        return TplApp::getActionRun(Action::SWITCH_LOGS_VERBOSE, [$verbose]) . PHP_EOL .
             TplAppReload::getActionReload();
     }
 }

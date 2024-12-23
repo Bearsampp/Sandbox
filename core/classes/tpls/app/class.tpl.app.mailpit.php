@@ -16,15 +16,15 @@
  */
 class TplAppMailpit
 {
-    const MENU = 'mailpit';
-    const MENU_VERSIONS = 'mailpitVersions';
-    const MENU_SERVICE = 'mailpitService';
+    public const MENU = 'mailpit';
+    public const MENU_VERSIONS = 'mailpitVersions';
+    public const MENU_SERVICE = 'mailpitService';
 
-    const ACTION_ENABLE = 'enableMailpit';
-    const ACTION_SWITCH_VERSION = 'switchMailpitVersion';
-    const ACTION_CHANGE_PORT = 'changeMailpitPort';
-    const ACTION_INSTALL_SERVICE = 'installMailpitService';
-    const ACTION_REMOVE_SERVICE = 'removeMailpitService';
+    public const ACTION_ENABLE = 'enableMailpit';
+    public const ACTION_SWITCH_VERSION = 'switchMailpitVersion';
+    public const ACTION_CHANGE_PORT = 'changeMailpitPort';
+    public const ACTION_INSTALL_SERVICE = 'installMailpitService';
+    public const ACTION_REMOVE_SERVICE = 'removeMailpitService';
 
     /**
      * Processes the Mailpit menu.
@@ -37,11 +37,16 @@ class TplAppMailpit
      *
      * @return array The generated menu for enabling or disabling Mailpit.
      */
-    public static function process()
+    public static function process(): array
     {
         global $bearsamppLang, $bearsamppBins;
 
-        return TplApp::getMenuEnable($bearsamppLang->getValue(Lang::MAILPIT), self::MENU, get_called_class(), $bearsamppBins->getMailpit()->isEnable());
+        return TplApp::getMenuEnable(
+            $bearsamppLang->getValue(Lang::MAILPIT),
+            self::MENU,
+            static::class,
+            $bearsamppBins->getMailpit()->isEnable()
+        );
     }
 
     /**
@@ -57,7 +62,7 @@ class TplAppMailpit
      *
      * @return string The generated Mailpit menu items and actions.
      */
-    public static function getMenuMailpit()
+    public static function getMenuMailpit(): string
     {
         global $bearsamppRoot, $bearsamppConfig, $bearsamppBins, $bearsamppLang;
         $resultItems = $resultActions = '';
@@ -66,41 +71,43 @@ class TplAppMailpit
 
         // Download
         $resultItems .= TplAestan::getItemLink(
-                $bearsamppLang->getValue(Lang::DOWNLOAD_MORE),
-                Util::getWebsiteUrl('module/mailpit', '#releases'),
-                false,
-                TplAestan::GLYPH_BROWSER
-            ) . PHP_EOL;
+            $bearsamppLang->getValue(Lang::DOWNLOAD_MORE),
+            Util::getWebsiteUrl('module/mailpit', '#releases'),
+            false,
+            TplAestan::GLYPH_BROWSER
+        ) . PHP_EOL;
 
         // Enable
-        $tplEnable     = TplApp::getActionMulti(
-            self::ACTION_ENABLE, array($isEnabled ? Config::DISABLED : Config::ENABLED),
-            array($bearsamppLang->getValue(Lang::MENU_ENABLE), $isEnabled ? TplAestan::GLYPH_CHECK : ''),
-            false, get_called_class()
+        $tplEnable = TplApp::getActionMulti(
+            self::ACTION_ENABLE,
+            [$isEnabled ? Config::DISABLED : Config::ENABLED],
+            [$bearsamppLang->getValue(Lang::MENU_ENABLE), $isEnabled ? TplAestan::GLYPH_CHECK : ''],
+            false,
+            static::class
         );
-        $resultItems   .= $tplEnable[TplApp::SECTION_CALL] . PHP_EOL;
+        $resultItems .= $tplEnable[TplApp::SECTION_CALL] . PHP_EOL;
         $resultActions .= $tplEnable[TplApp::SECTION_CONTENT] . PHP_EOL;
 
         if ($isEnabled) {
             $resultItems .= TplAestan::getItemSeparator() . PHP_EOL;
 
             // Versions
-            $tplVersions   = TplApp::getMenu($bearsamppLang->getValue(Lang::VERSIONS), self::MENU_VERSIONS, get_called_class());
-            $resultItems   .= $tplVersions[TplApp::SECTION_CALL] . PHP_EOL;
+            $tplVersions = TplApp::getMenu($bearsamppLang->getValue(Lang::VERSIONS), self::MENU_VERSIONS, static::class);
+            $resultItems .= $tplVersions[TplApp::SECTION_CALL] . PHP_EOL;
             $resultActions .= $tplVersions[TplApp::SECTION_CONTENT] . PHP_EOL;
 
             // Service
-            $tplService    = TplApp::getMenu($bearsamppLang->getValue(Lang::SERVICE), self::MENU_SERVICE, get_called_class());
-            $resultItems   .= $tplService[TplApp::SECTION_CALL] . PHP_EOL;
+            $tplService = TplApp::getMenu($bearsamppLang->getValue(Lang::SERVICE), self::MENU_SERVICE, static::class);
+            $resultItems .= $tplService[TplApp::SECTION_CALL] . PHP_EOL;
             $resultActions .= $tplService[TplApp::SECTION_CONTENT] . PHP_EOL;
 
             // Web page
             $resultItems .= TplAestan::getItemExe(
-                    $bearsamppLang->getValue(Lang::MAILPIT),
-                    $bearsamppConfig->getBrowser(),
-                    TplAestan::GLYPH_WEB_PAGE,
-                    $bearsamppRoot->getLocalUrl() . ':' . $bearsamppBins->getMailpit()->getUiPort() . '/' . $bearsamppBins->getMailpit()->getWebRoot()
-                ) . PHP_EOL;
+                $bearsamppLang->getValue(Lang::MAILPIT),
+                $bearsamppConfig->getBrowser(),
+                TplAestan::GLYPH_WEB_PAGE,
+                $bearsamppRoot->getLocalUrl() . ':' . $bearsamppBins->getMailpit()->getUiPort() . '/' . $bearsamppBins->getMailpit()->getWebRoot()
+            ) . PHP_EOL;
 
             // Log
             $resultItems .= TplAestan::getItemNotepad($bearsamppLang->getValue(Lang::MENU_LOGS), $bearsamppBins->getMailpit()->getLog()) . PHP_EOL;
@@ -118,17 +125,19 @@ class TplAppMailpit
      *
      * @return string The generated Mailpit versions menu items and actions.
      */
-    public static function getMenuMailpitVersions()
+    public static function getMenuMailpitVersions(): string
     {
         global $bearsamppBins;
-        $items   = '';
+        $items = '';
         $actions = '';
 
         foreach ($bearsamppBins->getMailpit()->getVersionList() as $version) {
             $tplSwitchMailpitVersion = TplApp::getActionMulti(
-                self::ACTION_SWITCH_VERSION, array($version),
-                array($version, $version == $bearsamppBins->getMailpit()->getVersion() ? TplAestan::GLYPH_CHECK : ''),
-                false, get_called_class()
+                self::ACTION_SWITCH_VERSION,
+                [$version],
+                [$version, $version === $bearsamppBins->getMailpit()->getVersion() ? TplAestan::GLYPH_CHECK : ''],
+                false,
+                static::class
             );
 
             // Item
@@ -151,12 +160,14 @@ class TplAppMailpit
      * @param int $enable The enable flag (1 to enable, 0 to disable).
      * @return string The generated action string for enabling or disabling Mailpit.
      */
-    public static function getActionEnableMailpit($enable)
+    public static function getActionEnableMailpit(int $enable): string
     {
         global $bearsamppBins;
 
-        return TplApp::getActionRun(Action::ENABLE, array($bearsamppBins->getMailpit()->getName(), $enable)) . PHP_EOL .
-            TplAppReload::getActionReload();
+        return TplApp::getActionRun(
+            Action::ENABLE,
+            [$bearsamppBins->getMailpit()->getName(), $enable]
+        ) . PHP_EOL . TplAppReload::getActionReload();
     }
 
     /**
@@ -169,12 +180,14 @@ class TplAppMailpit
      * @param string $version The version to switch to.
      * @return string The generated action string for switching the Mailpit version.
      */
-    public static function getActionSwitchMailpitVersion($version)
+    public static function getActionSwitchMailpitVersion(string $version): string
     {
         global $bearsamppBins;
 
-        return TplApp::getActionRun(Action::SWITCH_VERSION, array($bearsamppBins->getMailpit()->getName(), $version)) . PHP_EOL .
-            TplAppReload::getActionReload() . PHP_EOL;
+        return TplApp::getActionRun(
+            Action::SWITCH_VERSION,
+            [$bearsamppBins->getMailpit()->getName(), $version]
+        ) . PHP_EOL . TplAppReload::getActionReload() . PHP_EOL;
     }
 
     /**
@@ -189,14 +202,16 @@ class TplAppMailpit
      *
      * @return string The generated Mailpit service menu items and actions.
      */
-    public static function getMenuMailpitService()
+    public static function getMenuMailpitService(): string
     {
         global $bearsamppRoot, $bearsamppLang, $bearsamppBins;
 
         $tplChangePort = TplApp::getActionMulti(
-            self::ACTION_CHANGE_PORT, null,
-            array($bearsamppLang->getValue(Lang::MENU_CHANGE_PORT), TplAestan::GLYPH_NETWORK),
-            false, get_called_class()
+            self::ACTION_CHANGE_PORT,
+            null,
+            [$bearsamppLang->getValue(Lang::MENU_CHANGE_PORT), TplAestan::GLYPH_NETWORK],
+            false,
+            static::class
         );
 
         $isInstalled = $bearsamppBins->getMailpit()->getService()->isInstalled();
@@ -206,26 +221,31 @@ class TplAppMailpit
             TplAestan::getItemActionServiceRestart($bearsamppBins->getMailpit()->getService()->getName()) . PHP_EOL .
             TplAestan::getItemSeparator() . PHP_EOL .
             TplApp::getActionRun(
-                Action::CHECK_PORT, array($bearsamppBins->getMailpit()->getName(), $bearsamppBins->getMailpit()->getSmtpPort()),
-                array(sprintf($bearsamppLang->getValue(Lang::MENU_CHECK_PORT), $bearsamppBins->getMailpit()->getSmtpPort()), TplAestan::GLYPH_LIGHT)
+                Action::CHECK_PORT,
+                [$bearsamppBins->getMailpit()->getName(), $bearsamppBins->getMailpit()->getSmtpPort()],
+                [sprintf($bearsamppLang->getValue(Lang::MENU_CHECK_PORT), $bearsamppBins->getMailpit()->getSmtpPort()), TplAestan::GLYPH_LIGHT]
             ) . PHP_EOL .
             $tplChangePort[TplApp::SECTION_CALL] . PHP_EOL .
             TplAestan::getItemNotepad($bearsamppLang->getValue(Lang::MENU_UPDATE_ENV_PATH), $bearsamppRoot->getRootPath() . '/nssmEnvPaths.dat') . PHP_EOL;
 
         if (!$isInstalled) {
             $tplInstallService = TplApp::getActionMulti(
-                self::ACTION_INSTALL_SERVICE, null,
-                array($bearsamppLang->getValue(Lang::MENU_INSTALL_SERVICE), TplAestan::GLYPH_SERVICE_INSTALL),
-                $isInstalled, get_called_class()
+                self::ACTION_INSTALL_SERVICE,
+                null,
+                [$bearsamppLang->getValue(Lang::MENU_INSTALL_SERVICE), TplAestan::GLYPH_SERVICE_INSTALL],
+                $isInstalled,
+                static::class
             );
 
             $result .= $tplInstallService[TplApp::SECTION_CALL] . PHP_EOL . PHP_EOL .
                 $tplInstallService[TplApp::SECTION_CONTENT] . PHP_EOL;
         } else {
             $tplRemoveService = TplApp::getActionMulti(
-                self::ACTION_REMOVE_SERVICE, null,
-                array($bearsamppLang->getValue(Lang::MENU_REMOVE_SERVICE), TplAestan::GLYPH_SERVICE_REMOVE),
-                !$isInstalled, get_called_class()
+                self::ACTION_REMOVE_SERVICE,
+                null,
+                [$bearsamppLang->getValue(Lang::MENU_REMOVE_SERVICE), TplAestan::GLYPH_SERVICE_REMOVE],
+                !$isInstalled,
+                static::class
             );
 
             $result .= $tplRemoveService[TplApp::SECTION_CALL] . PHP_EOL . PHP_EOL .
@@ -246,12 +266,14 @@ class TplAppMailpit
      *
      * @return string The generated action string for changing the Mailpit port.
      */
-    public static function getActionChangeMailpitPort()
+    public static function getActionChangeMailpitPort(): string
     {
         global $bearsamppBins;
 
-        return TplApp::getActionRun(Action::CHANGE_PORT, array($bearsamppBins->getMailpit()->getName())) . PHP_EOL .
-            TplAppReload::getActionReload();
+        return TplApp::getActionRun(
+            Action::CHANGE_PORT,
+            [$bearsamppBins->getMailpit()->getName()]
+        ) . PHP_EOL . TplAppReload::getActionReload();
     }
 
     /**
@@ -261,10 +283,12 @@ class TplAppMailpit
      *
      * @return string The generated action string for installing the Mailpit service.
      */
-    public static function getActionInstallMailpitService()
+    public static function getActionInstallMailpitService(): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array(BinMailpit::SERVICE_NAME, ActionService::INSTALL)) . PHP_EOL .
-            TplAppReload::getActionReload();
+        return TplApp::getActionRun(
+            Action::SERVICE,
+            [BinMailpit::SERVICE_NAME, ActionService::INSTALL]
+        ) . PHP_EOL . TplAppReload::getActionReload();
     }
 
     /**
@@ -274,9 +298,11 @@ class TplAppMailpit
      *
      * @return string The generated action string for removing the Mailpit service.
      */
-    public static function getActionRemoveMailpitService()
+    public static function getActionRemoveMailpitService(): string
     {
-        return TplApp::getActionRun(Action::SERVICE, array(BinMailpit::SERVICE_NAME, ActionService::REMOVE)) . PHP_EOL .
-            TplAppReload::getActionReload();
+        return TplApp::getActionRun(
+            Action::SERVICE,
+            [BinMailpit::SERVICE_NAME, ActionService::REMOVE]
+        ) . PHP_EOL . TplAppReload::getActionReload();
     }
 }

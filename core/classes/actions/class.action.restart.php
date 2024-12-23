@@ -19,12 +19,13 @@ class ActionRestart
      *
      * @param array $args Command line arguments passed to the action.
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppLang, $bearsamppWinbinder;
 
         $bearsamppWinbinder->messageBoxInfo(
             sprintf($bearsamppLang->getValue(Lang::RESTART_TEXT), APP_TITLE),
-            $bearsamppLang->getValue(Lang::RESTART_TITLE));
+            $bearsamppLang->getValue(Lang::RESTART_TITLE)
+        );
     }
 }

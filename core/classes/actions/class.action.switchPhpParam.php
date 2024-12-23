@@ -15,15 +15,18 @@
  */
 class ActionSwitchPhpParam
 {
-    const SWITCH_ON = 'on';
-    const SWITCH_OFF = 'off';
+    public const SWITCH_ON = 'on';
+    public const SWITCH_OFF = 'off';
 
     /**
      * Constructor for ActionSwitchPhpParam.
      *
+     * Initializes the class and modifies the PHP configuration file to enable or disable
+     * the specified PHP setting based on the provided arguments.
+     *
      * @param array $args An array containing the PHP setting name and the desired state ('on' or 'off').
      */
-    public function __construct($args)
+    public function __construct(array $args)
     {
         global $bearsamppLang, $bearsamppBins, $bearsamppWinbinder;
 
@@ -46,10 +49,10 @@ class ActionSwitchPhpParam
 
                 // Read the current PHP configuration file content
                 $phpiniContent = file_get_contents($bearsamppBins->getPhp()->getConf());
-                if ($args[1] == self::SWITCH_ON) {
+                if ($args[1] === self::SWITCH_ON) {
                     // Replace the off setting with the on setting
                     $phpiniContent = str_replace($offContent, $onContent, $phpiniContent);
-                } elseif ($args[1] == self::SWITCH_OFF) {
+                } elseif ($args[1] === self::SWITCH_OFF) {
                     // Replace the on setting with the off setting
                     $phpiniContent = str_replace($onContent, $offContent, $phpiniContent);
                 }
