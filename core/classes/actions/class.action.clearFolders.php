@@ -52,7 +52,6 @@ class ActionClearFolders
     {
         global $bearsamppWinbinder;
         $this->callWinBinder('wb_destroy_window', array($window), true);
-        return;
     }
 
     /**
