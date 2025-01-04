@@ -1,58 +1,80 @@
 <?php
-/*
- * Copyright (c) 2021-2024 Bearsampp
- * License:  GNU General Public License version 3 or later; see LICENSE.txt
- * Author: Bear
- * Website: https://bearsampp.com
- * Github: https://github.com/Bearsampp
- */
 
-/**
- * Handles the action of clearing specific temporary folders within the application.
- *
- * This class is responsible for clearing out temporary files and directories that are not
- * essential for immediate functionality but may accumulate over time and use disk space.
- * It targets temporary directories used by various components like Composer, OpenSSL, and others.
- */
 class ActionClearFolders
 {
-    /**
-     * Constructor for the ActionClearFolders class.
-     *
-     * Upon instantiation, it clears specified temporary folders in both the root and core temporary paths.
-     * It excludes certain files and folders from being deleted to prevent essential data loss.
-     *
-     * @param array $args Arguments that might be used for further extension of constructor functionality.
-     */
     public function __construct($args)
     {
-        global $bearsamppRoot, $bearsamppCore;
+        global $bearsamppRoot, $bearsamppCore, $bearsamppWinbinder;
 
-        /**
-         * Clears specific temporary folders in the root temporary path.
-         *
-         * Util::clearFolder is used to clear the contents of the root temporary path, excluding
-         * certain essential items such as 'cachegrind', 'composer', 'openssl', 'mailpit', 'xlight', 'npm-cache',
-         * 'pip', 'yarn', and '.gitignore'. This ensures that important data and configurations are not lost.
-         *
-         * @param string $bearsamppRoot->getTmpPath() The root temporary path to be cleared.
-         * @param array $exclusions List of folders and files to be excluded from deletion.
-         */
+        // Clear specific temporary folders in the root temporary path
         Util::clearFolder($bearsamppRoot->getTmpPath(), array('cachegrind', 'composer', 'openssl', 'mailhog', 'mailpit', 'xlight', 'npm-cache', 'pip', 'yarn', '.gitignore'));
 
         // Clear logs
-        Util::clearFolder($bearsamppRoot->getLogsPath(), array('mailpit.err.log', 'mailpit.out.log', 'memcached.err.log', 'memcached.out.log', 'xlight.err.log', 'xlight.log', '.gitignore') );
+        Util::clearFolder(
+            $bearsamppRoot->getLogsPath(),
+            array('mailpit.err.log', 'mailpit.out.log', 'memcached.err.log', 'memcached.out.log', 'xlight.err.log', 'xlight.log', '.gitignore')
+        );
 
-        /**
-         * Clears the core temporary path.
-         *
-         * Util::clearFolder is used to clear the contents of the core temporary path, excluding
-         * the '.gitignore' file. This ensures that the core temporary path is cleaned without
-         * removing the '.gitignore' file which might be necessary for version control.
-         *
-         * @param string $bearsamppCore->getTmpPath() The core temporary path to be cleared.
-         * @param array $exclusions List of folders and files to be excluded from deletion.
-         */
+        // Clear the core temporary path
         Util::clearFolder($bearsamppCore->getTmpPath(), array('.gitignore'));
+
+        // Handle the logs menu and reload
+        $this->handleLogsAndReload();
+    }
+
+    private function handleLogsAndReload()
+    {
+        global $bearsamppWinbinder;
+
+        // Generate menu items for each log file
+        $window = TplAppLogs::process();
+
+        // Destroy the logs window
+        $this->destroyWindow($window);
+
+        // Regenerate the logs menu items
+        $logsMenuItems = TplAppLogs::process();
+
+        // Regenerate the reload menu item
+        $reloadMenuItem = TplAppReload::process();
+
+        // Reload the application
+        $args = []; // Define any necessary arguments
+        new ActionReload($args);
+    }
+
+    /**
+     * Destroys a window.
+     *
+     * @param   mixed  $window  The window object to destroy.
+     */
+    public function destroyWindow($window)
+    {
+        global $bearsamppWinbinder;
+        $this->callWinBinder('wb_destroy_window', array($window), true);
+        return;
+    }
+
+    /**
+     * Calls a WinBinder function with the specified parameters.
+     *
+     * @param   string  $function            The name of the WinBinder function to call.
+     * @param   array   $params              The parameters to pass to the function.
+     * @param   bool    $removeErrorHandler  Whether to remove the error handler during the call.
+     *
+     * @return mixed The result of the function call.
+     */
+    private function callWinBinder($function, $params = array(), $removeErrorHandler = false)
+    {
+        $result = false;
+        if (function_exists($function)) {
+            if ($removeErrorHandler) {
+                $result = @call_user_func_array($function, $params);
+            } else {
+                $result = call_user_func_array($function, $params);
+            }
+        }
+
+        return $result;
     }
 }
