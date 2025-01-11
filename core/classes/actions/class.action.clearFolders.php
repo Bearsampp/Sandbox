@@ -24,21 +24,15 @@ class ActionClearFolders
 
     private function handleLogsAndReload()
     {
-        global $bearsamppAction;
+        global $bearsamppAction, $bearsamppWinbinder;
 
         // Purge old log entries from bearsampp.ini
         $args = [];
         new ActionRebuildini($args);
 
-        $logs = TplAppLogs::getMenuLogs();
+        $logs = TplAppLogs::process();
 
         // Process the logs menu update
         TplAppReload::process();
-
-        // Get the reload action string
-        $reloadAction = TplAppReload::getActionReload();
-
-        // Now reload using the global action handler
-        $bearsamppAction->call(Action::RELOAD);
     }
 }
