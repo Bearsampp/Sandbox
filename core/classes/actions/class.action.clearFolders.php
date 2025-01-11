@@ -24,56 +24,21 @@ class ActionClearFolders
 
     private function handleLogsAndReload()
     {
-        global $bearsamppWinbinder;
+        global $bearsamppAction;
 
-        // Generate menu items for each log file
-        $window = TplAppLogs::process();
+        // Purge old log entries from bearsampp.ini
+        $args = [];
+        new ActionRebuildini($args);
 
-        // Destroy the logs window
-        $this->destroyWindow($window);
+        $logs = TplAppLogs::getMenuLogs();
 
-        // Regenerate the logs menu items
-        $logsMenuItems = TplAppLogs::process();
+        // Process the logs menu update
+        TplAppReload::process();
 
-        // Regenerate the reload menu item
-        $reloadMenuItem = TplAppReload::process();
+        // Get the reload action string
+        $reloadAction = TplAppReload::getActionReload();
 
-        // Reload the application
-        $args = []; // Define any necessary arguments
-        new ActionReload($args);
-    }
-
-    /**
-     * Destroys a window.
-     *
-     * @param   mixed  $window  The window object to destroy.
-     */
-    public function destroyWindow($window)
-    {
-        global $bearsamppWinbinder;
-        $this->callWinBinder('wb_destroy_window', array($window), true);
-    }
-
-    /**
-     * Calls a WinBinder function with the specified parameters.
-     *
-     * @param   string  $function            The name of the WinBinder function to call.
-     * @param   array   $params              The parameters to pass to the function.
-     * @param   bool    $removeErrorHandler  Whether to remove the error handler during the call.
-     *
-     * @return mixed The result of the function call.
-     */
-    private function callWinBinder($function, $params = array(), $removeErrorHandler = false)
-    {
-        $result = false;
-        if (function_exists($function)) {
-            if ($removeErrorHandler) {
-                $result = @call_user_func_array($function, $params);
-            } else {
-                $result = call_user_func_array($function, $params);
-            }
-        }
-
-        return $result;
+        // Now reload using the global action handler
+        $bearsamppAction->call(Action::RELOAD);
     }
 }
