@@ -32,7 +32,9 @@ class ActionClearFolders
 
         $logs = TplAppLogs::process();
 
-        // Process the logs menu update
-        TplAppReload::process();
+        // Trigger the reload action
+        new ActionReload($args);
+
+        $reloadActions = TplAppReload::process();
     }
 }
