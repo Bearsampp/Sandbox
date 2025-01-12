@@ -26,7 +26,7 @@ class ActionClearFolders
     {
         global $bearsamppAction, $bearsamppWinbinder;
 
-        // Purge old log entries from bearsampp.ini
+        // Correctly purges old log entries from bearsampp.ini
         $args = [];
         new ActionRebuildini($args);
 
